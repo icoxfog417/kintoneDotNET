@@ -1,0 +1,6 @@
+﻿"レコード番号","テストメソッド","文字列フィールド","数値","ラジオボタン","チェックボックス[check1]","チェックボックス[check2]","ドロップダウン","リッチエディター","複数行文字列","セレクトボックス[select1]","セレクトボックス[select2]","セレクトボックス[select3]","日付","時刻","日時","リンク"
+"5","ExecuteUpdateAndRead","","0","radio1",,,"drop1",,"",,,,"1000/01/01","23:59","1000/01/02 00:17",""
+"4","ReadInitialField","","","radio1",,,"drop2","<br />","",,,,"","","",""
+"3","InitialData","文字","","radio2","1","1","drop1","<b>リッチ</b>　だぜ","複数複数複数複数","1","1",,"2013/10/24","15:54","2013/10/24 15:54","http://msdn.microsoft.com/ja-jp/library/system.configuration.configurationmanager.appsettings.aspx"
+"2","InitialData","字文","120","radio1","1","1","","<b>リッチ</b>　<u>だぜ</u>&nbsp; &nbsp;きんとん","複数複数複数複数","1",,"1","2013/10/24","15:54","2013/10/24 15:54","http://epplus.codeplex.com/SourceControl/latest#EPPlus/ExcelCellBase.cs"
+"1","InitialData","文字","100","radio2","1",,"drop1","<b>リッチ</b>　だぜ","複数複数複数複数","1","1",,"2013/10/24","15:54","2013/10/24 15:54","http://msdn.microsoft.com/ja-jp/library/system.configuration.configurationmanager.appsettings.aspx"
