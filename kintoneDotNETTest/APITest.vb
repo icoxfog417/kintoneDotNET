@@ -38,11 +38,11 @@ Public Class APITest
 
 
     ''' <summary>
-    ''' Readのテスト(単純に全件を読み込み)
+    ''' Readのテスト(単純に読み込みで例外が発生しないことを確認)
     ''' </summary>
     ''' <remarks></remarks>
     <TestMethod()>
-    Public Sub ReadAll()
+    Public Sub Read()
 
         Dim kerror As kintoneError = Nothing
         Dim result As List(Of kintoneTestModel) = kintoneAPI.Find(Of kintoneTestModel)(String.Empty, kerror)
@@ -54,6 +54,30 @@ Public Class APITest
         Next
 
     End Sub
+
+    ''' <summary>
+    ''' FindAllのテスト 全件取得可能かチェックする
+    ''' テストアプリには制限を超えるようなレコード数は登録しないため、Limitを調整しテスト
+    ''' </summary>
+    ''' <remarks></remarks>
+    <TestMethod()>
+    Public Sub FindAllTest()
+
+        Dim kerror As kintoneError = Nothing
+        Dim result As List(Of kintoneTestModel) = kintoneAPI.Find(Of kintoneTestModel)(String.Empty, kerror)
+
+        Assert.IsTrue(kerror Is Nothing)
+
+        Dim before As Integer = kintoneAPI.ReadLimit
+        kintoneAPI.ReadLimit = 1
+        Dim resultAll As List(Of kintoneTestModel) = kintoneAPI.FindAll(Of kintoneTestModel)(String.Empty, kerror)
+
+        Assert.AreEqual(result.Count, resultAll.Count)
+
+        kintoneAPI.ReadLimit = before
+
+    End Sub
+
 
     ''' <summary>
     ''' Create/Deleteのテスト

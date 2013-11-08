@@ -123,7 +123,6 @@ Namespace API
             Dim props As PropertyInfo() = objType.GetProperties()
             For Each p As PropertyInfo In props
                 If dictionary.ContainsKey(p.Name) Then
-                    'TODO タイプ別の変換処理を考慮する必要があるかも(例:値が空白の場合数値型に入れようとするとキャストエラーetc)
                     Dim value As Object = readKintoneItem(p.PropertyType, dictionary(p.Name))
                     p.SetValue(m, _serializer.ConvertToType(value, p.PropertyType), Nothing)
                 End If
