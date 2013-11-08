@@ -8,4 +8,6 @@ kintone API を.NET Framework上で扱うためのライブラリです。
 アカウントのIDなどは、`app.config`へ記載します。  
 ※自分のアカウント情報を記載したままコミットしてしまうと大変なので、app.Debug.configを使用するなどした方が良いと思います。
 
-
+## Help Document
+APIのドキュメントはこちらを参照ください。
+[Help Document Site](http://icoxfog417.github.io/kintoneDotNET/Index.html)
