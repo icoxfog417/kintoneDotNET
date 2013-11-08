@@ -34,8 +34,16 @@
     <ProjectSummary>サイボウズkintoneを.NET Framworkで扱うためのライブラリ</ProjectSummary>
     <NamespaceSummaries>
       <NamespaceSummaryItem name="(global)" isDocumented="False" />
-<NamespaceSummaryItem name="kintoneDotNET.API" isDocumented="True">kintoneに対する読み取り/更新操作を行うためのAPI</NamespaceSummaryItem>
-<NamespaceSummaryItem name="kintoneDotNET.API.Types" isDocumented="True">kintone上のデータ型に対応するクラスなどの定義</NamespaceSummaryItem></NamespaceSummaries>
+      <NamespaceSummaryItem name="kintoneDotNET.API" isDocumented="True">kintoneに対する読み取り/更新操作を行うためのAPI</NamespaceSummaryItem>
+      <NamespaceSummaryItem name="kintoneDotNET.API.Types" isDocumented="True">kintone上のデータ型に対応するクラスなどの定義</NamespaceSummaryItem>
+    </NamespaceSummaries>
+    <BuildAssemblerVerbosity>OnlyWarningsAndErrors</BuildAssemblerVerbosity>
+    <HelpFileFormat>HtmlHelp1, Website</HelpFileFormat>
+    <IndentHtml>False</IndentHtml>
+    <KeepLogFile>True</KeepLogFile>
+    <DisableCodeBlockComponent>False</DisableCodeBlockComponent>
+    <CppCommentsFixup>False</CppCommentsFixup>
+    <CleanIntermediates>True</CleanIntermediates>
   </PropertyGroup>
   <!-- There are no properties for these groups.  AnyCPU needs to appear in
        order for Visual Studio to perform the build.  The others are optional

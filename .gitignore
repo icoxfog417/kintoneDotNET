@@ -18,5 +18,6 @@ artifacts/*
 msbuild.log
 LastBuild.log
 *.shfbproj_*
+Help/
 *.nupkg
 app.Debug.config
