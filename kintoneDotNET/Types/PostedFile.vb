@@ -48,7 +48,7 @@ Namespace API.Types
         Public Sub New(ByVal filePath As String)
             Dim file As New FileStream(filePath, FileMode.Open, FileAccess.Read)
             _fileName = Path.GetFileName(filePath)
-            'TODO ContentType判定 Upload時にいるわけではないので、必須ではない
+            'TODO ContentType判定。 Upload時にいるわけではないので、必須ではない
             _contentLength = file.Length
             _stream = file
 

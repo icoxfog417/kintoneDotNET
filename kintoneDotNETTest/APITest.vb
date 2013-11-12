@@ -20,7 +20,7 @@ Public Class APITest
     ''' <remarks></remarks>
     Public ReadOnly Property TargetAppId As String
         Get
-            Return ConfigurationManager.AppSettings("testdAppId")
+            Return ConfigurationManager.AppSettings("testAppId")
         End Get
     End Property
 
@@ -73,6 +73,10 @@ Public Class APITest
         Dim resultAll As List(Of kintoneTestModel) = kintoneAPI.FindAll(Of kintoneTestModel)(String.Empty, kerror)
 
         Assert.AreEqual(result.Count, resultAll.Count)
+        For Each item In result
+            Dim sameItem As kintoneTestModel = resultAll.Find(Function(x) x.record_id = item.record_id)
+            Assert.IsTrue(sameItem IsNot Nothing)
+        Next
 
         kintoneAPI.ReadLimit = before
 
@@ -208,6 +212,47 @@ Public Class APITest
         End Using
 
         Assert.IsTrue(System.IO.File.Exists(FileOutPath(DOWNLOAD_FILE)))
+
+    End Sub
+
+    ''' <summary>
+    ''' 内部テーブルのRead/Writeテスト
+    ''' </summary>
+    ''' <remarks></remarks>
+    <TestMethod()>
+    Public Sub UploadDownloadSubTable()
+
+        Dim addLog As New ChangeLog(New DateTime(1000, 1, 1), "The Beggining Day ")
+        Dim nextLog As New ChangeLog(DateTime.MaxValue, "The End of Century")
+        Dim updLog As New ChangeLog(New DateTime(1999, 7, 31), "The Ending Day")
+
+        '現在のレコードを取得
+        Dim item As kintoneTestModel = getInitializedRecord()
+        Assert.IsTrue(item.changeLogs.Count = 0)
+
+        '内部テーブルレコードを追加
+        item.changeLogs.Add(addLog)
+        Assert.IsTrue(item.Update())
+        Assert.IsFalse(item.isError)
+
+        item = getRecordForUpdateAndRead()
+        Assert.AreEqual(addLog.changeYMD.ToString("yyyyMMdd"), item.changeLogs(0).changeYMD.ToString("yyyyMMdd"))
+        Assert.AreEqual(addLog.historyDesc, item.changeLogs(0).historyDesc)
+
+        'もう一件追加+内容を編集
+        updLog.id = item.changeLogs(0).id
+        item.changeLogs(0) = updLog
+        item.changeLogs.Add(nextLog)
+
+        Assert.IsTrue(item.Update())
+        Assert.IsFalse(item.isError)
+
+        item = getRecordForUpdateAndRead()
+        Assert.AreEqual(item.changeLogs.Count, 2)
+
+        Dim log As ChangeLog = item.changeLogs.Find(Function(x) x.id = updLog.id)
+        Assert.AreEqual(updLog.changeYMD.ToString("yyyyMMdd"), log.changeYMD.ToString("yyyyMMdd"))
+        Assert.AreEqual(updLog.historyDesc, log.historyDesc)
 
     End Sub
 

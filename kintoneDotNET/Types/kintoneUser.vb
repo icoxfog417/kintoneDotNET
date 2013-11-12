@@ -16,9 +16,9 @@ Namespace API.Types
 
         Public Sub New(ByVal obj As Object)
 
-            If obj("value").Count > 0 Then
-                Me.code = obj("value")("code")
-                Me.name = obj("value")("name")
+            If obj.Count > 0 Then
+                Me.code = obj("code")
+                Me.name = obj("name")
             End If
 
         End Sub

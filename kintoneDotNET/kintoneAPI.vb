@@ -278,7 +278,6 @@ Namespace API
 
             Dim request As HttpWebRequest = makeHttpHeader("records", "GET", query)
             Using response As HttpWebResponse = getResponse(request, kerror)
-                'TODO 100件制限の考慮
                 If Not response Is Nothing Then
                     Dim js As New JavaScriptSerializer
                     Dim kc As New kintoneContentConvertor(Of T)

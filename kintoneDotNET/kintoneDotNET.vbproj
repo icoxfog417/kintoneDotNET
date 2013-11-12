@@ -74,6 +74,7 @@
     <Compile Include="kintoneContentConvertor.vb" />
     <Compile Include="Types\kintoneDatetime.vb" />
     <Compile Include="Types\kintoneFile.vb" />
+    <Compile Include="Types\kintoneSubTableItem.vb" />
     <Compile Include="Types\kintoneType.vb" />
     <Compile Include="kintoneTypeAttributes.vb" />
     <Compile Include="kintoneTypeExtension.vb" />

@@ -34,6 +34,9 @@ Public Class kintoneTestModel
     <UploadTarget>
     Public Property attachfile As New List(Of kintoneFile)
 
+    <UploadTarget>
+    Public Property changeLogs As New List(Of ChangeLog)
+
     Private _app As String = ConfigurationManager.AppSettings("testAppId")
     Public Overrides ReadOnly Property app As String
         Get
@@ -51,5 +54,24 @@ Public Class kintoneTestModel
         Dim result As String = methodinfo + ":" + stringField
         Return result
     End Function
+
+End Class
+
+Public Class ChangeLog
+    Inherits kintoneSubTableItem
+
+    <UploadTarget>
+    Public Property changeYMD As DateTime = Nothing
+
+    <UploadTarget>
+    Public Property historyDesc As String = ""
+
+    Public Sub New()
+    End Sub
+
+    Public Sub New(changeYMD As DateTime, historyDesc As String)
+        Me.changeYMD = changeYMD
+        Me.historyDesc = historyDesc
+    End Sub
 
 End Class

@@ -36,14 +36,14 @@ Namespace API.Types
             '※なお、UTCは日付/時刻には適用されない
             'https://developers.cybozu.com/ja/kintone-api/common-appapi.html#i-5
 
-            If DateTime.TryParseExact(obj("value"), "yyyy-MM-ddTHH:mm:ssZ", System.Globalization.DateTimeFormatInfo.InvariantInfo, _
+            If DateTime.TryParseExact(obj, "yyyy-MM-ddTHH:mm:ssZ", System.Globalization.DateTimeFormatInfo.InvariantInfo, _
                                       System.Globalization.DateTimeStyles.AssumeUniversal, d) Then
                 Return d
-            ElseIf DateTime.TryParseExact(obj("value"), "yyyy-MM-dd", System.Globalization.DateTimeFormatInfo.InvariantInfo, _
+            ElseIf DateTime.TryParseExact(obj, "yyyy-MM-dd", System.Globalization.DateTimeFormatInfo.InvariantInfo, _
                                       System.Globalization.DateTimeStyles.None, d) Then
                 '日付型
                 Return d
-            ElseIf DateTime.TryParseExact(obj("value"), "HH:mm", System.Globalization.DateTimeFormatInfo.InvariantInfo, _
+            ElseIf DateTime.TryParseExact(obj, "HH:mm", System.Globalization.DateTimeFormatInfo.InvariantInfo, _
                                       System.Globalization.DateTimeStyles.None, d) Then
                 '時刻型
                 Return d

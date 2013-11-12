@@ -34,7 +34,7 @@ Namespace API
             Dim result As New Dictionary(Of String, Object)
 
             'UploadTargetAttributeがセットされている項目を取得してシリアライズ
-            Dim objType As Type = GetType(T)
+            Dim objType As Type = obj.GetType
             Dim props As PropertyInfo() = objType.GetProperties()
             Dim targets = From p As PropertyInfo In props
                           Let attribute As UploadTargetAttribute = p.GetCustomAttributes(GetType(UploadTargetAttribute), True).SingleOrDefault
@@ -43,19 +43,16 @@ Namespace API
 
             For Each tgt In targets
                 Dim value As Object = tgt.p.GetValue(obj, Nothing)
-                Dim pType As Type = tgt.p.PropertyType
-                If pType.IsGenericType Then
-                    pType = pType.GetGenericArguments(0)
-                End If
+                Dim pType As Type = getGenericsType(tgt.p.PropertyType)
 
                 If TypeOf value Is IList Then
                     Dim list As New List(Of Object)
                     For Each v In value
-                        list.Add(makeKintoneItem(pType, tgt.attribute, v, True))
+                        list.Add(makeKintoneItem(pType, tgt.attribute, v, serializer, True))
                     Next
                     result.Add(tgt.p.Name, New With {.value = list})
                 Else
-                    result.Add(tgt.p.Name, makeKintoneItem(pType, tgt.attribute, value))
+                    result.Add(tgt.p.Name, makeKintoneItem(pType, tgt.attribute, value, serializer))
                 End If
             Next
 
@@ -70,26 +67,42 @@ Namespace API
         ''' <param name="value"></param>
         ''' <returns></returns>
         ''' <remarks></remarks>
-        Private Function makeKintoneItem(ByVal pType As Type, ByVal attr As UploadTargetAttribute, ByVal value As Object, Optional ByVal isRaw As Boolean = False) As Object
+        Private Function makeKintoneItem(ByVal pType As Type, ByVal attr As UploadTargetAttribute, ByVal value As Object, ByVal serializer As JavaScriptSerializer, Optional ByVal isRaw As Boolean = False) As Object
             Dim result As Object = Nothing
-            Select Case pType
-                Case GetType(DateTime)
-                    Dim d As DateTime = value
-                    If value Is Nothing Then
-                        d = kintoneDatetime.InitialValue
-                    End If
-                    result = kintoneDatetime.toKintoneDate(d, attr.FieldType)
-                Case GetType(kintoneFile)
-                    Dim obj As kintoneFile = CType(value, kintoneFile)
-                    result = New With {.fileKey = obj.fileKey}
-                Case Else
-                    If (value Is Nothing OrElse String.IsNullOrEmpty(value.ToString)) And _
-                        Not attr.InitialValue Is Nothing Then
-                        result = attr.InitialValue
+
+            If pType.BaseType = GetType(kintoneSubTableItem) Then '内部テーブル項目
+                Dim id As String = CType(value, kintoneSubTableItem).id
+                Dim tableData As IDictionary(Of String, Object) = Serialize(value, serializer)
+                If tableData.ContainsKey("id") Then
+                    tableData.Remove("id")
+                    If Not String.IsNullOrEmpty(id) Then
+                        result = New With {.id = id, .value = tableData}
                     Else
-                        result = value
+                        result = New With {.value = tableData}
                     End If
-            End Select
+                End If
+            Else
+
+                Select Case pType
+                    Case GetType(DateTime)
+                        Dim d As DateTime = value
+                        If value Is Nothing Then
+                            d = kintoneDatetime.InitialValue
+                        End If
+                        result = kintoneDatetime.toKintoneDate(d, attr.FieldType)
+                    Case GetType(kintoneFile)
+                        Dim obj As kintoneFile = CType(value, kintoneFile)
+                        result = New With {.fileKey = obj.fileKey}
+                    Case Else
+                        If (value Is Nothing OrElse String.IsNullOrEmpty(value.ToString)) And _
+                            Not attr.InitialValue Is Nothing Then
+                            result = attr.InitialValue
+                        Else
+                            result = value
+                        End If
+                End Select
+
+            End If
 
             If isRaw Then
                 Return result
@@ -108,23 +121,23 @@ Namespace API
         ''' <returns></returns>
         ''' <remarks></remarks>
         Public Overrides Function Deserialize(dictionary As IDictionary(Of String, Object), type As Type, serializer As JavaScriptSerializer) As Object
-            Dim objType As Type = GetType(T)
-            Dim m As T = Activator.CreateInstance(objType)
+            Dim objType As Type = type
+            Dim m = Activator.CreateInstance(objType)
 
             '共通オブジェクト格納
             If dictionary.ContainsKey("レコード番号") Then m.record_id = dictionary("レコード番号")("value")
-            If dictionary.ContainsKey("作成日時") Then m.create_time = kintoneDatetime.kintoneToDatetime(dictionary("作成日時"))
-            If dictionary.ContainsKey("更新日時") Then m.update_time = kintoneDatetime.kintoneToDatetime(dictionary("更新日時"))
-            If dictionary.ContainsKey("作成者") Then m.create_usr = New kintoneUser(dictionary("作成者"))
-            If dictionary.ContainsKey("更新者") Then m.update_usr = New kintoneUser(dictionary("更新者"))
+            If dictionary.ContainsKey("作成日時") Then m.create_time = kintoneDatetime.kintoneToDatetime(dictionary("作成日時")("value"))
+            If dictionary.ContainsKey("更新日時") Then m.update_time = kintoneDatetime.kintoneToDatetime(dictionary("更新日時")("value"))
+            If dictionary.ContainsKey("作成者") Then m.create_usr = New kintoneUser(dictionary("作成者")("value"))
+            If dictionary.ContainsKey("更新者") Then m.update_usr = New kintoneUser(dictionary("更新者")("value"))
             If dictionary.ContainsKey("ステータス") Then m.status = dictionary("ステータス")("value")
-            If dictionary.ContainsKey("作業者") Then m.work_usr = New kintoneUser(dictionary("作業者"))
+            If dictionary.ContainsKey("作業者") Then m.work_usr = New kintoneUser(dictionary("作業者")("value"))
 
             Dim props As PropertyInfo() = objType.GetProperties()
             For Each p As PropertyInfo In props
                 If dictionary.ContainsKey(p.Name) Then
-                    Dim value As Object = readKintoneItem(p.PropertyType, dictionary(p.Name))
-                    p.SetValue(m, _serializer.ConvertToType(value, p.PropertyType), Nothing)
+                    Dim value As Object = readKintoneItem(p.PropertyType, dictionary(p.Name)("value"), serializer)
+                    p.SetValue(m, value, Nothing)
                 End If
             Next
 
@@ -139,22 +152,45 @@ Namespace API
         ''' <param name="obj"></param>
         ''' <returns></returns>
         ''' <remarks></remarks>
-        Private Function readKintoneItem(ByVal pType As Type, ByVal obj As Object) As Object
-            Dim result As Object = obj("value")
-            Select Case pType
-                Case GetType(DateTime)
-                    Dim d As DateTime = Nothing
-                    result = kintoneDatetime.kintoneToDatetime(obj)
-                Case GetType(Decimal), GetType(Double), GetType(Integer)
-                    If result Is Nothing OrElse String.IsNullOrWhiteSpace(result.ToString) Then
-                        result = 0 '初期値を設定
-                    End If
-            End Select
+        Private Function readKintoneItem(ByVal pType As Type, ByVal obj As Object, ByVal serializer As JavaScriptSerializer) As Object
+            Dim result As Object = obj
+            Dim t As Type = getGenericsType(pType)
+
+            If t.BaseType = GetType(kintoneSubTableItem) Then '内部テーブル項目
+                Dim list As ArrayList = CType(result, ArrayList)
+                Dim genericsType As Type = GetType(List(Of )).MakeGenericType(t)
+                Dim objArray = Activator.CreateInstance(genericsType)
+                For Each item As Object In list
+                    Dim innerTableRow = Deserialize(item("value"), t, serializer)
+                    innerTableRow.id = item("id") '親クラスが kintoneSubTableItem であることは保証されているため、idプロパティは必ず存在する
+                    objArray.Add(innerTableRow)
+                Next
+                result = objArray
+            Else
+                Select Case t
+                    Case GetType(DateTime)
+                        Dim d As DateTime = Nothing
+                        result = kintoneDatetime.kintoneToDatetime(obj)
+                    Case GetType(Decimal), GetType(Double), GetType(Integer)
+                        If result Is Nothing OrElse String.IsNullOrWhiteSpace(result.ToString) Then
+                            result = 0 '初期値を設定
+                        End If
+                End Select
+
+                result = _serializer.ConvertToType(result, pType) '指定タイプでDeserialize
+            End If
 
             Return result
 
         End Function
 
+        Private Function getGenericsType(ByVal pType As Type) As Type
+            If pType.IsGenericType Then
+                Return pType.GetGenericArguments(0) '複数のジェネリクスは考慮しない
+            Else
+                Return pType
+            End If
+        End Function
 
     End Class
 

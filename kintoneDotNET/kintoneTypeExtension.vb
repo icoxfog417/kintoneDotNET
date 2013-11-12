@@ -5,7 +5,7 @@ Imports kintoneDotNET.API.Types
 Namespace API
 
     ''' <summary>
-    ''' 特定項目型だが、データ型の性質上Listで宣言せざるを得ない項目について、メソッド拡張を行う
+    ''' データ型の性質上List型となる項目について、メソッド拡張を行う
     ''' </summary>
     ''' <remarks></remarks>
     Public Module kintoneTypeExtension
