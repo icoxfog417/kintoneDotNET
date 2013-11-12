@@ -39,8 +39,8 @@
     <HelpKINode Title="kintoneUser.code Property " Url="html/614e88f1-2ec3-176a-cedc-ca2bf3c239b7.htm" />
   </HelpKINode>
   <HelpKINode Title="ContentLength property" Url="html/c5b75f16-41c3-e846-1b0b-cff2b23be6e4.htm" />
-  <HelpKINode Title="ContentType property" Url="html/cb92d1c6-caac-62d0-17dd-1348f3d46e64.htm" />
   <HelpKINode Title="contentType property" Url="html/8d141380-fc16-1237-9865-b22eec15e6ff.htm" />
+  <HelpKINode Title="ContentType property" Url="html/cb92d1c6-caac-62d0-17dd-1348f3d46e64.htm" />
   <HelpKINode Title="Create method" Url="html/ceae2e30-f0a4-25db-0c7d-275cdf095683.htm" />
   <HelpKINode Title="Create(Of T) method" Url="html/0e2d4148-c089-99cc-9ed9-d04debdb2642.htm" />
   <HelpKINode Title="Create&lt;T&gt; method" Url="html/0e2d4148-c089-99cc-9ed9-d04debdb2642.htm" />
@@ -71,6 +71,7 @@
   <HelpKINode Title="id property">
     <HelpKINode Title="kintoneError.id Property " Url="html/aff29319-7c01-7898-eedd-6ae05a89f4b5.htm" />
     <HelpKINode Title="kintoneRecord(T).id Property " Url="html/8d267943-d090-9b5f-71ce-c98fdaf2eb28.htm" />
+    <HelpKINode Title="kintoneSubTableItem.id Property " Url="html/f0e412f1-504e-378d-9f70-feece2aae797.htm" />
   </HelpKINode>
   <HelpKINode Title="ids property" Url="html/515b7d4f-6ca5-a844-e738-6137ac5e297d.htm" />
   <HelpKINode Title="IkintoneType interface">
@@ -224,6 +225,10 @@
     <HelpKINode Title="kintoneRecords(T) Class" Url="html/40fff596-5972-78b0-1e56-24fd77dabccc.htm" />
     <HelpKINode Title="kintoneRecords(T) Members" Url="html/6e2304f5-f5dc-1a4f-ae2b-6194e88d4b38.htm" />
   </HelpKINode>
+  <HelpKINode Title="kintoneDotNET.API.Types.kintoneSubTableItem class">
+    <HelpKINode Title="kintoneSubTableItem Class" Url="html/3beea170-75a9-10b6-aad2-bffef463098d.htm" />
+    <HelpKINode Title="kintoneSubTableItem Members" Url="html/8a432ce7-3ce6-c3a7-1500-9146f15c22d5.htm" />
+  </HelpKINode>
   <HelpKINode Title="kintoneDotNET.API.Types.kintoneUser class">
     <HelpKINode Title="kintoneUser Class" Url="html/d2ee0834-d56a-c431-4975-148fb3cafe98.htm" />
     <HelpKINode Title="kintoneUser Members" Url="html/991704a9-d53a-9728-62e0-f42cbaf011d2.htm" />
@@ -337,6 +342,17 @@
   <HelpKINode Title="kintoneRecords&lt;T&gt;.app property" Url="html/45588744-da43-c780-a15e-797b961eea67.htm" />
   <HelpKINode Title="kintoneRecords&lt;T&gt;.kintoneRecords constructor" Url="html/dbf9399e-f217-18da-9862-9474389ba2df.htm" />
   <HelpKINode Title="kintoneRecords&lt;T&gt;.records property" Url="html/699c292b-1fd3-3c17-01f8-e80ce7a37d0f.htm" />
+  <HelpKINode Title="kintoneSubTableItem class">
+    <HelpKINode Title="kintoneSubTableItem Class" Url="html/3beea170-75a9-10b6-aad2-bffef463098d.htm" />
+    <HelpKINode Title="kintoneSubTableItem Members" Url="html/8a432ce7-3ce6-c3a7-1500-9146f15c22d5.htm" />
+    <HelpKINode Title="about kintoneSubTableItem class" Url="html/3beea170-75a9-10b6-aad2-bffef463098d.htm" />
+    <HelpKINode Title="all members" Url="html/8a432ce7-3ce6-c3a7-1500-9146f15c22d5.htm" />
+    <HelpKINode Title="constructor" Url="html/339406da-6180-445c-aaa3-0bd03952d316.htm" />
+    <HelpKINode Title="methods" Url="html/343cc8e9-97e5-15f4-faf1-68615e4a6a7d.htm" />
+    <HelpKINode Title="properties" Url="html/fec80570-29f3-c208-302d-1b6368cfa11b.htm" />
+  </HelpKINode>
+  <HelpKINode Title="kintoneSubTableItem.id property" Url="html/f0e412f1-504e-378d-9f70-feece2aae797.htm" />
+  <HelpKINode Title="kintoneSubTableItem.kintoneSubTableItem constructor" Url="html/339406da-6180-445c-aaa3-0bd03952d316.htm" />
   <HelpKINode Title="kintoneToDatetime method" Url="html/210b3898-a9ba-833c-9c16-ca043612899f.htm" />
   <HelpKINode Title="kintoneTypeExtension class">
     <HelpKINode Title="kintoneTypeExtension Class" Url="html/5d441fb1-cf60-5de1-26c3-867270cd2b71.htm" />
