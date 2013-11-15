@@ -72,6 +72,8 @@
     <Compile Include="AbskintoneModel.vb" />
     <Compile Include="kintoneAPI.vb" />
     <Compile Include="kintoneContentConvertor.vb" />
+    <Compile Include="kintoneException.vb" />
+    <Compile Include="kintoneQuery.vb" />
     <Compile Include="Types\kintoneDatetime.vb" />
     <Compile Include="Types\kintoneFile.vb" />
     <Compile Include="Types\kintoneSubTableItem.vb" />

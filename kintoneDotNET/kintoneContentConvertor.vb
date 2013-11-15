@@ -124,15 +124,18 @@ Namespace API
             Dim objType As Type = type
             Dim m = Activator.CreateInstance(objType)
 
-            '共通オブジェクト格納
-            If dictionary.ContainsKey("レコード番号") Then m.record_id = dictionary("レコード番号")("value")
-            If dictionary.ContainsKey("作成日時") Then m.create_time = kintoneDatetime.kintoneToDatetime(dictionary("作成日時")("value"))
-            If dictionary.ContainsKey("更新日時") Then m.update_time = kintoneDatetime.kintoneToDatetime(dictionary("更新日時")("value"))
-            If dictionary.ContainsKey("作成者") Then m.create_usr = New kintoneUser(dictionary("作成者")("value"))
-            If dictionary.ContainsKey("更新者") Then m.update_usr = New kintoneUser(dictionary("更新者")("value"))
-            If dictionary.ContainsKey("ステータス") Then m.status = dictionary("ステータス")("value")
-            If dictionary.ContainsKey("作業者") Then m.work_usr = New kintoneUser(dictionary("作業者")("value"))
+            'デフォルトプロパティ格納
+            For Each item As KeyValuePair(Of String, String) In AbskintoneModel.GetDefaultToPropertyDic
+                If dictionary.ContainsKey(item.Key) Then 'デフォルト名称が使用されている場合
+                    Dim defaultProp As PropertyInfo = objType.GetProperty(item.Value)
+                    If defaultProp IsNot Nothing Then
+                        Dim value As Object = readKintoneItem(defaultProp.PropertyType, dictionary(item.Key)("value"), serializer)
+                        defaultProp.SetValue(m, value, Nothing)
+                    End If
+                End If
+            Next
 
+            'その他プロパティ処理
             Dim props As PropertyInfo() = objType.GetProperties()
             For Each p As PropertyInfo In props
                 If dictionary.ContainsKey(p.Name) Then
@@ -171,6 +174,8 @@ Namespace API
                     Case GetType(DateTime)
                         Dim d As DateTime = Nothing
                         result = kintoneDatetime.kintoneToDatetime(obj)
+                    Case GetType(kintoneUser)
+                        result = New kintoneUser(obj)
                     Case GetType(Decimal), GetType(Double), GetType(Integer)
                         If result Is Nothing OrElse String.IsNullOrWhiteSpace(result.ToString) Then
                             result = 0 '初期値を設定

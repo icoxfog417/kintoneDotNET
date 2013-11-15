@@ -44,16 +44,20 @@ Public Class APITest
     <TestMethod()>
     Public Sub Read()
 
-        Dim kerror As kintoneError = Nothing
-        Dim result As List(Of kintoneTestModel) = kintoneAPI.Find(Of kintoneTestModel)(String.Empty, kerror)
-
-        Assert.IsTrue(kerror Is Nothing)
+        Dim result As List(Of kintoneTestModel) = kintoneTestModel.Find(Of kintoneTestModel)(String.Empty)
 
         For Each item As kintoneTestModel In result
             Console.WriteLine(item)
         Next
 
     End Sub
+
+    <TestMethod()>
+    Public Sub ReadExpression()
+        Dim query As String = kintoneQuery.toQuery(Of kintoneTestModel)(Function(x) Not {"a", "b"}.Contains(x.radio) And Not x.methodinfo Like String.Empty And x.created_time > kintoneDatetime.toKintoneDate(DateTime.Now), AbskintoneModel.GetPropertyToDefaultDic)
+        Console.WriteLine(query)
+    End Sub
+
 
     ''' <summary>
     ''' FindAllのテスト 全件取得可能かチェックする
@@ -63,14 +67,11 @@ Public Class APITest
     <TestMethod()>
     Public Sub FindAllTest()
 
-        Dim kerror As kintoneError = Nothing
-        Dim result As List(Of kintoneTestModel) = kintoneAPI.Find(Of kintoneTestModel)(String.Empty, kerror)
-
-        Assert.IsTrue(kerror Is Nothing)
+        Dim result As List(Of kintoneTestModel) = kintoneTestModel.Find(Of kintoneTestModel)(String.Empty)
 
         Dim before As Integer = kintoneAPI.ReadLimit
         kintoneAPI.ReadLimit = 1
-        Dim resultAll As List(Of kintoneTestModel) = kintoneAPI.FindAll(Of kintoneTestModel)(String.Empty, kerror)
+        Dim resultAll As List(Of kintoneTestModel) = kintoneTestModel.FindAll(Of kintoneTestModel)(String.Empty)
 
         Assert.AreEqual(result.Count, resultAll.Count)
         For Each item In result
@@ -98,13 +99,9 @@ Public Class APITest
 
         Assert.IsTrue(ids.Count > 0)
 
-        item.GetAPI.Delete(Of kintoneTestModel)(ids)
+        item.Delete(ids)
 
-        Dim kerror As kintoneError = Nothing
-        Dim result As List(Of kintoneTestModel) = kintoneAPI.Find(Of kintoneTestModel)("methodinfo=""" + METHOD_NAME + """", kerror)
-
-        Assert.IsTrue(kerror Is Nothing)
-
+        Dim result As List(Of kintoneTestModel) = kintoneTestModel.Find(Of kintoneTestModel)("methodinfo=""" + METHOD_NAME + """")
 
     End Sub
 
@@ -124,7 +121,6 @@ Public Class APITest
         item.textarea = updTexts
 
         Assert.IsTrue(item.Update())
-        Assert.IsFalse(item.isError)
 
         item = getRecordForUpdateAndRead()
         Assert.IsTrue(item.stringField = updString)
@@ -151,7 +147,6 @@ Public Class APITest
         item.datetimeField = updDateTime
 
         Assert.IsTrue(item.Update())
-        Assert.IsFalse(item.isError)
 
         item = getRecordForUpdateAndRead()
         Assert.AreEqual(updDate.ToString("yyyyMMdd"), item.dateField.ToString("yyyyMMdd"))
@@ -178,7 +173,6 @@ Public Class APITest
         item.multiselect = updSelect
 
         Assert.IsTrue(item.Update())
-        Assert.IsFalse(item.isError)
 
         item = getRecordForUpdateAndRead()
         Assert.IsTrue(ListEqual(Of String)(updCheck, item.checkbox))
@@ -233,7 +227,6 @@ Public Class APITest
         '内部テーブルレコードを追加
         item.changeLogs.Add(addLog)
         Assert.IsTrue(item.Update())
-        Assert.IsFalse(item.isError)
 
         item = getRecordForUpdateAndRead()
         Assert.AreEqual(addLog.changeYMD.ToString("yyyyMMdd"), item.changeLogs(0).changeYMD.ToString("yyyyMMdd"))
@@ -245,7 +238,6 @@ Public Class APITest
         item.changeLogs.Add(nextLog)
 
         Assert.IsTrue(item.Update())
-        Assert.IsFalse(item.isError)
 
         item = getRecordForUpdateAndRead()
         Assert.AreEqual(item.changeLogs.Count, 2)
@@ -263,14 +255,12 @@ Public Class APITest
     ''' <remarks></remarks>
     Private Function getRecordForUpdateAndRead() As kintoneTestModel
 
-        Dim kerror As kintoneError = Nothing
-        Dim result As List(Of kintoneTestModel) = kintoneAPI.Find(Of kintoneTestModel)(QueryForUpdateAndRead, kerror)
+        Dim result As List(Of kintoneTestModel) = kintoneTestModel.Find(Of kintoneTestModel)(QueryForUpdateAndRead)
 
-        If kerror Is Nothing AndAlso result.Count = 1 Then
+        If result IsNot Nothing AndAlso result.Count = 1 Then
             Return result(0)
         Else
-            Console.WriteLine(kerror.message)
-            Throw New Exception("UpdateReadテスト用レコードの読取に失敗しました")
+            Return Nothing
         End If
 
     End Function
@@ -305,10 +295,6 @@ Public Class APITest
         item.record_id = record.record_id
         item.methodinfo = "ExecuteUpdateAndRead"
         item.Update()
-        If item.isError Then
-            Console.WriteLine(item.GetError.message)
-            Throw New Exception("レコードの初期化更新に失敗しました")
-        End If
 
         Return item
 

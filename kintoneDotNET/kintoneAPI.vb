@@ -10,44 +10,65 @@ Imports kintoneDotNET.API.Types
 Namespace API
 
     ''' <summary>
-    ''' kintoneのREST APIをコールするためのクラス
-    ''' https://developers.cybozu.com/ja/kintone-api/appapi-requestjsapi.html
+    ''' kintoneのREST APIをコールするためのクラス<br/>
+    ''' REST APIについては<a href="https://developers.cybozu.com/ja/kintone-api/common-appapi.html">サイボウズ公式のドキュメント</a>参照
     ''' </summary>
-    ''' <remarks></remarks>
+    ''' <remarks>
+    ''' </remarks>
     Public Class kintoneAPI
 
         Protected Const KINTONE_HOST As String = "{0}.cybozu.com"
         Protected Const KINTONE_PORT As String = "443"
-        Protected Const KINTONE_API_FORMAT As String = "https://{0}/k/v1/{1}.json"
-        Public Const KINTONE_READ_LIMIT As Integer = 100 '100件がMAX
+        Protected Const KINTONE_API_FORMAT As String = "https://{0}/k/v1/{1}.json" 'TODO:APIのバージョンが上がれば変更する必要あり
+        Public Const KINTONE_READ_LIMIT As Integer = 100 'TODO:レコード取得の上限値。変更されれば上げる必要あり
 
-        Private _error As New kintoneError
-        Public ReadOnly Property GetError As kintoneError
-            Get
-                Return _error
-            End Get
-        End Property
-
+        ''' <summary>
+        ''' 送受信時のエンコード
+        ''' </summary>
+        ''' <value></value>
+        ''' <returns></returns>
+        ''' <remarks></remarks>
         Public Shared ReadOnly Property ApiEncoding As Encoding
             Get
                 Return Encoding.GetEncoding("UTF-8") 'kintoneのエンコードはUTF-8
             End Get
         End Property
 
-        Public Shared ReadOnly Property Domain As String
+        Private Shared _domain As String = ""
+        ''' <summary>
+        ''' アプリケーションのドメイン。単体で使用することはまずないので、Protected化
+        ''' </summary>
+        ''' <value></value>
+        ''' <returns></returns>
+        ''' <remarks></remarks>
+        Protected Shared ReadOnly Property Domain As String
             Get
-                Dim d As String = ConfigurationManager.AppSettings("ktDomain")
-                Return d
+                If String.IsNullOrEmpty(_domain) Then _domain = ConfigurationManager.AppSettings("ktDomain")
+                Return _domain
             End Get
         End Property
 
+        Private Shared _host As String = ""
+        ''' <summary>
+        ''' kintoneのアクセス先。"xxx.cybozu.com"というようなアドレスで表現される(xxxはDomain)
+        ''' </summary>
+        ''' <value></value>
+        ''' <returns></returns>
+        ''' <remarks></remarks>
         Public Shared ReadOnly Property Host As String
             Get
-                Return String.Format(KINTONE_HOST, Domain)
+                If String.IsNullOrEmpty(_host) Then _host = String.Format(KINTONE_HOST, Domain)
+                Return _host
             End Get
         End Property
 
-        Private _appId As String
+        Private _appId As String = ""
+        ''' <summary>
+        ''' アクセス先アプリケーションのID。コンストラクタで指定
+        ''' </summary>
+        ''' <value></value>
+        ''' <returns></returns>
+        ''' <remarks></remarks>
         Public ReadOnly Property AppId() As String
             Get
                 Return _appId
@@ -55,6 +76,13 @@ Namespace API
         End Property
 
         Private Shared _readLimit As Integer = 0
+        ''' <summary>
+        ''' レコードの読み取り上限を設定する。設定がない場合、APIの上限値が設定る<br/>
+        ''' 上限値については、<a href="https://developers.cybozu.com/ja/kintone-api/apprec-readapi.html">レコード取得</a>の「クエリで条件を指定する」を参照
+        ''' </summary>
+        ''' <value></value>
+        ''' <returns></returns>
+        ''' <remarks></remarks>
         Public Shared Property ReadLimit As Integer
             Get
                 If _readLimit < 1 Then
@@ -70,8 +98,7 @@ Namespace API
 
 
         ''' <summary>
-        ''' Basic認証のためのキーを作成する。形式などについては公式ドキュメントを参照
-        ''' http://developers.cybozu.com/ja/kintone-api/common-appapi.html
+        ''' Basic認証のためのキーを作成する。形式については<a href="http://developers.cybozu.com/ja/kintone-api/common-appapi.html">公式ドキュメント</a>を参照
         ''' </summary>
         ''' <value></value>
         ''' <returns></returns>
@@ -86,7 +113,7 @@ Namespace API
         End Property
 
         ''' <summary>
-        ''' kintone上のログインを行うためのキーを作成する
+        ''' kintoneのログインを行うためのキーを作成する
         ''' </summary>
         ''' <value></value>
         ''' <returns></returns>
@@ -125,18 +152,16 @@ Namespace API
         End Property
 
         ''' <summary>
-        ''' kintoneのアプリケーションIDを引数とする。
-        ''' 引数として受け取ったアプリケーションに対して、レコードの登録や更新などの操作を行う。アプリケーションIDは、URLから判断可能。
-        ''' https://xxx.cybozu.com/k/{アプリケーションID}/
+        ''' アプリケーションIDを指定し、APIの生成を行う
         ''' </summary>
-        ''' <param name="appId">kintoneのアプリケーションID</param>
+        ''' <param name="id">アプリケーションID</param>
         ''' <remarks></remarks>
-        Public Sub New(ByVal appId As String)
-            Me._appId = appId
+        Public Sub New(ByVal id As String)
+            Me._appId = id
         End Sub
 
         ''' <summary>
-        ''' kintoneにアクセスするためのHttpヘッダを作成する
+        ''' kintoneにアクセスするためのHTTPヘッダを作成する<br/>
         ''' </summary>
         ''' <param name="command">record/records、fileなどのREST APIの名称</param>
         ''' <param name="method">POST/GETなど</param>
@@ -173,35 +198,35 @@ Namespace API
         End Function
 
         ''' <summary>
-        ''' 指定された型でデータの抽出を行う
+        ''' 指定された型でデータの抽出を行う<br/>
         ''' ※このメソッドは、kintoneのレコード数上限までしか取得を行いません。全件取得する場合はFindAllを使用してください
         ''' </summary>
-        ''' <typeparam name="T"></typeparam>
         ''' <param name="query">
-        ''' queryの形式については、kintone上の公式ドキュメントを参照
-        ''' https://developers.cybozu.com/ja/kintone-api/apprec-readapi.html
-        ''' item="xxxx"のように、値はダブルクウォーテーションで囲う必要があるため要注意
+        ''' queryの形式については、<a href="https://developers.cybozu.com/ja/kintone-api/apprec-readapi.html">公式ドキュメント</a>を参照<br/>
+        ''' item="xxxx"のように、文字列値は""で囲う必要があるため注意
         ''' </param>
-        ''' <param name="kerror"></param>
         ''' <returns></returns>
         ''' <remarks></remarks>
-        Public Shared Function Find(Of T As AbskintoneModel)(ByVal query As String, Optional ByRef kerror As kintoneError = Nothing) As List(Of T)
+        Public Function Find(Of T As AbskintoneModel)(Optional ByVal query As String = "") As List(Of T)
             Dim model As T = Activator.CreateInstance(Of T)()
             Dim q As String = "app=" + model.app + If(Not String.IsNullOrEmpty(query), "&query=" + HttpUtility.UrlEncode(query), String.Empty)
 
-            Return FindBase(Of T)(q, kerror)
+            Dim kerror As kintoneError = Nothing
+            Dim result As List(Of T) = FindBase(Of T)(q, kerror)
+            If kerror IsNot Nothing Then Throw New kintoneException(kerror)
+
+            Return result
 
         End Function
 
         ''' <summary>
-        ''' レコード上限を超えたレコードの抽出を行う
+        ''' レコード上限を超えたレコードの抽出を行う<br/>
+        ''' ※並列でリクエストを投げ取得を行うため、order等の指定は考慮されない。データ取得後LINQ等で並び替えを行う必要あり
         ''' </summary>
-        ''' <typeparam name="T"></typeparam>
         ''' <param name="query"></param>
-        ''' <param name="kerror"></param>
         ''' <returns></returns>
-        ''' <remarks>orderは考慮されないため、データ取得後LINQ等で並び替えを行ってください</remarks>
-        Public Shared Function FindAll(Of T As AbskintoneModel)(ByVal query As String, Optional ByRef kerror As kintoneError = Nothing) As List(Of T)
+        ''' <remarks></remarks>
+        Public Function FindAll(Of T As AbskintoneModel)(Optional ByVal query As String = "") As List(Of T)
             Dim model As T = Activator.CreateInstance(Of T)()
             Dim q As String = "app=" + model.app + If(Not String.IsNullOrEmpty(query), "&query=" + HttpUtility.UrlEncode(query), "&query=") 'limitを指定する必要があるので、条件指定がなくてもqueryパラメータは付与
 
@@ -210,6 +235,7 @@ Namespace API
             Dim recordStillExist As Boolean = True
             Dim threadCount As Integer = 4 'TODO:並列実行数は様子を見ながら調整
             Dim result As New List(Of T)
+            Dim kex As kintoneException = Nothing
 
             While recordStillExist
                 Dim tasks As New List(Of Task(Of List(Of T)))
@@ -238,10 +264,16 @@ Namespace API
                         End If
                     Next
 
+                Catch ex As kintoneException
+                    kex = ex
                 Catch ex As Exception
-                    kerror = New kintoneError
+                    Dim kerror = New kintoneError
                     kerror.message = ex.Message
-                    recordStillExist = False '例外が発生した場合終了する
+                    kex = New kintoneException(kerror)
+                Finally
+                    If kex IsNot Nothing Then
+                        recordStillExist = False '例外が発生した場合終了する
+                    End If
                 End Try
 
                 If stepCount > 150 Then '無限ループを回避するための保険 threadCount * 150 * ReadLimit (大体 4 * 150 * 100 = 60000件)　で無理ならあきらめたほうがいい
@@ -252,18 +284,20 @@ Namespace API
 
             End While
 
+            If kex IsNot Nothing Then Throw kex
+
             Return result
 
         End Function
 
-        Private Shared Function createTask(Of T As AbskintoneModel)(baseQuery As String, offset As Integer) As Task(Of List(Of T))
+        Private Function createTask(Of T As AbskintoneModel)(baseQuery As String, offset As Integer) As Task(Of List(Of T))
 
             Dim task As New Task(Of List(Of T))(Function()
                                                     Dim query = baseQuery + HttpUtility.UrlEncode(" limit " + ReadLimit.ToString + " offset " + offset.ToString)
                                                     Dim localError As kintoneError = Nothing
                                                     Dim list As List(Of T) = FindBase(Of T)(query, localError)
                                                     If Not localError Is Nothing Then
-                                                        Throw New Exception(localError.message) 'TODO:kintoneErrorを格納できる独自例外があったほうがいいかも
+                                                        Throw New kintoneException(localError)
                                                     End If
                                                     Return list
                                                 End Function
@@ -271,7 +305,7 @@ Namespace API
             Return task
         End Function
 
-        Private Shared Function FindBase(Of T As AbskintoneModel)(ByVal query As String, Optional ByRef kerror As kintoneError = Nothing) As List(Of T)
+        Private Function FindBase(Of T As AbskintoneModel)(ByVal query As String, Optional ByRef kerror As kintoneError = Nothing) As List(Of T)
 
             Dim serialized As kintoneRecords(Of T) = Nothing
             Dim result As New List(Of T)
@@ -299,7 +333,6 @@ Namespace API
         ''' <summary>
         ''' レコード登録を行う
         ''' </summary>
-        ''' <typeparam name="T"></typeparam>
         ''' <param name="obj"></param>
         ''' <returns></returns>
         ''' <remarks></remarks>
@@ -326,13 +359,15 @@ Namespace API
             End Using
 
             Dim list As New List(Of String)
-            Using response As HttpWebResponse = getResponse(request, _error)
+            Dim kerror As kintoneError = Nothing
+            Using response As HttpWebResponse = getResponse(request, kerror)
                 If Not response Is Nothing Then
                     Dim reader As New StreamReader(response.GetResponseStream)
                     Dim serialized As kintoneIds = js.Deserialize(Of kintoneIds)(reader.ReadToEnd)
                     list = serialized.ids
                 End If
             End Using
+            If kerror IsNot Nothing Then Throw New kintoneException(kerror)
 
             Return list
 
@@ -341,7 +376,6 @@ Namespace API
         ''' <summary>
         ''' レコードの更新を行う
         ''' </summary>
-        ''' <typeparam name="T"></typeparam>
         ''' <param name="obj"></param>
         ''' <returns></returns>
         ''' <remarks></remarks>
@@ -364,17 +398,18 @@ Namespace API
                 bodyWriter.Close()
             End Using
 
-            Using response As HttpWebResponse = getResponse(request, _error)
+            Dim kerror As kintoneError = Nothing
+            Using response As HttpWebResponse = getResponse(request, kerror)
             End Using
 
-            Return Not isError()
+            If kerror IsNot Nothing Then Throw New kintoneException(kerror)
+            Return True
 
         End Function
 
         ''' <summary>
         ''' レコードの削除を行う
         ''' </summary>
-        ''' <typeparam name="T"></typeparam>
         ''' <param name="ids"></param>
         ''' <returns></returns>
         ''' <remarks></remarks>
@@ -398,24 +433,25 @@ Namespace API
                 bodyWriter.Close()
             End Using
 
-            Using response As HttpWebResponse = getResponse(request, _error)
+            Dim kerror As kintoneError = Nothing
+            Using response As HttpWebResponse = getResponse(request, kerror)
             End Using
 
-            Return Not isError()
+            If kerror IsNot Nothing Then Throw New kintoneException(kerror)
+            Return True
 
         End Function
 
 
         ''' <summary>
-        ''' ファイルのアップロードを行う
+        ''' ファイルのアップロードを行う<br/>
+        ''' kintone上、複数ファイルをアップロードしてもキーは単一になる。このためアップロードに使用したキーとファイルダウンロードのキーは異なるので注意
         ''' </summary>
         ''' <param name="files"></param>
-        ''' <param name="kerror"></param>
         ''' <returns></returns>
-        ''' <remarks>
-        ''' 複数ファイルをアップロードしても、キーは単一になる模様。アップロードに使用したキーとファイルダウンロードのキーは異なるので注意
+        ''' <remarks> 
         ''' </remarks>
-        Public Shared Function UploadFile(ByVal files As ReadOnlyCollection(Of HttpPostedFileBase), Optional ByRef kerror As kintoneError = Nothing) As String
+        Public Shared Function UploadFile(ByVal files As ReadOnlyCollection(Of HttpPostedFileBase)) As String
 
             Const FORM_NAME As String = "file" 'fileという名前でないとエラーになる
             Dim fileKey As String = ""
@@ -460,42 +496,48 @@ Namespace API
             Dim postDataArray As Byte() = postData.ToArray
             request.GetRequestStream.Write(postDataArray, 0, postDataArray.Length)
 
+            Dim kerror As kintoneError = Nothing
             Using response = getResponse(request, kerror)
                 If Not response Is Nothing Then
                     Dim reader As New StreamReader(response.GetResponseStream)
                     Dim serialized As kintoneFile = js.Deserialize(Of kintoneFile)(reader.ReadToEnd)
                     fileKey = serialized.fileKey
+                ElseIf kerror Is Nothing Then 'エラーは発生していないが、何らかの理由でresponseがNothingの場合
+                    kerror = New kintoneError
+                    kerror.message = "予期しないエラーが発生しました"
                 End If
             End Using
+
+            If kerror IsNot Nothing Then Throw New kintoneException(kerror)
 
             Return fileKey
 
         End Function
 
-        Public Shared Function UploadFile(ByVal file As HttpPostedFile, Optional ByRef kerror As kintoneError = Nothing) As String
-            Return UploadFile(file.ToHttpPostedFileBase, kerror)
+        Public Shared Function UploadFile(ByVal file As HttpPostedFile) As String
+            Return UploadFile(file.ToHttpPostedFileBase)
         End Function
 
 
-        Public Shared Function UploadFile(ByVal files As ReadOnlyCollection(Of HttpPostedFile), Optional ByRef kerror As kintoneError = Nothing) As String
-            Return UploadFile(files.ToHttpPostedFileBaseList, kerror)
+        Public Shared Function UploadFile(ByVal files As ReadOnlyCollection(Of HttpPostedFile)) As String
+            Return UploadFile(files.ToHttpPostedFileBaseList)
         End Function
 
-        Public Shared Function UploadFile(ByVal file As HttpPostedFileBase, Optional ByRef kerror As kintoneError = Nothing) As String
-            Return UploadFile(New ReadOnlyCollection(Of HttpPostedFileBase)(New List(Of HttpPostedFileBase) From {file}), kerror)
+        Public Shared Function UploadFile(ByVal file As HttpPostedFileBase) As String
+            Return UploadFile(New ReadOnlyCollection(Of HttpPostedFileBase)(New List(Of HttpPostedFileBase) From {file}))
         End Function
 
         ''' <summary>
         ''' ファイルのダウンロードを行う
         ''' </summary>
         ''' <param name="fileKey"></param>
-        ''' <param name="kerror"></param>
         ''' <returns></returns>
         ''' <remarks></remarks>
-        Public Shared Function DownloadFile(ByVal fileKey As String, Optional ByRef kerror As kintoneError = Nothing) As MemoryStream
+        Public Shared Function DownloadFile(ByVal fileKey As String) As MemoryStream
 
             Dim result As New MemoryStream
             Dim request As HttpWebRequest = makeHttpHeader("file", "GET", "fileKey=" + fileKey)
+            Dim kerror As kintoneError = Nothing
             Using response As HttpWebResponse = getResponse(request, kerror)
                 If Not response Is Nothing Then
                     response.GetResponseStream.CopyTo(result)
@@ -504,30 +546,22 @@ Namespace API
                 End If
             End Using
 
+            If kerror IsNot Nothing Then Throw New kintoneException(kerror)
+
             Return result
 
         End Function
 
-        Public Function isError() As Boolean
-            Return isError(_error)
-        End Function
-        Public Shared Function isError(ByVal kerror As kintoneError) As Boolean
-            If kerror Is Nothing OrElse String.IsNullOrEmpty(kerror.message) Then
-                Return False
-            Else
-                Return True
-            End If
-        End Function
-
         ''' <summary>
-        ''' レスポンス取得のための共通関数
+        ''' Response取得のための共通関数<br/>
+        ''' 返却値のHttpWebResponseはUsing/End Usingセクションで扱い、使用後破棄されるようにしないと
+        ''' <a href="http://stackoverflow.com/questions/12513078/system-net-webrequest-timeout-error">Timeoutが発生することがある</a>ため注意<br/>
+        ''' Responseの破棄を確実にするため、例外をthrowせずエラー処理は呼び出し側に委譲する<br/>
         ''' </summary>
         ''' <param name="request"></param>
         ''' <param name="kerror"></param>
         ''' <returns></returns>
         ''' <remarks>
-        ''' 返却値のHttpWebResponseはUsing/End Usingセクションで扱い、使用後破棄されるようにしないとTimeoutが発生することがあるため注意
-        ''' http://stackoverflow.com/questions/12513078/system-net-webrequest-timeout-error
         ''' </remarks>
         Private Shared Function getResponse(ByVal request As HttpWebRequest, ByRef kerror As kintoneError) As HttpWebResponse
 
