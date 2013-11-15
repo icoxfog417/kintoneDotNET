@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<shfbBuild product="Sandcastle Help File Builder" version="1.9.7.0" projectFile="D:\project\kintoneDotNET\documents\kintoneDotNETHelp.shfbproj" started="2013/11/12 11:34:39">
+<shfbBuild product="Sandcastle Help File Builder" version="1.9.7.0" projectFile="D:\project\kintoneDotNET\documents\kintoneDotNETHelp.shfbproj" started="2013/11/15 21:28:01">
 <buildStep step="Initializing">
 Finding tools...
 Found Sandcastle tools in &#39;D:\Applications\Sandcastle\&#39;
@@ -18,11 +18,11 @@ Copying XML comments files
 <buildStep step="GenerateSharedContent">
 Generating shared content files (ja-JP, 日本語 (日本))...
 SHFB: Warning BE0003: Sandcastle shared content for the &#39;ja-JP, 日本語 (日本)&#39; language could not be found.  Using &#39;en-US, English (US)&#39; defaults.
-    Last step completed in 00:00:00.1410
+    Last step completed in 00:00:00.1260
 </buildStep>
 <buildStep step="GenerateApiFilter">
 Generating API filter for MRefBuilder...
-    Last step completed in 00:00:00.0030
+    Last step completed in 00:00:00.0270
 </buildStep>
 <buildStep step="GenerateReflectionInfo">
 Generating reflection information...
@@ -31,23 +31,23 @@ Generating reflection information...
   Copyright c 2006-2013, Microsoft Corporation, All Rights Reserved.
   Portions Copyright c 2006-2013, Eric Woodruff, All Rights Reserved.
   Info: Loaded 1 assemblies for reflection and 1 dependency assemblies.
-  Info: Wrote information on 2 namespaces, 16 types, and 101 members
+  Info: Wrote information on 2 namespaces, 20 types, and 115 members
   XslTransform (v2.7.3.0)
   Copyright c 2006-2013, Microsoft Corporation, All Rights Reserved.
   Portions Copyright c 2006-2013, Eric Woodruff, All Rights Reserved.
   Info: Applying XSL transformation &#39;D:\Applications\Sandcastle\ProductionTransforms\MergeDuplicates.xsl&#39;.
-    Last step completed in 00:00:02.1202
+    Last step completed in 00:00:03.1649
 </buildStep>
 <buildStep step="GenerateNamespaceSummaries">
 Generating namespace summary information...
-    Last step completed in 00:00:00.0180
+    Last step completed in 00:00:00.0390
 </buildStep>
 <buildStep step="ApplyVisibilityProperties">
 Applying visibility properties to reflection information file
     4 attribute nodes removed
     0 explicit interface implementations removed
     4 local and base class EII elements removed
-    Last step completed in 00:00:00.0330
+    Last step completed in 00:00:00.0670
 </buildStep>
 <buildStep step="TransformReflectionInfo">
 Transforming reflection output...
@@ -61,12 +61,12 @@ Transforming reflection output...
   Copyright c 2006-2013, Microsoft Corporation, All Rights Reserved.
   Portions Copyright c 2006-2013, Eric Woodruff, All Rights Reserved.
   Info: Applying XSL transformation &#39;D:\Applications\Sandcastle\ProductionTransforms\ReflectionToManifest.xsl&#39;.
-    Last step completed in 00:00:02.0972
+    Last step completed in 00:00:01.4704
 </buildStep>
 <buildStep step="ModifyHelpTopicFilenames">
 Modifying help topic filenames in reflection information file
     No changes required
-    Last step completed in 00:00:00.0500
+    Last step completed in 00:00:00.0240
 </buildStep>
 <buildStep step="CopyStandardContent">
 Copying standard help content...
@@ -458,16 +458,16 @@ D:\Applications\Sandcastle\\Presentation\VS2010\branding -&gt; D:\project\kinton
     D:\Applications\Sandcastle\Presentation\VS2010\branding\ps-instrumentedLink.xslt -> D:\project\kintoneDotNET\documents\Help\Working\branding\ps-instrumentedLink.xslt
     D:\Applications\Sandcastle\Presentation\VS2010\branding\ps-languageSpecificText.xslt -> D:\project\kintoneDotNET\documents\Help\Working\branding\ps-languageSpecificText.xslt
     D:\Applications\Sandcastle\Presentation\VS2010\branding\ps-codesnippet.xslt -> D:\project\kintoneDotNET\documents\Help\Working\branding\ps-codesnippet.xslt
-    Last step completed in 00:00:02.5673
+    Last step completed in 00:00:02.2637
 </buildStep>
 <buildStep step="CopyAdditionalContent">
 Copying additional content files...
 No additional content to copy
-    Last step completed in 00:00:00.0190
+    Last step completed in 00:00:00.0030
 </buildStep>
 <buildStep step="MergeTablesOfContents">
 Merging conceptual and additional tables of contents...
-    Last step completed in 00:00:00.0010
+    Last step completed in 00:00:00.0020
 </buildStep>
 <buildStep step="GenerateIntermediateTableOfContents">
 Generating intermediate table of contents file...
@@ -477,17 +477,17 @@ Generating intermediate table of contents file...
   Portions Copyright c 2006-2013, Eric Woodruff, All Rights Reserved.
   Info: Applying XSL transformation &#39;D:\Applications\Sandcastle\\ProductionTransforms\CreateVSToc.xsl&#39;.
 Generating conceptual content intermediate TOC file...
-    Last step completed in 00:00:00.3410
+    Last step completed in 00:00:00.3161
 </buildStep>
 <buildStep step="CreateBuildAssemblerConfigs">
 Creating Sandcastle configuration files...
     sandcastle.config
-    Last step completed in 00:00:00.5761
+    Last step completed in 00:00:00.7032
 </buildStep>
 <buildStep step="MergeCustomConfigs">
 Merging custom build component configurations
 D:\project\kintoneDotNET\documents\Help\Working\sandcastle.config
-    Last step completed in 00:00:00.2040
+    Last step completed in 00:00:00.0700
 </buildStep>
 <buildStep step="BuildReferenceTopics">
 Building reference help topics...
@@ -588,69 +588,63 @@ Building reference help topics...
   Warn: ResolveReferenceLinksComponent2: [M:kintoneDotNET.API.AbskintoneModel.Create] MSDN URL not found for target &#39;T:System.String&#39;.
   Warn: ResolveReferenceLinksComponent2: [M:kintoneDotNET.API.AbskintoneModel.Create] MSDN URL not found for target &#39;T:System.Collections.Generic.List`1&#39;.
   Warn: ResolveReferenceLinksComponent2: [M:kintoneDotNET.API.AbskintoneModel.Create] MSDN URL not found for target &#39;T:System.String&#39;.
-  Warn: ShowMissingComponent: [P:kintoneDotNET.API.AbskintoneModel.create_time] Missing &lt;summary&gt; documentation
-  Warn: ResolveReferenceLinksComponent2: [P:kintoneDotNET.API.AbskintoneModel.create_time] MSDN URL not found for target &#39;T:System.DateTime&#39;.
-  Warn: ResolveReferenceLinksComponent2: [P:kintoneDotNET.API.AbskintoneModel.create_time] MSDN URL not found for target &#39;T:System.DateTime&#39;.
   Warn: ShowMissingComponent: [P:kintoneDotNET.API.AbskintoneModel.create_usr] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [P:kintoneDotNET.API.AbskintoneModel.created_time] Missing &lt;summary&gt; documentation
+  Warn: ResolveReferenceLinksComponent2: [P:kintoneDotNET.API.AbskintoneModel.created_time] MSDN URL not found for target &#39;T:System.DateTime&#39;.
+  Warn: ResolveReferenceLinksComponent2: [P:kintoneDotNET.API.AbskintoneModel.created_time] MSDN URL not found for target &#39;T:System.DateTime&#39;.
   Warn: ShowMissingComponent: [M:kintoneDotNET.API.AbskintoneModel.Delete] Missing &lt;summary&gt; documentation
   Warn: ShowMissingComponent: [M:kintoneDotNET.API.AbskintoneModel.Delete] Missing &lt;returns&gt; documentation
   Warn: ResolveReferenceLinksComponent2: [M:kintoneDotNET.API.AbskintoneModel.Delete] MSDN URL not found for target &#39;T:System.Boolean&#39;.
   Warn: ResolveReferenceLinksComponent2: [M:kintoneDotNET.API.AbskintoneModel.Delete] MSDN URL not found for target &#39;T:System.Boolean&#39;.
-  Warn: ShowMissingComponent: [M:kintoneDotNET.API.AbskintoneModel.GetAPI] Missing &lt;returns&gt; documentation
-  Warn: ShowMissingComponent: [M:kintoneDotNET.API.AbskintoneModel.GetError] Missing &lt;returns&gt; documentation
-  Warn: ShowMissingComponent: [M:kintoneDotNET.API.AbskintoneModel.InvokeAPI(System.String,System.Object[])] Missing &lt;returns&gt; documentation
-  Warn: ShowMissingComponent: [M:kintoneDotNET.API.AbskintoneModel.InvokeAPI(System.String,System.Object[])] Missing &lt;param name=&quot;arguments&quot;/&gt; documentation
-  Warn: ResolveReferenceLinksComponent2: [M:kintoneDotNET.API.AbskintoneModel.InvokeAPI(System.String,System.Object[])] MSDN URL not found for target &#39;T:System.String&#39;.
-  Warn: ResolveReferenceLinksComponent2: [M:kintoneDotNET.API.AbskintoneModel.InvokeAPI(System.String,System.Object[])] MSDN URL not found for target &#39;T:System.Object&#39;.
-  Warn: ResolveReferenceLinksComponent2: [M:kintoneDotNET.API.AbskintoneModel.InvokeAPI(System.String,System.Object[])] MSDN URL not found for target &#39;T:System.Object&#39;.
-  Warn: ResolveReferenceLinksComponent2: [M:kintoneDotNET.API.AbskintoneModel.InvokeAPI(System.String,System.Object[])] MSDN URL not found for target &#39;T:System.String&#39;.
-  Warn: ResolveReferenceLinksComponent2: [M:kintoneDotNET.API.AbskintoneModel.InvokeAPI(System.String,System.Object[])] MSDN URL not found for target &#39;T:System.Object&#39;.
-  Warn: ResolveReferenceLinksComponent2: [M:kintoneDotNET.API.AbskintoneModel.InvokeAPI(System.String,System.Object[])] MSDN URL not found for target &#39;T:System.Object&#39;.
-  Warn: ShowMissingComponent: [M:kintoneDotNET.API.AbskintoneModel.isError] Missing &lt;summary&gt; documentation
-  Warn: ShowMissingComponent: [M:kintoneDotNET.API.AbskintoneModel.isError] Missing &lt;returns&gt; documentation
-  Warn: ResolveReferenceLinksComponent2: [M:kintoneDotNET.API.AbskintoneModel.isError] MSDN URL not found for target &#39;T:System.Boolean&#39;.
-  Warn: ResolveReferenceLinksComponent2: [M:kintoneDotNET.API.AbskintoneModel.isError] MSDN URL not found for target &#39;T:System.Boolean&#39;.
+  Warn: ShowMissingComponent: [M:kintoneDotNET.API.AbskintoneModel.Delete(System.Collections.Generic.List{{System.String}})] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [M:kintoneDotNET.API.AbskintoneModel.Delete(System.Collections.Generic.List{{System.String}})] Missing &lt;returns&gt; documentation
+  Warn: ShowMissingComponent: [M:kintoneDotNET.API.AbskintoneModel.Delete(System.Collections.Generic.List{{System.String}})] Missing &lt;param name=&quot;ids&quot;/&gt; documentation
+  Warn: ResolveReferenceLinksComponent2: [M:kintoneDotNET.API.AbskintoneModel.Delete(System.Collections.Generic.List{{System.String}})] MSDN URL not found for target &#39;T:System.Collections.Generic.List`1&#39;.
+  Warn: ResolveReferenceLinksComponent2: [M:kintoneDotNET.API.AbskintoneModel.Delete(System.Collections.Generic.List{{System.String}})] MSDN URL not found for target &#39;T:System.String&#39;.
+  Warn: ResolveReferenceLinksComponent2: [M:kintoneDotNET.API.AbskintoneModel.Delete(System.Collections.Generic.List{{System.String}})] MSDN URL not found for target &#39;T:System.Boolean&#39;.
+  Warn: ResolveReferenceLinksComponent2: [M:kintoneDotNET.API.AbskintoneModel.Delete(System.Collections.Generic.List{{System.String}})] MSDN URL not found for target &#39;T:System.Collections.Generic.List`1&#39;.
+  Warn: ResolveReferenceLinksComponent2: [M:kintoneDotNET.API.AbskintoneModel.Delete(System.Collections.Generic.List{{System.String}})] MSDN URL not found for target &#39;T:System.String&#39;.
+  Warn: ResolveReferenceLinksComponent2: [M:kintoneDotNET.API.AbskintoneModel.Delete(System.Collections.Generic.List{{System.String}})] MSDN URL not found for target &#39;T:System.Boolean&#39;.
+  Warn: ShowMissingComponent: [M:kintoneDotNET.API.AbskintoneModel.Find``1(System.String)] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [M:kintoneDotNET.API.AbskintoneModel.Find``1(System.String)] Missing &lt;typeparam name=&quot;T&quot;/&gt; documentation
+  Warn: ShowMissingComponent: [M:kintoneDotNET.API.AbskintoneModel.Find``1(System.String)] Missing &lt;returns&gt; documentation
+  Warn: ShowMissingComponent: [M:kintoneDotNET.API.AbskintoneModel.Find``1(System.String)] Missing &lt;param name=&quot;query&quot;/&gt; documentation
+  Warn: ResolveReferenceLinksComponent2: [M:kintoneDotNET.API.AbskintoneModel.Find``1(System.String)] MSDN URL not found for target &#39;T:System.String&#39;.
+  Warn: ResolveReferenceLinksComponent2: [M:kintoneDotNET.API.AbskintoneModel.Find``1(System.String)] MSDN URL not found for target &#39;T:System.Collections.Generic.List`1&#39;.
+  Warn: ResolveReferenceLinksComponent2: [M:kintoneDotNET.API.AbskintoneModel.Find``1(System.String)] MSDN URL not found for target &#39;T:System.String&#39;.
+  Warn: ResolveReferenceLinksComponent2: [M:kintoneDotNET.API.AbskintoneModel.Find``1(System.String)] MSDN URL not found for target &#39;T:System.Collections.Generic.List`1&#39;.
+  Warn: ShowMissingComponent: [M:kintoneDotNET.API.AbskintoneModel.FindAll``1(System.String)] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [M:kintoneDotNET.API.AbskintoneModel.FindAll``1(System.String)] Missing &lt;typeparam name=&quot;T&quot;/&gt; documentation
+  Warn: ShowMissingComponent: [M:kintoneDotNET.API.AbskintoneModel.FindAll``1(System.String)] Missing &lt;returns&gt; documentation
+  Warn: ShowMissingComponent: [M:kintoneDotNET.API.AbskintoneModel.FindAll``1(System.String)] Missing &lt;param name=&quot;query&quot;/&gt; documentation
+  Warn: ResolveReferenceLinksComponent2: [M:kintoneDotNET.API.AbskintoneModel.FindAll``1(System.String)] MSDN URL not found for target &#39;T:System.String&#39;.
+  Warn: ResolveReferenceLinksComponent2: [M:kintoneDotNET.API.AbskintoneModel.FindAll``1(System.String)] MSDN URL not found for target &#39;T:System.Collections.Generic.List`1&#39;.
+  Warn: ResolveReferenceLinksComponent2: [M:kintoneDotNET.API.AbskintoneModel.FindAll``1(System.String)] MSDN URL not found for target &#39;T:System.String&#39;.
+  Warn: ResolveReferenceLinksComponent2: [M:kintoneDotNET.API.AbskintoneModel.FindAll``1(System.String)] MSDN URL not found for target &#39;T:System.Collections.Generic.List`1&#39;.
+  Warn: ShowMissingComponent: [M:kintoneDotNET.API.AbskintoneModel.GetDefaultToPropertyDic] Missing &lt;returns&gt; documentation
+  Warn: ResolveReferenceLinksComponent2: [M:kintoneDotNET.API.AbskintoneModel.GetDefaultToPropertyDic] MSDN web service failed.  No further look ups will be performed for this build.
+  Reason: HTTP ステータス 407: Proxy Authentication Required ( The ISA Server requires authorization to fulfill the request. Access to the Web Proxy filter is denied.  ) で要求が失敗しました。
+  Warn: ResolveReferenceLinksComponent2: [M:kintoneDotNET.API.AbskintoneModel.GetDefaultToPropertyDic] MSDN URL not found for target &#39;T:System.Collections.Generic.Dictionary`2&#39;.
+  Warn: ResolveReferenceLinksComponent2: [M:kintoneDotNET.API.AbskintoneModel.GetDefaultToPropertyDic] MSDN URL not found for target &#39;T:System.String&#39;.
+  Warn: ResolveReferenceLinksComponent2: [M:kintoneDotNET.API.AbskintoneModel.GetDefaultToPropertyDic] MSDN URL not found for target &#39;T:System.String&#39;.
+  Warn: ShowMissingComponent: [M:kintoneDotNET.API.AbskintoneModel.GetPropertyToDefaultDic] Missing &lt;returns&gt; documentation
+  Warn: ResolveReferenceLinksComponent2: [M:kintoneDotNET.API.AbskintoneModel.GetPropertyToDefaultDic] MSDN URL not found for target &#39;T:System.Collections.Generic.Dictionary`2&#39;.
+  Warn: ResolveReferenceLinksComponent2: [M:kintoneDotNET.API.AbskintoneModel.GetPropertyToDefaultDic] MSDN URL not found for target &#39;T:System.String&#39;.
+  Warn: ResolveReferenceLinksComponent2: [M:kintoneDotNET.API.AbskintoneModel.GetPropertyToDefaultDic] MSDN URL not found for target &#39;T:System.String&#39;.
   Warn: ShowMissingComponent: [P:kintoneDotNET.API.AbskintoneModel.record_id] Missing &lt;summary&gt; documentation
   Warn: ResolveReferenceLinksComponent2: [P:kintoneDotNET.API.AbskintoneModel.record_id] MSDN URL not found for target &#39;T:System.String&#39;.
-  Warn: ResolveReferenceLinksComponent2: [P:kintoneDotNET.API.AbskintoneModel.record_id] MSDN URL not found for target &#39;T:System.String&#39;.
-  Warn: ResolveReferenceLinksComponent2: [P:kintoneDotNET.API.AbskintoneModel.record_show_url] MSDN URL not found for target &#39;T:System.String&#39;.
-  Warn: ResolveReferenceLinksComponent2: [P:kintoneDotNET.API.AbskintoneModel.record_show_url] MSDN URL not found for target &#39;T:System.String&#39;.
   Warn: ResolveReferenceLinksComponent2: [P:kintoneDotNET.API.AbskintoneModel.record_show_url] MSDN URL not found for target &#39;T:System.String&#39;.
   Warn: ResolveReferenceLinksComponent2: [P:kintoneDotNET.API.AbskintoneModel.record_show_url] MSDN URL not found for target &#39;T:System.String&#39;.
   Warn: ShowMissingComponent: [P:kintoneDotNET.API.AbskintoneModel.status] Missing &lt;summary&gt; documentation
   Warn: ResolveReferenceLinksComponent2: [P:kintoneDotNET.API.AbskintoneModel.status] MSDN URL not found for target &#39;T:System.String&#39;.
-  Warn: ResolveReferenceLinksComponent2: [P:kintoneDotNET.API.AbskintoneModel.status] MSDN URL not found for target &#39;T:System.String&#39;.
   Warn: ShowMissingComponent: [M:kintoneDotNET.API.AbskintoneModel.Update] Missing &lt;summary&gt; documentation
   Warn: ShowMissingComponent: [M:kintoneDotNET.API.AbskintoneModel.Update] Missing &lt;returns&gt; documentation
   Warn: ResolveReferenceLinksComponent2: [M:kintoneDotNET.API.AbskintoneModel.Update] MSDN URL not found for target &#39;T:System.Boolean&#39;.
-  Warn: ResolveReferenceLinksComponent2: [M:kintoneDotNET.API.AbskintoneModel.Update] MSDN URL not found for target &#39;T:System.Boolean&#39;.
-  Warn: ShowMissingComponent: [P:kintoneDotNET.API.AbskintoneModel.update_time] Missing &lt;summary&gt; documentation
-  Warn: ResolveReferenceLinksComponent2: [P:kintoneDotNET.API.AbskintoneModel.update_time] MSDN URL not found for target &#39;T:System.DateTime&#39;.
-  Warn: ResolveReferenceLinksComponent2: [P:kintoneDotNET.API.AbskintoneModel.update_time] MSDN URL not found for target &#39;T:System.DateTime&#39;.
   Warn: ShowMissingComponent: [P:kintoneDotNET.API.AbskintoneModel.update_usr] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [P:kintoneDotNET.API.AbskintoneModel.updated_time] Missing &lt;summary&gt; documentation
+  Warn: ResolveReferenceLinksComponent2: [P:kintoneDotNET.API.AbskintoneModel.updated_time] MSDN URL not found for target &#39;T:System.DateTime&#39;.
   Warn: ShowMissingComponent: [P:kintoneDotNET.API.AbskintoneModel.work_usr] Missing &lt;summary&gt; documentation
   Warn: ResolveReferenceLinksComponent2: [T:kintoneDotNET.API.kintoneAPI] MSDN URL not found for target &#39;T:System.Object&#39;.
-  Warn: ResolveReferenceLinksComponent2: [T:kintoneDotNET.API.kintoneAPI] MSDN URL not found for target &#39;T:System.Object&#39;.
-  Warn: ResolveReferenceLinksComponent2: [AllMembers.T:kintoneDotNET.API.kintoneAPI] MSDN URL not found for target &#39;M:System.Object.Equals(System.Object)&#39;.
-  Warn: ResolveReferenceLinksComponent2: [AllMembers.T:kintoneDotNET.API.kintoneAPI] MSDN URL not found for target &#39;T:System.Object&#39;.
-  Warn: ResolveReferenceLinksComponent2: [AllMembers.T:kintoneDotNET.API.kintoneAPI] MSDN URL not found for target &#39;T:System.Object&#39;.
-  Warn: ResolveReferenceLinksComponent2: [AllMembers.T:kintoneDotNET.API.kintoneAPI] MSDN URL not found for target &#39;T:System.Object&#39;.
-  Warn: ResolveReferenceLinksComponent2: [AllMembers.T:kintoneDotNET.API.kintoneAPI] MSDN URL not found for target &#39;M:System.Object.Finalize&#39;.
-  Warn: ResolveReferenceLinksComponent2: [AllMembers.T:kintoneDotNET.API.kintoneAPI] MSDN URL not found for target &#39;T:System.Object&#39;.
-  Warn: ResolveReferenceLinksComponent2: [AllMembers.T:kintoneDotNET.API.kintoneAPI] MSDN URL not found for target &#39;T:System.Object&#39;.
-  Warn: ResolveReferenceLinksComponent2: [AllMembers.T:kintoneDotNET.API.kintoneAPI] MSDN URL not found for target &#39;T:System.Object&#39;.
-  Warn: ResolveReferenceLinksComponent2: [AllMembers.T:kintoneDotNET.API.kintoneAPI] MSDN URL not found for target &#39;M:System.Object.GetHashCode&#39;.
-  Warn: ResolveReferenceLinksComponent2: [AllMembers.T:kintoneDotNET.API.kintoneAPI] MSDN URL not found for target &#39;T:System.Object&#39;.
-  Warn: ResolveReferenceLinksComponent2: [AllMembers.T:kintoneDotNET.API.kintoneAPI] MSDN URL not found for target &#39;M:System.Object.GetType&#39;.
-  Warn: ResolveReferenceLinksComponent2: [AllMembers.T:kintoneDotNET.API.kintoneAPI] MSDN URL not found for target &#39;T:System.Type&#39;.
-  Warn: ResolveReferenceLinksComponent2: [AllMembers.T:kintoneDotNET.API.kintoneAPI] MSDN URL not found for target &#39;T:System.Object&#39;.
-  Warn: ResolveReferenceLinksComponent2: [AllMembers.T:kintoneDotNET.API.kintoneAPI] MSDN URL not found for target &#39;M:System.Object.MemberwiseClone&#39;.
-  Warn: ResolveReferenceLinksComponent2: [AllMembers.T:kintoneDotNET.API.kintoneAPI] MSDN URL not found for target &#39;T:System.Object&#39;.
-  Warn: ResolveReferenceLinksComponent2: [AllMembers.T:kintoneDotNET.API.kintoneAPI] MSDN URL not found for target &#39;T:System.Object&#39;.
-  Warn: ResolveReferenceLinksComponent2: [AllMembers.T:kintoneDotNET.API.kintoneAPI] MSDN URL not found for target &#39;M:System.Object.ToString&#39;.
-  Warn: ResolveReferenceLinksComponent2: [AllMembers.T:kintoneDotNET.API.kintoneAPI] MSDN URL not found for target &#39;T:System.Object&#39;.
-  Warn: ResolveReferenceLinksComponent2: [AllMembers.T:kintoneDotNET.API.kintoneAPI] MSDN URL not found for target &#39;T:System.String&#39;.
-  Warn: ResolveReferenceLinksComponent2: [AllMembers.T:kintoneDotNET.API.kintoneAPI] MSDN URL not found for target &#39;T:System.Object&#39;.
   Warn: ResolveReferenceLinksComponent2: [AllMembers.T:kintoneDotNET.API.kintoneAPI] MSDN URL not found for target &#39;M:System.Object.Equals(System.Object)&#39;.
   Warn: ResolveReferenceLinksComponent2: [AllMembers.T:kintoneDotNET.API.kintoneAPI] MSDN URL not found for target &#39;T:System.Object&#39;.
   Warn: ResolveReferenceLinksComponent2: [AllMembers.T:kintoneDotNET.API.kintoneAPI] MSDN URL not found for target &#39;T:System.Object&#39;.
@@ -691,43 +685,16 @@ Building reference help topics...
   Warn: ResolveReferenceLinksComponent2: [Methods.T:kintoneDotNET.API.kintoneAPI] MSDN URL not found for target &#39;T:System.Object&#39;.
   Warn: ResolveReferenceLinksComponent2: [Methods.T:kintoneDotNET.API.kintoneAPI] MSDN URL not found for target &#39;T:System.String&#39;.
   Warn: ResolveReferenceLinksComponent2: [Methods.T:kintoneDotNET.API.kintoneAPI] MSDN URL not found for target &#39;T:System.Object&#39;.
-  Warn: ResolveReferenceLinksComponent2: [Methods.T:kintoneDotNET.API.kintoneAPI] MSDN URL not found for target &#39;M:System.Object.Equals(System.Object)&#39;.
-  Warn: ResolveReferenceLinksComponent2: [Methods.T:kintoneDotNET.API.kintoneAPI] MSDN URL not found for target &#39;T:System.Object&#39;.
-  Warn: ResolveReferenceLinksComponent2: [Methods.T:kintoneDotNET.API.kintoneAPI] MSDN URL not found for target &#39;T:System.Object&#39;.
-  Warn: ResolveReferenceLinksComponent2: [Methods.T:kintoneDotNET.API.kintoneAPI] MSDN URL not found for target &#39;T:System.Object&#39;.
-  Warn: ResolveReferenceLinksComponent2: [Methods.T:kintoneDotNET.API.kintoneAPI] MSDN URL not found for target &#39;M:System.Object.Finalize&#39;.
-  Warn: ResolveReferenceLinksComponent2: [Methods.T:kintoneDotNET.API.kintoneAPI] MSDN URL not found for target &#39;T:System.Object&#39;.
-  Warn: ResolveReferenceLinksComponent2: [Methods.T:kintoneDotNET.API.kintoneAPI] MSDN URL not found for target &#39;T:System.Object&#39;.
-  Warn: ResolveReferenceLinksComponent2: [Methods.T:kintoneDotNET.API.kintoneAPI] MSDN URL not found for target &#39;T:System.Object&#39;.
-  Warn: ResolveReferenceLinksComponent2: [Methods.T:kintoneDotNET.API.kintoneAPI] MSDN URL not found for target &#39;M:System.Object.GetHashCode&#39;.
-  Warn: ResolveReferenceLinksComponent2: [Methods.T:kintoneDotNET.API.kintoneAPI] MSDN URL not found for target &#39;T:System.Object&#39;.
-  Warn: ResolveReferenceLinksComponent2: [Methods.T:kintoneDotNET.API.kintoneAPI] MSDN URL not found for target &#39;M:System.Object.GetType&#39;.
-  Warn: ResolveReferenceLinksComponent2: [Methods.T:kintoneDotNET.API.kintoneAPI] MSDN URL not found for target &#39;T:System.Type&#39;.
-  Warn: ResolveReferenceLinksComponent2: [Methods.T:kintoneDotNET.API.kintoneAPI] MSDN URL not found for target &#39;T:System.Object&#39;.
-  Warn: ResolveReferenceLinksComponent2: [Methods.T:kintoneDotNET.API.kintoneAPI] MSDN URL not found for target &#39;M:System.Object.MemberwiseClone&#39;.
-  Warn: ResolveReferenceLinksComponent2: [Methods.T:kintoneDotNET.API.kintoneAPI] MSDN URL not found for target &#39;T:System.Object&#39;.
-  Warn: ResolveReferenceLinksComponent2: [Methods.T:kintoneDotNET.API.kintoneAPI] MSDN URL not found for target &#39;T:System.Object&#39;.
-  Warn: ResolveReferenceLinksComponent2: [Methods.T:kintoneDotNET.API.kintoneAPI] MSDN URL not found for target &#39;M:System.Object.ToString&#39;.
-  Warn: ResolveReferenceLinksComponent2: [Methods.T:kintoneDotNET.API.kintoneAPI] MSDN URL not found for target &#39;T:System.Object&#39;.
-  Warn: ResolveReferenceLinksComponent2: [Methods.T:kintoneDotNET.API.kintoneAPI] MSDN URL not found for target &#39;T:System.String&#39;.
-  Warn: ResolveReferenceLinksComponent2: [Methods.T:kintoneDotNET.API.kintoneAPI] MSDN URL not found for target &#39;T:System.Object&#39;.
-  Warn: ResolveReferenceLinksComponent2: [M:kintoneDotNET.API.kintoneAPI.#ctor(System.String)] MSDN URL not found for target &#39;T:System.String&#39;.
   Warn: ResolveReferenceLinksComponent2: [M:kintoneDotNET.API.kintoneAPI.#ctor(System.String)] MSDN URL not found for target &#39;T:System.String&#39;.
   Warn: ResolveReferenceLinksComponent2: [P:kintoneDotNET.API.kintoneAPI.AccessKey] MSDN URL not found for target &#39;T:System.String&#39;.
   Warn: ResolveReferenceLinksComponent2: [P:kintoneDotNET.API.kintoneAPI.AccessKey] MSDN URL not found for target &#39;T:System.String&#39;.
-  Warn: ResolveReferenceLinksComponent2: [P:kintoneDotNET.API.kintoneAPI.AccessKey] MSDN URL not found for target &#39;T:System.String&#39;.
-  Warn: ResolveReferenceLinksComponent2: [P:kintoneDotNET.API.kintoneAPI.AccessKey] MSDN URL not found for target &#39;T:System.String&#39;.
-  Warn: ShowMissingComponent: [P:kintoneDotNET.API.kintoneAPI.ApiEncoding] Missing &lt;summary&gt; documentation
   Warn: ResolveReferenceLinksComponent2: [P:kintoneDotNET.API.kintoneAPI.ApiEncoding] MSDN URL not found for target &#39;T:System.Text.Encoding&#39;.
   Warn: ResolveReferenceLinksComponent2: [P:kintoneDotNET.API.kintoneAPI.ApiEncoding] MSDN URL not found for target &#39;T:System.Text.Encoding&#39;.
-  Warn: ShowMissingComponent: [P:kintoneDotNET.API.kintoneAPI.AppId] Missing &lt;summary&gt; documentation
   Warn: ResolveReferenceLinksComponent2: [P:kintoneDotNET.API.kintoneAPI.AppId] MSDN URL not found for target &#39;T:System.String&#39;.
   Warn: ResolveReferenceLinksComponent2: [P:kintoneDotNET.API.kintoneAPI.AppId] MSDN URL not found for target &#39;T:System.String&#39;.
   Warn: ShowMissingComponent: [M:kintoneDotNET.API.kintoneAPI.Create``1(``0)] Missing &lt;typeparam name=&quot;T&quot;/&gt; documentation
   Warn: ShowMissingComponent: [M:kintoneDotNET.API.kintoneAPI.Create``1(``0)] Missing &lt;returns&gt; documentation
   Warn: ShowMissingComponent: [M:kintoneDotNET.API.kintoneAPI.Create``1(``0)] Missing &lt;param name=&quot;obj&quot;/&gt; documentation
-  Warn: ResolveReferenceLinksComponent2: [M:kintoneDotNET.API.kintoneAPI.Create``1(``0)] MSDN URL not found for target &#39;T:System.Collections.Generic.List`1&#39;.
-  Warn: ResolveReferenceLinksComponent2: [M:kintoneDotNET.API.kintoneAPI.Create``1(``0)] MSDN URL not found for target &#39;T:System.String&#39;.
   Warn: ResolveReferenceLinksComponent2: [M:kintoneDotNET.API.kintoneAPI.Create``1(``0)] MSDN URL not found for target &#39;T:System.Collections.Generic.List`1&#39;.
   Warn: ResolveReferenceLinksComponent2: [M:kintoneDotNET.API.kintoneAPI.Create``1(``0)] MSDN URL not found for target &#39;T:System.String&#39;.
   Warn: ShowMissingComponent: [M:kintoneDotNET.API.kintoneAPI.Delete``1(System.Collections.Generic.List{{System.String}})] Missing &lt;typeparam name=&quot;T&quot;/&gt; documentation
@@ -736,41 +703,23 @@ Building reference help topics...
   Warn: ResolveReferenceLinksComponent2: [M:kintoneDotNET.API.kintoneAPI.Delete``1(System.Collections.Generic.List{{System.String}})] MSDN URL not found for target &#39;T:System.Collections.Generic.List`1&#39;.
   Warn: ResolveReferenceLinksComponent2: [M:kintoneDotNET.API.kintoneAPI.Delete``1(System.Collections.Generic.List{{System.String}})] MSDN URL not found for target &#39;T:System.String&#39;.
   Warn: ResolveReferenceLinksComponent2: [M:kintoneDotNET.API.kintoneAPI.Delete``1(System.Collections.Generic.List{{System.String}})] MSDN URL not found for target &#39;T:System.Boolean&#39;.
-  Warn: ResolveReferenceLinksComponent2: [M:kintoneDotNET.API.kintoneAPI.Delete``1(System.Collections.Generic.List{{System.String}})] MSDN URL not found for target &#39;T:System.Collections.Generic.List`1&#39;.
-  Warn: ResolveReferenceLinksComponent2: [M:kintoneDotNET.API.kintoneAPI.Delete``1(System.Collections.Generic.List{{System.String}})] MSDN URL not found for target &#39;T:System.String&#39;.
-  Warn: ResolveReferenceLinksComponent2: [M:kintoneDotNET.API.kintoneAPI.Delete``1(System.Collections.Generic.List{{System.String}})] MSDN URL not found for target &#39;T:System.Boolean&#39;.
-  Warn: ShowMissingComponent: [P:kintoneDotNET.API.kintoneAPI.Domain] Missing &lt;summary&gt; documentation
   Warn: ResolveReferenceLinksComponent2: [P:kintoneDotNET.API.kintoneAPI.Domain] MSDN URL not found for target &#39;T:System.String&#39;.
   Warn: ResolveReferenceLinksComponent2: [P:kintoneDotNET.API.kintoneAPI.Domain] MSDN URL not found for target &#39;T:System.String&#39;.
-  Warn: ShowMissingComponent: [M:kintoneDotNET.API.kintoneAPI.DownloadFile(System.String,kintoneDotNET.API.Types.kintoneError@)] Missing &lt;returns&gt; documentation
-  Warn: ShowMissingComponent: [M:kintoneDotNET.API.kintoneAPI.DownloadFile(System.String,kintoneDotNET.API.Types.kintoneError@)] Missing &lt;param name=&quot;fileKey&quot;/&gt; documentation
-  Warn: ShowMissingComponent: [M:kintoneDotNET.API.kintoneAPI.DownloadFile(System.String,kintoneDotNET.API.Types.kintoneError@)] Missing &lt;param name=&quot;kerror&quot;/&gt; documentation
-  Warn: ResolveReferenceLinksComponent2: [M:kintoneDotNET.API.kintoneAPI.DownloadFile(System.String,kintoneDotNET.API.Types.kintoneError@)] MSDN URL not found for target &#39;T:System.String&#39;.
-  Warn: ResolveReferenceLinksComponent2: [M:kintoneDotNET.API.kintoneAPI.DownloadFile(System.String,kintoneDotNET.API.Types.kintoneError@)] MSDN web service failed.  No further look ups will be performed for this build.
-  Reason: HTTP ステータス 407: Proxy Authentication Required ( The ISA Server requires authorization to fulfill the request. Access to the Web Proxy filter is denied.  ) で要求が失敗しました。
-  Warn: ResolveReferenceLinksComponent2: [M:kintoneDotNET.API.kintoneAPI.DownloadFile(System.String,kintoneDotNET.API.Types.kintoneError@)] MSDN URL not found for target &#39;T:System.String&#39;.
-  Warn: ResolveReferenceLinksComponent2: [M:kintoneDotNET.API.kintoneAPI.DownloadFile(System.String,kintoneDotNET.API.Types.kintoneError@)] MSDN URL not found for target &#39;T:System.IO.MemoryStream&#39;.
-  Warn: ShowMissingComponent: [M:kintoneDotNET.API.kintoneAPI.Find``1(System.String,kintoneDotNET.API.Types.kintoneError@)] Missing &lt;typeparam name=&quot;T&quot;/&gt; documentation
-  Warn: ShowMissingComponent: [M:kintoneDotNET.API.kintoneAPI.Find``1(System.String,kintoneDotNET.API.Types.kintoneError@)] Missing &lt;returns&gt; documentation
-  Warn: ShowMissingComponent: [M:kintoneDotNET.API.kintoneAPI.Find``1(System.String,kintoneDotNET.API.Types.kintoneError@)] Missing &lt;param name=&quot;kerror&quot;/&gt; documentation
-  Warn: ResolveReferenceLinksComponent2: [M:kintoneDotNET.API.kintoneAPI.Find``1(System.String,kintoneDotNET.API.Types.kintoneError@)] MSDN URL not found for target &#39;T:System.String&#39;.
-  Warn: ResolveReferenceLinksComponent2: [M:kintoneDotNET.API.kintoneAPI.Find``1(System.String,kintoneDotNET.API.Types.kintoneError@)] MSDN URL not found for target &#39;T:System.Collections.Generic.List`1&#39;.
-  Warn: ShowMissingComponent: [M:kintoneDotNET.API.kintoneAPI.FindAll``1(System.String,kintoneDotNET.API.Types.kintoneError@)] Missing &lt;typeparam name=&quot;T&quot;/&gt; documentation
-  Warn: ShowMissingComponent: [M:kintoneDotNET.API.kintoneAPI.FindAll``1(System.String,kintoneDotNET.API.Types.kintoneError@)] Missing &lt;returns&gt; documentation
-  Warn: ShowMissingComponent: [M:kintoneDotNET.API.kintoneAPI.FindAll``1(System.String,kintoneDotNET.API.Types.kintoneError@)] Missing &lt;param name=&quot;query&quot;/&gt; documentation
-  Warn: ShowMissingComponent: [M:kintoneDotNET.API.kintoneAPI.FindAll``1(System.String,kintoneDotNET.API.Types.kintoneError@)] Missing &lt;param name=&quot;kerror&quot;/&gt; documentation
-  Warn: ResolveReferenceLinksComponent2: [M:kintoneDotNET.API.kintoneAPI.FindAll``1(System.String,kintoneDotNET.API.Types.kintoneError@)] MSDN URL not found for target &#39;T:System.String&#39;.
-  Warn: ResolveReferenceLinksComponent2: [M:kintoneDotNET.API.kintoneAPI.FindAll``1(System.String,kintoneDotNET.API.Types.kintoneError@)] MSDN URL not found for target &#39;T:System.Collections.Generic.List`1&#39;.
-  Warn: ShowMissingComponent: [P:kintoneDotNET.API.kintoneAPI.GetError] Missing &lt;summary&gt; documentation
-  Warn: ShowMissingComponent: [P:kintoneDotNET.API.kintoneAPI.Host] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [M:kintoneDotNET.API.kintoneAPI.DownloadFile(System.String)] Missing &lt;returns&gt; documentation
+  Warn: ShowMissingComponent: [M:kintoneDotNET.API.kintoneAPI.DownloadFile(System.String)] Missing &lt;param name=&quot;fileKey&quot;/&gt; documentation
+  Warn: ResolveReferenceLinksComponent2: [M:kintoneDotNET.API.kintoneAPI.DownloadFile(System.String)] MSDN URL not found for target &#39;T:System.String&#39;.
+  Warn: ResolveReferenceLinksComponent2: [M:kintoneDotNET.API.kintoneAPI.DownloadFile(System.String)] MSDN URL not found for target &#39;T:System.IO.MemoryStream&#39;.
+  Warn: ShowMissingComponent: [M:kintoneDotNET.API.kintoneAPI.Find``1(System.String)] Missing &lt;typeparam name=&quot;T&quot;/&gt; documentation
+  Warn: ShowMissingComponent: [M:kintoneDotNET.API.kintoneAPI.Find``1(System.String)] Missing &lt;returns&gt; documentation
+  Warn: ResolveReferenceLinksComponent2: [M:kintoneDotNET.API.kintoneAPI.Find``1(System.String)] MSDN URL not found for target &#39;T:System.String&#39;.
+  Warn: ResolveReferenceLinksComponent2: [M:kintoneDotNET.API.kintoneAPI.Find``1(System.String)] MSDN URL not found for target &#39;T:System.Collections.Generic.List`1&#39;.
+  Warn: ShowMissingComponent: [M:kintoneDotNET.API.kintoneAPI.FindAll``1(System.String)] Missing &lt;typeparam name=&quot;T&quot;/&gt; documentation
+  Warn: ShowMissingComponent: [M:kintoneDotNET.API.kintoneAPI.FindAll``1(System.String)] Missing &lt;returns&gt; documentation
+  Warn: ShowMissingComponent: [M:kintoneDotNET.API.kintoneAPI.FindAll``1(System.String)] Missing &lt;param name=&quot;query&quot;/&gt; documentation
+  Warn: ResolveReferenceLinksComponent2: [M:kintoneDotNET.API.kintoneAPI.FindAll``1(System.String)] MSDN URL not found for target &#39;T:System.String&#39;.
+  Warn: ResolveReferenceLinksComponent2: [M:kintoneDotNET.API.kintoneAPI.FindAll``1(System.String)] MSDN URL not found for target &#39;T:System.Collections.Generic.List`1&#39;.
   Warn: ResolveReferenceLinksComponent2: [P:kintoneDotNET.API.kintoneAPI.Host] MSDN URL not found for target &#39;T:System.String&#39;.
-  Warn: ShowMissingComponent: [M:kintoneDotNET.API.kintoneAPI.isError] Missing &lt;summary&gt; documentation
-  Warn: ShowMissingComponent: [M:kintoneDotNET.API.kintoneAPI.isError] Missing &lt;returns&gt; documentation
-  Warn: ResolveReferenceLinksComponent2: [M:kintoneDotNET.API.kintoneAPI.isError] MSDN URL not found for target &#39;T:System.Boolean&#39;.
-  Warn: ShowMissingComponent: [M:kintoneDotNET.API.kintoneAPI.isError(kintoneDotNET.API.Types.kintoneError)] Missing &lt;summary&gt; documentation
-  Warn: ShowMissingComponent: [M:kintoneDotNET.API.kintoneAPI.isError(kintoneDotNET.API.Types.kintoneError)] Missing &lt;returns&gt; documentation
-  Warn: ShowMissingComponent: [M:kintoneDotNET.API.kintoneAPI.isError(kintoneDotNET.API.Types.kintoneError)] Missing &lt;param name=&quot;kerror&quot;/&gt; documentation
-  Warn: ResolveReferenceLinksComponent2: [M:kintoneDotNET.API.kintoneAPI.isError(kintoneDotNET.API.Types.kintoneError)] MSDN URL not found for target &#39;T:System.Boolean&#39;.
+  Warn: ResolveReferenceLinksComponent2: [P:kintoneDotNET.API.kintoneAPI.Host] MSDN URL not found for target &#39;T:System.String&#39;.
   Warn: ShowMissingComponent: [F:kintoneDotNET.API.kintoneAPI.KINTONE_API_FORMAT] Missing &lt;summary&gt; documentation
   Warn: ResolveReferenceLinksComponent2: [F:kintoneDotNET.API.kintoneAPI.KINTONE_API_FORMAT] MSDN URL not found for target &#39;T:System.String&#39;.
   Warn: ShowMissingComponent: [F:kintoneDotNET.API.kintoneAPI.KINTONE_HOST] Missing &lt;summary&gt; documentation
@@ -778,29 +727,70 @@ Building reference help topics...
   Warn: ShowMissingComponent: [F:kintoneDotNET.API.kintoneAPI.KINTONE_PORT] Missing &lt;summary&gt; documentation
   Warn: ResolveReferenceLinksComponent2: [F:kintoneDotNET.API.kintoneAPI.KINTONE_PORT] MSDN URL not found for target &#39;T:System.String&#39;.
   Warn: ShowMissingComponent: [F:kintoneDotNET.API.kintoneAPI.KINTONE_READ_LIMIT] Missing &lt;summary&gt; documentation
-  Warn: ResolveReferenceLinksComponent2: [F:kintoneDotNET.API.kintoneAPI.KINTONE_READ_LIMIT] MSDN web service failed.  No further look ups will be performed for this build.
-  Reason: HTTP ステータス 407: Proxy Authentication Required ( The ISA Server requires authorization to fulfill the request. Access to the Web Proxy filter is denied.  ) で要求が失敗しました。
+  Warn: ResolveReferenceLinksComponent2: [F:kintoneDotNET.API.kintoneAPI.KINTONE_READ_LIMIT] MSDN URL not found for target &#39;T:System.Int32&#39;.
+  Warn: ResolveReferenceLinksComponent2: [P:kintoneDotNET.API.kintoneAPI.LoginKey] MSDN URL not found for target &#39;T:System.String&#39;.
+  Warn: ResolveReferenceLinksComponent2: [P:kintoneDotNET.API.kintoneAPI.LoginKey] MSDN URL not found for target &#39;T:System.String&#39;.
   Warn: ShowMissingComponent: [M:kintoneDotNET.API.kintoneAPI.makeHttpHeader(System.String,System.String,System.String)] Missing &lt;returns&gt; documentation
-  Warn: ShowMissingComponent: [P:kintoneDotNET.API.kintoneAPI.ReadLimit] Missing &lt;summary&gt; documentation
+  Warn: ResolveReferenceLinksComponent2: [M:kintoneDotNET.API.kintoneAPI.makeHttpHeader(System.String,System.String,System.String)] MSDN URL not found for target &#39;T:System.String&#39;.
+  Warn: ResolveReferenceLinksComponent2: [M:kintoneDotNET.API.kintoneAPI.makeHttpHeader(System.String,System.String,System.String)] MSDN URL not found for target &#39;T:System.String&#39;.
+  Warn: ResolveReferenceLinksComponent2: [M:kintoneDotNET.API.kintoneAPI.makeHttpHeader(System.String,System.String,System.String)] MSDN URL not found for target &#39;T:System.String&#39;.
+  Warn: ResolveReferenceLinksComponent2: [M:kintoneDotNET.API.kintoneAPI.makeHttpHeader(System.String,System.String,System.String)] MSDN URL not found for target &#39;T:System.Net.HttpWebRequest&#39;.
+  Warn: ResolveReferenceLinksComponent2: [P:kintoneDotNET.API.kintoneAPI.Proxy] MSDN URL not found for target &#39;T:System.Net.WebProxy&#39;.
+  Warn: ResolveReferenceLinksComponent2: [P:kintoneDotNET.API.kintoneAPI.Proxy] MSDN URL not found for target &#39;T:System.Net.WebProxy&#39;.
+  Warn: ResolveReferenceLinksComponent2: [P:kintoneDotNET.API.kintoneAPI.ReadLimit] MSDN URL not found for target &#39;T:System.Int32&#39;.
+  Warn: ResolveReferenceLinksComponent2: [P:kintoneDotNET.API.kintoneAPI.ReadLimit] MSDN URL not found for target &#39;T:System.Int32&#39;.
   Warn: ShowMissingComponent: [M:kintoneDotNET.API.kintoneAPI.Update``1(``0)] Missing &lt;typeparam name=&quot;T&quot;/&gt; documentation
   Warn: ShowMissingComponent: [M:kintoneDotNET.API.kintoneAPI.Update``1(``0)] Missing &lt;returns&gt; documentation
   Warn: ShowMissingComponent: [M:kintoneDotNET.API.kintoneAPI.Update``1(``0)] Missing &lt;param name=&quot;obj&quot;/&gt; documentation
-  Warn: ShowMissingComponent: [M:kintoneDotNET.API.kintoneAPI.UploadFile(System.Collections.ObjectModel.ReadOnlyCollection{{System.Web.HttpPostedFile}},kintoneDotNET.API.Types.kintoneError@)] Missing &lt;summary&gt; documentation
-  Warn: ShowMissingComponent: [M:kintoneDotNET.API.kintoneAPI.UploadFile(System.Collections.ObjectModel.ReadOnlyCollection{{System.Web.HttpPostedFile}},kintoneDotNET.API.Types.kintoneError@)] Missing &lt;returns&gt; documentation
-  Warn: ShowMissingComponent: [M:kintoneDotNET.API.kintoneAPI.UploadFile(System.Collections.ObjectModel.ReadOnlyCollection{{System.Web.HttpPostedFile}},kintoneDotNET.API.Types.kintoneError@)] Missing &lt;param name=&quot;files&quot;/&gt; documentation
-  Warn: ShowMissingComponent: [M:kintoneDotNET.API.kintoneAPI.UploadFile(System.Collections.ObjectModel.ReadOnlyCollection{{System.Web.HttpPostedFile}},kintoneDotNET.API.Types.kintoneError@)] Missing &lt;param name=&quot;kerror&quot;/&gt; documentation
-  Warn: ShowMissingComponent: [M:kintoneDotNET.API.kintoneAPI.UploadFile(System.Collections.ObjectModel.ReadOnlyCollection{{System.Web.HttpPostedFileBase}},kintoneDotNET.API.Types.kintoneError@)] Missing &lt;returns&gt; documentation
-  Warn: ShowMissingComponent: [M:kintoneDotNET.API.kintoneAPI.UploadFile(System.Collections.ObjectModel.ReadOnlyCollection{{System.Web.HttpPostedFileBase}},kintoneDotNET.API.Types.kintoneError@)] Missing &lt;param name=&quot;files&quot;/&gt; documentation
-  Warn: ShowMissingComponent: [M:kintoneDotNET.API.kintoneAPI.UploadFile(System.Collections.ObjectModel.ReadOnlyCollection{{System.Web.HttpPostedFileBase}},kintoneDotNET.API.Types.kintoneError@)] Missing &lt;param name=&quot;kerror&quot;/&gt; documentation
-  Warn: ShowMissingComponent: [M:kintoneDotNET.API.kintoneAPI.UploadFile(System.Web.HttpPostedFile,kintoneDotNET.API.Types.kintoneError@)] Missing &lt;summary&gt; documentation
-  Warn: ShowMissingComponent: [M:kintoneDotNET.API.kintoneAPI.UploadFile(System.Web.HttpPostedFile,kintoneDotNET.API.Types.kintoneError@)] Missing &lt;returns&gt; documentation
-  Warn: ShowMissingComponent: [M:kintoneDotNET.API.kintoneAPI.UploadFile(System.Web.HttpPostedFile,kintoneDotNET.API.Types.kintoneError@)] Missing &lt;param name=&quot;file&quot;/&gt; documentation
-  Warn: ShowMissingComponent: [M:kintoneDotNET.API.kintoneAPI.UploadFile(System.Web.HttpPostedFile,kintoneDotNET.API.Types.kintoneError@)] Missing &lt;param name=&quot;kerror&quot;/&gt; documentation
-  Warn: ShowMissingComponent: [M:kintoneDotNET.API.kintoneAPI.UploadFile(System.Web.HttpPostedFileBase,kintoneDotNET.API.Types.kintoneError@)] Missing &lt;summary&gt; documentation
-  Warn: ShowMissingComponent: [M:kintoneDotNET.API.kintoneAPI.UploadFile(System.Web.HttpPostedFileBase,kintoneDotNET.API.Types.kintoneError@)] Missing &lt;returns&gt; documentation
-  Warn: ShowMissingComponent: [M:kintoneDotNET.API.kintoneAPI.UploadFile(System.Web.HttpPostedFileBase,kintoneDotNET.API.Types.kintoneError@)] Missing &lt;param name=&quot;file&quot;/&gt; documentation
-  Warn: ShowMissingComponent: [M:kintoneDotNET.API.kintoneAPI.UploadFile(System.Web.HttpPostedFileBase,kintoneDotNET.API.Types.kintoneError@)] Missing &lt;param name=&quot;kerror&quot;/&gt; documentation
+  Warn: ResolveReferenceLinksComponent2: [M:kintoneDotNET.API.kintoneAPI.Update``1(``0)] MSDN URL not found for target &#39;T:System.Boolean&#39;.
+  Warn: ShowMissingComponent: [M:kintoneDotNET.API.kintoneAPI.UploadFile(System.Collections.ObjectModel.ReadOnlyCollection{{System.Web.HttpPostedFile}})] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [M:kintoneDotNET.API.kintoneAPI.UploadFile(System.Collections.ObjectModel.ReadOnlyCollection{{System.Web.HttpPostedFile}})] Missing &lt;returns&gt; documentation
+  Warn: ShowMissingComponent: [M:kintoneDotNET.API.kintoneAPI.UploadFile(System.Collections.ObjectModel.ReadOnlyCollection{{System.Web.HttpPostedFile}})] Missing &lt;param name=&quot;files&quot;/&gt; documentation
+  Warn: ResolveReferenceLinksComponent2: [M:kintoneDotNET.API.kintoneAPI.UploadFile(System.Collections.ObjectModel.ReadOnlyCollection{{System.Web.HttpPostedFile}})] MSDN URL not found for target &#39;T:System.Collections.ObjectModel.ReadOnlyCollection`1&#39;.
+  Warn: ResolveReferenceLinksComponent2: [M:kintoneDotNET.API.kintoneAPI.UploadFile(System.Collections.ObjectModel.ReadOnlyCollection{{System.Web.HttpPostedFile}})] MSDN URL not found for target &#39;T:System.Web.HttpPostedFile&#39;.
+  Warn: ResolveReferenceLinksComponent2: [M:kintoneDotNET.API.kintoneAPI.UploadFile(System.Collections.ObjectModel.ReadOnlyCollection{{System.Web.HttpPostedFile}})] MSDN URL not found for target &#39;T:System.String&#39;.
+  Warn: ShowMissingComponent: [M:kintoneDotNET.API.kintoneAPI.UploadFile(System.Collections.ObjectModel.ReadOnlyCollection{{System.Web.HttpPostedFileBase}})] Missing &lt;returns&gt; documentation
+  Warn: ShowMissingComponent: [M:kintoneDotNET.API.kintoneAPI.UploadFile(System.Collections.ObjectModel.ReadOnlyCollection{{System.Web.HttpPostedFileBase}})] Missing &lt;param name=&quot;files&quot;/&gt; documentation
+  Warn: ResolveReferenceLinksComponent2: [M:kintoneDotNET.API.kintoneAPI.UploadFile(System.Collections.ObjectModel.ReadOnlyCollection{{System.Web.HttpPostedFileBase}})] MSDN URL not found for target &#39;T:System.Collections.ObjectModel.ReadOnlyCollection`1&#39;.
+  Warn: ResolveReferenceLinksComponent2: [M:kintoneDotNET.API.kintoneAPI.UploadFile(System.Collections.ObjectModel.ReadOnlyCollection{{System.Web.HttpPostedFileBase}})] MSDN URL not found for target &#39;T:System.Web.HttpPostedFileBase&#39;.
+  Warn: ResolveReferenceLinksComponent2: [M:kintoneDotNET.API.kintoneAPI.UploadFile(System.Collections.ObjectModel.ReadOnlyCollection{{System.Web.HttpPostedFileBase}})] MSDN URL not found for target &#39;T:System.String&#39;.
+  Warn: ShowMissingComponent: [M:kintoneDotNET.API.kintoneAPI.UploadFile(System.Web.HttpPostedFile)] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [M:kintoneDotNET.API.kintoneAPI.UploadFile(System.Web.HttpPostedFile)] Missing &lt;returns&gt; documentation
+  Warn: ShowMissingComponent: [M:kintoneDotNET.API.kintoneAPI.UploadFile(System.Web.HttpPostedFile)] Missing &lt;param name=&quot;file&quot;/&gt; documentation
+  Warn: ResolveReferenceLinksComponent2: [M:kintoneDotNET.API.kintoneAPI.UploadFile(System.Web.HttpPostedFile)] MSDN URL not found for target &#39;T:System.Web.HttpPostedFile&#39;.
+  Warn: ResolveReferenceLinksComponent2: [M:kintoneDotNET.API.kintoneAPI.UploadFile(System.Web.HttpPostedFile)] MSDN URL not found for target &#39;T:System.String&#39;.
+  Warn: ShowMissingComponent: [M:kintoneDotNET.API.kintoneAPI.UploadFile(System.Web.HttpPostedFileBase)] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [M:kintoneDotNET.API.kintoneAPI.UploadFile(System.Web.HttpPostedFileBase)] Missing &lt;returns&gt; documentation
+  Warn: ShowMissingComponent: [M:kintoneDotNET.API.kintoneAPI.UploadFile(System.Web.HttpPostedFileBase)] Missing &lt;param name=&quot;file&quot;/&gt; documentation
+  Warn: ResolveReferenceLinksComponent2: [M:kintoneDotNET.API.kintoneAPI.UploadFile(System.Web.HttpPostedFileBase)] MSDN URL not found for target &#39;T:System.Web.HttpPostedFileBase&#39;.
+  Warn: ResolveReferenceLinksComponent2: [M:kintoneDotNET.API.kintoneAPI.UploadFile(System.Web.HttpPostedFileBase)] MSDN URL not found for target &#39;T:System.String&#39;.
   Warn: ShowMissingComponent: [T:kintoneDotNET.API.kintoneContentConvertor`1] Missing &lt;typeparam name=&quot;T&quot;/&gt; documentation
+  Warn: ResolveReferenceLinksComponent2: [T:kintoneDotNET.API.kintoneContentConvertor`1] MSDN URL not found for target &#39;T:System.Object&#39;.
+  Warn: ResolveReferenceLinksComponent2: [T:kintoneDotNET.API.kintoneContentConvertor`1] MSDN URL not found for target &#39;T:System.Web.Script.Serialization.JavaScriptConverter&#39;.
+  Warn: ResolveReferenceLinksComponent2: [AllMembers.T:kintoneDotNET.API.kintoneContentConvertor`1] MSDN URL not found for target &#39;M:System.Web.Script.Serialization.JavaScriptConverter.Deserialize(System.Collections.Generic.IDictionary{System.String,System.Object},System.Type,System.Web.Script.Serialization.JavaScriptSerializer)&#39;.
+  Warn: ResolveReferenceLinksComponent2: [AllMembers.T:kintoneDotNET.API.kintoneContentConvertor`1] MSDN URL not found for target &#39;M:System.Object.Equals(System.Object)&#39;.
+  Warn: ResolveReferenceLinksComponent2: [AllMembers.T:kintoneDotNET.API.kintoneContentConvertor`1] MSDN URL not found for target &#39;T:System.Object&#39;.
+  Warn: ResolveReferenceLinksComponent2: [AllMembers.T:kintoneDotNET.API.kintoneContentConvertor`1] MSDN URL not found for target &#39;T:System.Object&#39;.
+  Warn: ResolveReferenceLinksComponent2: [AllMembers.T:kintoneDotNET.API.kintoneContentConvertor`1] MSDN URL not found for target &#39;T:System.Object&#39;.
+  Warn: ResolveReferenceLinksComponent2: [AllMembers.T:kintoneDotNET.API.kintoneContentConvertor`1] MSDN URL not found for target &#39;M:System.Object.Finalize&#39;.
+  Warn: ResolveReferenceLinksComponent2: [AllMembers.T:kintoneDotNET.API.kintoneContentConvertor`1] MSDN URL not found for target &#39;T:System.Object&#39;.
+  Warn: ResolveReferenceLinksComponent2: [AllMembers.T:kintoneDotNET.API.kintoneContentConvertor`1] MSDN URL not found for target &#39;T:System.Object&#39;.
+  Warn: ResolveReferenceLinksComponent2: [AllMembers.T:kintoneDotNET.API.kintoneContentConvertor`1] MSDN URL not found for target &#39;T:System.Object&#39;.
+  Warn: ResolveReferenceLinksComponent2: [AllMembers.T:kintoneDotNET.API.kintoneContentConvertor`1] MSDN URL not found for target &#39;M:System.Object.GetHashCode&#39;.
+  Warn: ResolveReferenceLinksComponent2: [AllMembers.T:kintoneDotNET.API.kintoneContentConvertor`1] MSDN URL not found for target &#39;T:System.Object&#39;.
+  Warn: ResolveReferenceLinksComponent2: [AllMembers.T:kintoneDotNET.API.kintoneContentConvertor`1] MSDN URL not found for target &#39;M:System.Object.GetType&#39;.
+  Warn: ResolveReferenceLinksComponent2: [AllMembers.T:kintoneDotNET.API.kintoneContentConvertor`1] MSDN URL not found for target &#39;T:System.Type&#39;.
+  Warn: ResolveReferenceLinksComponent2: [AllMembers.T:kintoneDotNET.API.kintoneContentConvertor`1] MSDN URL not found for target &#39;T:System.Object&#39;.
+  Warn: ResolveReferenceLinksComponent2: [AllMembers.T:kintoneDotNET.API.kintoneContentConvertor`1] MSDN URL not found for target &#39;M:System.Object.MemberwiseClone&#39;.
+  Warn: ResolveReferenceLinksComponent2: [AllMembers.T:kintoneDotNET.API.kintoneContentConvertor`1] MSDN URL not found for target &#39;T:System.Object&#39;.
+  Warn: ResolveReferenceLinksComponent2: [AllMembers.T:kintoneDotNET.API.kintoneContentConvertor`1] MSDN URL not found for target &#39;T:System.Object&#39;.
+  Warn: ResolveReferenceLinksComponent2: [AllMembers.T:kintoneDotNET.API.kintoneContentConvertor`1] MSDN URL not found for target &#39;M:System.Web.Script.Serialization.JavaScriptConverter.Serialize(System.Object,System.Web.Script.Serialization.JavaScriptSerializer)&#39;.
+  Warn: ResolveReferenceLinksComponent2: [AllMembers.T:kintoneDotNET.API.kintoneContentConvertor`1] MSDN URL not found for target &#39;M:System.Object.ToString&#39;.
+  Warn: ResolveReferenceLinksComponent2: [AllMembers.T:kintoneDotNET.API.kintoneContentConvertor`1] MSDN URL not found for target &#39;T:System.Object&#39;.
+  Warn: ResolveReferenceLinksComponent2: [AllMembers.T:kintoneDotNET.API.kintoneContentConvertor`1] MSDN URL not found for target &#39;T:System.String&#39;.
+  Warn: ResolveReferenceLinksComponent2: [AllMembers.T:kintoneDotNET.API.kintoneContentConvertor`1] MSDN URL not found for target &#39;T:System.Object&#39;.
+  Warn: ResolveReferenceLinksComponent2: [AllMembers.T:kintoneDotNET.API.kintoneContentConvertor`1] MSDN web service failed.  No further look ups will be performed for this build.
+  Reason: HTTP ステータス 407: Proxy Authentication Required ( The ISA Server requires authorization to fulfill the request. Access to the Web Proxy filter is denied.  ) で要求が失敗しました。
   Warn: ShowMissingComponent: [M:kintoneDotNET.API.kintoneContentConvertor`1.Deserialize(System.Collections.Generic.IDictionary{{System.String,System.Object}},System.Type,System.Web.Script.Serialization.JavaScriptSerializer)] Missing &lt;returns&gt; documentation
   Warn: ShowMissingComponent: [M:kintoneDotNET.API.kintoneContentConvertor`1.Deserialize(System.Collections.Generic.IDictionary{{System.String,System.Object}},System.Type,System.Web.Script.Serialization.JavaScriptSerializer)] Missing &lt;param name=&quot;dictionary&quot;/&gt; documentation
   Warn: ShowMissingComponent: [M:kintoneDotNET.API.kintoneContentConvertor`1.Deserialize(System.Collections.Generic.IDictionary{{System.String,System.Object}},System.Type,System.Web.Script.Serialization.JavaScriptSerializer)] Missing &lt;param name=&quot;type&quot;/&gt; documentation
@@ -809,6 +799,22 @@ Building reference help topics...
   Warn: ShowMissingComponent: [M:kintoneDotNET.API.kintoneContentConvertor`1.Serialize(System.Object,System.Web.Script.Serialization.JavaScriptSerializer)] Missing &lt;param name=&quot;obj&quot;/&gt; documentation
   Warn: ShowMissingComponent: [M:kintoneDotNET.API.kintoneContentConvertor`1.Serialize(System.Object,System.Web.Script.Serialization.JavaScriptSerializer)] Missing &lt;param name=&quot;serializer&quot;/&gt; documentation
   Warn: ShowMissingComponent: [P:kintoneDotNET.API.kintoneContentConvertor`1.SupportedTypes] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [M:kintoneDotNET.API.kintoneException.#ctor(kintoneDotNET.API.Types.kintoneError)] Missing &lt;param name=&quot;kerror&quot;/&gt; documentation
+  Warn: ShowMissingComponent: [M:kintoneDotNET.API.kintoneException.#ctor(System.String)] Missing &lt;param name=&quot;message&quot;/&gt; documentation
+  Warn: ShowMissingComponent: [P:kintoneDotNET.API.kintoneException.Detail] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [P:kintoneDotNET.API.kintoneException.Message] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [P:kintoneDotNET.API.kintoneFieldGroup.FieldList] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [P:kintoneDotNET.API.kintoneFieldGroup.isAnd] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [M:kintoneDotNET.API.kintoneQuery.toQuery``1(System.Linq.Expressions.Expression{{System.Func{{``0,System.Boolean}}}},System.Collections.Generic.Dictionary{{System.String,System.String}})] Missing &lt;typeparam name=&quot;T&quot;/&gt; documentation
+  Warn: ShowMissingComponent: [M:kintoneDotNET.API.kintoneQuery.toQuery``1(System.Linq.Expressions.Expression{{System.Func{{``0,System.Boolean}}}},System.Collections.Generic.Dictionary{{System.String,System.String}})] Missing &lt;returns&gt; documentation
+  Warn: ShowMissingComponent: [M:kintoneDotNET.API.kintoneQueryField.#ctor(System.String,System.String,System.Object)] Missing &lt;param name=&quot;fieldName&quot;/&gt; documentation
+  Warn: ShowMissingComponent: [M:kintoneDotNET.API.kintoneQueryField.#ctor(System.String,System.String,System.Object)] Missing &lt;param name=&quot;opr&quot;/&gt; documentation
+  Warn: ShowMissingComponent: [M:kintoneDotNET.API.kintoneQueryField.#ctor(System.String,System.String,System.Object)] Missing &lt;param name=&quot;value&quot;/&gt; documentation
+  Warn: ShowMissingComponent: [P:kintoneDotNET.API.kintoneQueryField.FieldName] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [P:kintoneDotNET.API.kintoneQueryField.Operand] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [M:kintoneDotNET.API.kintoneQueryField.ToString] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [M:kintoneDotNET.API.kintoneQueryField.ToString] Missing &lt;returns&gt; documentation
+  Warn: ShowMissingComponent: [P:kintoneDotNET.API.kintoneQueryField.Value] Missing &lt;summary&gt; documentation
   Warn: ShowMissingComponent: [M:kintoneDotNET.API.kintoneTypeExtension.ToHttpPostedFileBase(System.Web.HttpPostedFile)] Missing &lt;summary&gt; documentation
   Warn: ShowMissingComponent: [M:kintoneDotNET.API.kintoneTypeExtension.ToHttpPostedFileBase(System.Web.HttpPostedFile)] Missing &lt;returns&gt; documentation
   Warn: ShowMissingComponent: [M:kintoneDotNET.API.kintoneTypeExtension.ToHttpPostedFileBase(System.Web.HttpPostedFile)] Missing &lt;param name=&quot;file&quot;/&gt; documentation
@@ -868,18 +874,18 @@ Building reference help topics...
   Warn: ShowMissingComponent: [P:kintoneDotNET.API.Types.PostedFile.InputStream] Missing &lt;summary&gt; documentation
   Warn: ShowMissingComponent: [M:kintoneDotNET.API.Types.PostedFile.SaveAs(System.String)] Missing &lt;summary&gt; documentation
   Warn: ShowMissingComponent: [M:kintoneDotNET.API.Types.PostedFile.SaveAs(System.String)] Missing &lt;param name=&quot;filename&quot;/&gt; documentation
-  Info: Processed 171 topic(s)
-  Info: 369 warning(s)
-  Diagnostic: CopyFromIndexComponent: &quot;reflection&quot; in-memory cache entries used: 9 of 15.
+  Info: Processed 203 topic(s)
+  Info: 375 warning(s)
+  Diagnostic: CopyFromIndexComponent: &quot;reflection&quot; in-memory cache entries used: 11 of 15.
   Diagnostic: CopyFromIndexComponent: &quot;comments&quot; in-memory cache entries used: 2 of 30.
-  Diagnostic: ResolveReferenceLinksComponent2: New MSDN content ID cache size: 15 entries
-    Last step completed in 00:00:27.5058
+  Diagnostic: ResolveReferenceLinksComponent2: New MSDN content ID cache size: 25 entries
+    Last step completed in 00:00:21.7925
 </buildStep>
 <buildStep step="CombiningIntermediateTocFiles">
 Combining conceptual and API intermediate TOC files...
 
 Clearing any prior web output
-    Last step completed in 00:00:00.0050
+    Last step completed in 00:00:00.6082
 </buildStep>
 <buildStep step="ExtractingHtmlInfo">
 Extracting HTML info for HTML Help 1 and/or website...
@@ -891,17 +897,17 @@ E-Mail: Eric@EWoodruff.us
 Using LCID &#39;1041&#39;, code page &#39;932&#39;, encoding charset &#39;shift-jis&#39;.
 
 Processing Help 1 files in D:\project\kintoneDotNET\documents\Help\Working\Output\HtmlHelp1
-Processed 171 HTML files
+Processed 203 HTML files
 Sorting keywords and generating See Also indices
 Saving HTML Help 1 keyword index to D:\project\kintoneDotNET\documents\Help\Working\kintoneDotNETHelp.hhk
 Saving HTML Help 1 table of contents to D:\project\kintoneDotNET\documents\Help\Working\kintoneDotNETHelp.hhc
 
 Processing website files in D:\project\kintoneDotNET\documents\Help\Working\Output\Website
-Processed 171 HTML files
+Processed 203 HTML files
 Sorting keywords and generating See Also indices
 Saving website keyword index to D:\project\kintoneDotNET\documents\Help\Working\WebKI.xml
 Saving website table of contents to D:\project\kintoneDotNET\documents\Help\Working\WebTOC.xml
-    Last step completed in 00:00:01.7372
+    Last step completed in 00:00:01.8886
 </buildStep>
 <buildStep step="GenerateHelpFormatTableOfContents">
 Generating HTML Help 1 table of contents file...
@@ -909,11 +915,11 @@ Generating HTML Help 1 table of contents file...
 </buildStep>
 <buildStep step="GenerateHelpFileIndex">
 Generating HTML Help 1 index file...
-    Last step completed in 00:00:00.0010
+    Last step completed in 00:00:00.0020
 </buildStep>
 <buildStep step="GenerateHelpProject">
 Generating HTML Help 1 project file...
-    Last step completed in 00:00:00.0260
+    Last step completed in 00:00:00.0280
 </buildStep>
 <buildStep step="CompilingHelpFile">
 Compiling HTML Help 1 file...
@@ -930,11 +936,11 @@ Compiling HTML Help 1 file...
   
   Compile time: 0 minutes, 2 seconds
   
-  173	Topics
+  205	Topics
   
-  1,953	Local links
+  2,293	Local links
   
-  12	Internet links
+  15	Internet links
   
   0	Graphics
   
@@ -942,11 +948,11 @@ Compiling HTML Help 1 file...
   
   
   
-  Created d:\project\kintoneDotNET\documents\Help\Working\Output\HtmlHelp1\kintoneDotNETHelp.chm, 310,223 bytes
+  Created d:\project\kintoneDotNET\documents\Help\Working\Output\HtmlHelp1\kintoneDotNETHelp.chm, 360,007 bytes
   
-  Compression decreased file by 1,647,379 bytes.
+  Compression decreased file by 1,925,893 bytes.
   
-    Last step completed in 00:00:03.9344
+    Last step completed in 00:00:04.5764
 </buildStep>
 <buildStep step="GenerateHelpFormatTableOfContents">
 Generating website table of contents file...
@@ -955,7 +961,7 @@ Generating website table of contents file...
 <buildStep step="GenerateFullTextIndex">
 Generating full-text index for the website...
 
-    Last step completed in 00:00:00.7721
+    Last step completed in 00:00:00.9613
 </buildStep>
 <buildStep step="CopyingWebsiteFiles">
 Copying website files to output folder...
@@ -963,16 +969,16 @@ Copying website files to output folder...
 Copied 100 files
 Copied 200 files
 Copied 300 files
-Copied 317 files for the website content
-    Last step completed in 00:00:01.6892
+Copied 359 files for the website content
+    Last step completed in 00:00:02.2207
 </buildStep>
 <buildStep step="CleanIntermediates">
 Removing intermediate files...
-    Last step completed in 00:00:00.2240
+    Last step completed in 00:00:00.2061
 </buildStep>
 <buildStep step="Completed">
 
-Build completed successfully at 11/12/2013 11:35 午前.  Total time: 00:00:44.4174
+Build completed successfully at 11/15/2013 09:28 午後.  Total time: 00:00:41.0013
 
 </buildStep>
 </shfbBuild>
