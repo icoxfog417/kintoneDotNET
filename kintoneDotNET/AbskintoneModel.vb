@@ -16,13 +16,13 @@ Namespace API
 
         Public MustOverride ReadOnly Property app As String
 
-        Public Property record_id As String = ""
-        Public Property created_time As DateTime
-        Public Property updated_time As DateTime
-        Public Property create_usr As kintoneUser = Nothing
-        Public Property update_usr As kintoneUser = Nothing
-        Public Property status As String = ""
-        Public Property work_usr As kintoneUser = Nothing
+        Public Overridable Property record_id As String = ""
+        Public Overridable Property created_time As DateTime = DateTime.MinValue
+        Public Overridable Property updated_time As DateTime = DateTime.MinValue
+        Public Overridable Property create_usr As New kintoneUser()
+        Public Overridable Property update_usr As New kintoneUser()
+        Public Overridable Property status As String = ""
+        Public Overridable Property work_usr As New kintoneUser()
 
         ''' <summary>
         ''' kintone上のレコードのURL

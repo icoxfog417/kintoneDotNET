@@ -22,58 +22,60 @@ Namespace API
             'Linq Expressions :http://msdn.microsoft.com/ja-jp/library/system.linq.expressions(v=vs.100).aspx
             'Linq ExpressionType :http://msdn.microsoft.com/ja-jp/library/bb361179(v=vs.100).aspx
 
-            Dim query As New List(Of kintoneFieldGroup)
-
             Dim exp As Expression = expression.Body
-            Dim expEnd As Boolean = False
-            Dim groupNow As New kintoneFieldGroup
-
-            While Not expEnd
-                Dim field As kintoneQueryField = Nothing
-                If TypeOf exp Is BinaryExpression Then
-                    Dim conjunction As ExpressionType = exp.NodeType
-                    '接続詞である場合、Leftを次回の評価式として渡す(Right側から順に評価されていく)
-                    If (conjunction = ExpressionType.And Or conjunction = ExpressionType.AndAlso) Or _
-                        (conjunction = ExpressionType.Or Or conjunction = ExpressionType.OrElse) Then
-                        'AndAlso/OrElseはkintone側がそもそも対応していないので反映は行われない
-                        field = evalExpression(CType(exp, BinaryExpression).Right)
-                        exp = CType(exp, BinaryExpression).Left
-
-                        Dim isAnd As Boolean = True
-                        If (conjunction = ExpressionType.Or Or conjunction = ExpressionType.OrElse) Then
-                            isAnd = False
-                        End If
-
-                        If groupNow.isAnd <> isAnd Then
-                            query.Insert(0, groupNow)
-                            groupNow = New kintoneFieldGroup
-                            groupNow.isAnd = isAnd
-                        End If
-
-                    Else
-                        field = evalExpression(CType(exp, BinaryExpression)) '接続詞でない場合、式を評価し終了する
-                        expEnd = True
-                    End If
-                Else
-                    field = evalExpression(exp)
-                    expEnd = True
-                End If
-
-                If nameConvertor IsNot Nothing AndAlso nameConvertor.ContainsKey(field.FieldName) Then
-                    field.FieldName = nameConvertor(field.FieldName)
-                End If
-                groupNow.FieldList.Insert(0, field)
-
-            End While
-
-            query.Insert(0, groupNow)
+            Dim query As List(Of kintoneFieldConnector) = searchExpression(exp)
 
             Dim result As String = ""
-            For Each group As kintoneFieldGroup In query
-                Dim conj As String = If(group.isAnd, " and ", " or ")
-                result += String.Join(conj, group.FieldList.Select(Function(x) x.ToString).ToArray)
+            For Each f As kintoneFieldConnector In query
+                If nameConvertor IsNot Nothing AndAlso nameConvertor.ContainsKey(f.Field.FieldName) Then
+                    f.Field.FieldName = nameConvertor(f.Field.FieldName)
+                End If
+
+                Dim conj As String = If(f.isAnd, " and ", " or ")
+                If String.IsNullOrEmpty(result) Then
+                    result += f.Field.ToString
+                Else
+                    result += conj + f.Field.ToString
+                End If
             Next
 
+            Return result
+
+        End Function
+        Private Shared Function searchExpression(ByVal exp As expression) As List(Of kintoneFieldConnector)
+            Dim result As New List(Of kintoneFieldConnector)
+            Dim expEnd As Boolean = False
+
+            Dim field As kintoneFieldConnector = Nothing
+            If TypeOf exp Is BinaryExpression Then
+                Dim conjunction As ExpressionType = exp.NodeType
+                '接続詞である場合、再度探索を行う
+                If (conjunction = ExpressionType.And Or conjunction = ExpressionType.AndAlso) Or _
+                    (conjunction = ExpressionType.Or Or conjunction = ExpressionType.OrElse) Then
+
+                    Dim isAndParam As Boolean = True
+                    If (conjunction = ExpressionType.Or Or conjunction = ExpressionType.OrElse) Then
+                        isAndParam = False
+                    End If
+
+                    Dim expLeft As List(Of kintoneFieldConnector) = searchExpression(CType(exp, BinaryExpression).Left)
+                    Dim expRight As List(Of kintoneFieldConnector) = searchExpression(CType(exp, BinaryExpression).Right)
+
+                    If expLeft.Count > 0 Then result.AddRange(expLeft)
+                    
+                    If expRight.Count > 0 Then
+                        expRight.First.isAnd = isAndParam 'Left/Rightの境界を設定
+                        result.AddRange(expRight)
+                    End If
+                Else
+                    '接続詞でない場合、式を評価し終了する
+                    field = New kintoneFieldConnector(evalExpression(CType(exp, BinaryExpression)))
+                End If
+            Else
+                field = New kintoneFieldConnector(evalExpression(exp))
+            End If
+
+            If field IsNot Nothing Then result.Add(field)
             Return result
 
         End Function
@@ -102,12 +104,12 @@ Namespace API
                 Dim methodExp = CType(left, MethodCallExpression)
                 methodName = methodExp.Method.Name
 
-                If methodExp.Object Is Nothing Then
-                    left = methodExp.Arguments(0)
-                    right = methodExp.Arguments(1)
-                Else
+                If methodExp.Object IsNot Nothing Then 'インスタンスメソッドのコールの場合、Objectにインスタンスが格納される
                     left = methodExp.Object
                     right = methodExp.Arguments(0)
+                Else
+                    left = methodExp.Arguments(0)
+                    right = methodExp.Arguments(1)
                 End If
 
                 If Not TypeOf left Is MemberExpression Then 'プロパティが右辺にくる場合逆転
@@ -115,8 +117,10 @@ Namespace API
                     left = right
                     right = temp
                 End If
-
             End If
+
+            left = extractMember(left)
+            If left Is Nothing Then Throw New InvalidExpressionException("左辺となるべきプロパティが見つかりません")
 
             name = CType(left, MemberExpression).Member.Name
             value = extractValue(right)
@@ -154,26 +158,29 @@ Namespace API
 
         End Function
 
+        Private Shared Function extractMember(ByVal exp As Expression) As MemberExpression
+            If TypeOf exp Is UnaryExpression Then
+                Return extractMember(CType(exp, UnaryExpression).Operand)
+            ElseIf TypeOf exp Is MemberExpression Then
+                Return exp
+            Else
+                If TryCast(exp, MemberExpression) IsNot Nothing Then
+                    Return CType(exp, MemberExpression)
+                Else
+                    Return Nothing
+                End If
+            End If
+        End Function
+
         Private Shared Function extractValue(ByVal exp As Expression) As String
-            If TypeOf exp Is ConstantExpression Then
-                Return valueToString(CType(exp, ConstantExpression).Value)
-            ElseIf TypeOf exp Is NewArrayExpression Then
-                Return valueToString(CType(exp, NewArrayExpression).Expressions)
-            ElseIf TypeOf exp Is ListInitExpression Then
-                '初期化子の配列を作成する
-                Dim initArgs As List(Of Expression) = (From x As ElementInit In CType(exp, ListInitExpression).Initializers
-                                                        Select x.Arguments(0)).ToList
-                Return valueToString(initArgs)
-            ElseIf TypeOf exp Is MethodCallExpression Then
+            If TypeOf exp Is MethodCallExpression Then
                 Dim method As MethodCallExpression = CType(exp, MethodCallExpression)
                 Dim value As Object = method.Method.Invoke(method.Object, evalValues(method.Arguments).ToArray)
                 Return valueToString(value)
-            ElseIf TypeOf exp Is MemberExpression Then
-                Return valueToString(evalValue(exp))
             ElseIf TypeOf exp Is UnaryExpression Then
                 Return extractValue(CType(exp, UnaryExpression).Operand)
             Else
-                Return ""
+                Return valueToString(evalValue(exp))
             End If
 
         End Function
@@ -219,12 +226,20 @@ Namespace API
     End Class
 
     ''' <summary>
-    ''' クエリにおいてAnd/Orのグループを管理するためのクラス
+    ''' フィールドの連結子を管理するクラス
     ''' </summary>
     ''' <remarks></remarks>
-    Public Class kintoneFieldGroup
+    Public Class kintoneFieldConnector
         Public Property isAnd As Boolean = True
-        Public Property FieldList As New List(Of kintoneQueryField)
+        Public Property Field As kintoneQueryField = Nothing
+        Public Sub New()
+        End Sub
+
+        Public Sub New(ByVal field As kintoneQueryField, Optional ByVal isAnd As Boolean = True)
+            Me.Field = field
+            Me.isAnd = isAnd
+        End Sub
+
     End Class
 
     ''' <summary>

@@ -9,7 +9,7 @@ Namespace API.Types
         Implements IkintoneType
 
         <UploadTarget()>
-        Public Property id As String = ""
+        Public Overridable Property id As String = ""
 
     End Class
 

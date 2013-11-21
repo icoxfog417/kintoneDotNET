@@ -54,8 +54,38 @@ Public Class APITest
 
     <TestMethod()>
     Public Sub ReadExpression()
-        Dim query As String = kintoneQuery.toQuery(Of kintoneTestModel)(Function(x) Not {"a", "b"}.Contains(x.radio) And Not x.methodinfo Like String.Empty And x.created_time > kintoneDatetime.toKintoneDate(DateTime.Now), AbskintoneModel.GetPropertyToDefaultDic)
-        Console.WriteLine(query)
+        Dim querys As New Dictionary(Of String, String)
+        Dim q As String = ""
+        'Simple Expression
+        q = kintoneQuery.toQuery(Of kintoneTestModel)(Function(x) x.status > "a", AbskintoneModel.GetPropertyToDefaultDic)
+        Console.WriteLine("querySimple1:" + q)
+        Assert.AreEqual("ステータス > ""a""", q)
+
+        q = kintoneQuery.toQuery(Of kintoneTestModel)(Function(x) Not x.status > "a", AbskintoneModel.GetPropertyToDefaultDic)
+        Console.WriteLine("querySimple2:" + q)
+        Assert.AreEqual("ステータス <= ""a""", q)
+
+        'Equal
+        q = kintoneQuery.toQuery(Of kintoneTestModel)(Function(x) x.status.Equals(1) Or x.record_id <> 1 And Not x.numberField = 1)
+        Console.WriteLine("queryEqual:" + q)
+        Assert.AreEqual("status = 1 or record_id != 1 and numberField != 1", q)
+
+        'like
+        q = kintoneQuery.toQuery(Of kintoneTestModel)(Function(x) x.status Like "A" And Not x.link Like "http")
+        Console.WriteLine("queryLike:" + q)
+        Assert.AreEqual("status like ""A"" and link not like ""http""", q)
+
+        'IN
+        q = kintoneQuery.toQuery(Of kintoneTestModel)(Function(x) {"1", "a"}.Contains(x.radio) And Not New List(Of String)() From {"c", "d"}.Contains(x.radio))
+        Console.WriteLine("queryArray&List:" + q)
+        Assert.AreEqual("radio in (""1"",""a"") and radio not in (""c"",""d"")", q)
+
+        'method Equal
+        q = kintoneQuery.toQuery(Of kintoneTestModel)(Function(x) x.status = String.Empty And x.created_time < kintoneDatetime.toKintoneDate(DateTime.MaxValue, "DATETIME"))
+        Console.WriteLine("queryMethodCall:" + q)
+        Assert.AreEqual("status = """" and created_time < ""9999-12-31T23:59:59+09:00""", q)
+
+
     End Sub
 
 
