@@ -20,14 +20,29 @@ Namespace API
         Protected Const KINTONE_HOST As String = "{0}.cybozu.com"
         Protected Const KINTONE_PORT As String = "443"
         Protected Const KINTONE_API_FORMAT As String = "https://{0}/k/v1/{1}.json" 'TODO:APIのバージョンが上がれば変更する必要あり
-        Public Const KINTONE_READ_LIMIT As Integer = 100 'TODO:レコード取得の上限値。変更されれば上げる必要あり
+
+        ''' <summary>
+        ''' kintone APIの読み込み上限値
+        ''' </summary>
+        ''' <remarks></remarks>
+        Public Const KINTONE_REC_LIMIT As Integer = 100 'TODO:レコード取得の上限値。変更されれば上げる必要あり
+
+        ''' <summary>
+        ''' kintone APIの更新上限値
+        ''' </summary>
+        ''' <remarks></remarks>
+        Public Const KINTONE_EXE_LIMIT As Integer = 100 'TODO:レコード更新の上限値。変更されれば上げる必要あり(現時点で件数は同じだが、読込と別にしておく)
+
+        ''' <summary>
+        ''' 本APIで扱うレコードの最大値(余りに大きい件数の処理を途中で止めるための措置)
+        ''' </summary>
+        ''' <remarks></remarks>
+        Public Const RECORD_LIMIT As Integer = 60000 'API内で処理する最大件数
 
         ''' <summary>
         ''' 送受信時のエンコード
         ''' </summary>
         ''' <value></value>
-        ''' <returns></returns>
-        ''' <remarks></remarks>
         Public Shared ReadOnly Property ApiEncoding As Encoding
             Get
                 Return Encoding.GetEncoding("UTF-8") 'kintoneのエンコードはUTF-8
@@ -36,11 +51,9 @@ Namespace API
 
         Private Shared _domain As String = ""
         ''' <summary>
-        ''' アプリケーションのドメイン。単体で使用することはまずないので、Protected化
+        ''' アプリケーションのドメイン。単一で使用することはまずないので、Protected化
         ''' </summary>
         ''' <value></value>
-        ''' <returns></returns>
-        ''' <remarks></remarks>
         Protected Shared ReadOnly Property Domain As String
             Get
                 If String.IsNullOrEmpty(_domain) Then _domain = ConfigurationManager.AppSettings("ktDomain")
@@ -53,8 +66,6 @@ Namespace API
         ''' kintoneのアクセス先。"xxx.cybozu.com"というようなアドレスで表現される(xxxはDomain)
         ''' </summary>
         ''' <value></value>
-        ''' <returns></returns>
-        ''' <remarks></remarks>
         Public Shared ReadOnly Property Host As String
             Get
                 If String.IsNullOrEmpty(_host) Then _host = String.Format(KINTONE_HOST, Domain)
@@ -67,8 +78,6 @@ Namespace API
         ''' アクセス先アプリケーションのID。コンストラクタで指定
         ''' </summary>
         ''' <value></value>
-        ''' <returns></returns>
-        ''' <remarks></remarks>
         Public ReadOnly Property AppId() As String
             Get
                 Return _appId
@@ -77,16 +86,14 @@ Namespace API
 
         Private Shared _readLimit As Integer = 0
         ''' <summary>
-        ''' レコードの読み取り上限を設定する。設定がない場合、APIの上限値が設定る<br/>
+        ''' レコードの読み取り上限を設定する。設定がない場合、APIの上限値が設定される<br/>
         ''' 上限値については、<a href="https://developers.cybozu.com/ja/kintone-api/apprec-readapi.html">レコード取得</a>の「クエリで条件を指定する」を参照
         ''' </summary>
         ''' <value></value>
-        ''' <returns></returns>
-        ''' <remarks></remarks>
         Public Shared Property ReadLimit As Integer
             Get
                 If _readLimit < 1 Then
-                    Return KINTONE_READ_LIMIT '設定がない場合、既定上限を返却
+                    Return KINTONE_REC_LIMIT '設定がない場合、既定上限を返却
                 Else
                     Return _readLimit
                 End If
@@ -96,6 +103,23 @@ Namespace API
             End Set
         End Property
 
+        Private Shared _executeLimit As Integer = 0
+        ''' <summary>
+        ''' レコード更新件数の上限を設定する。設定がない場合、APIの上限値が設定される<br/>
+        ''' </summary>
+        ''' <value></value>
+        Public Shared Property ExecuteLimit As Integer
+            Get
+                If _executeLimit < 1 Then
+                    Return KINTONE_EXE_LIMIT '設定がない場合、既定上限を返却
+                Else
+                    Return _executeLimit
+                End If
+            End Get
+            Set(value As Integer)
+                _executeLimit = value
+            End Set
+        End Property
 
         ''' <summary>
         ''' Basic認証のためのキーを作成する。形式については<a href="http://developers.cybozu.com/ja/kintone-api/common-appapi.html">公式ドキュメント</a>を参照
@@ -198,7 +222,7 @@ Namespace API
         End Function
 
         ''' <summary>
-        ''' 指定された型でデータの抽出を行う<br/>
+        ''' レコードの検索を行う<br/>
         ''' ※このメソッドは、kintoneのレコード数上限までしか取得を行いません。全件取得する場合はFindAllを使用してください
         ''' </summary>
         ''' <param name="query">
@@ -220,7 +244,7 @@ Namespace API
         End Function
 
         ''' <summary>
-        ''' レコード上限を超えたレコードの抽出を行う<br/>
+        ''' API上限値を超えたレコードの検索を行う<br/>
         ''' ※並列でリクエストを投げ取得を行うため、order等の指定は考慮されない。データ取得後LINQ等で並び替えを行う必要あり
         ''' </summary>
         ''' <param name="query"></param>
@@ -240,7 +264,7 @@ Namespace API
             While recordStillExist
                 Dim tasks As New List(Of Task(Of List(Of T)))
                 For i As Integer = 1 To threadCount
-                    tasks.Add(createTask(Of T)(q, offset))
+                    tasks.Add(makeTaskForFind(Of T)(q, offset))
                     offset += ReadLimit
                 Next
                 Dim taskRuns As Task(Of List(Of T))() = tasks.ToArray
@@ -255,29 +279,29 @@ Namespace API
                     '処理結果マージ
                     For Each tx In taskRuns
                         If tx.IsCompleted Then
-                            If Not tx.Result Is Nothing AndAlso tx.Result.Count > 0 Then
-                                result.AddRange(tx.Result)
-                            End If
+                            If tx.Result.Count > 0 Then result.AddRange(tx.Result)
                             If tx.Result.Count < ReadLimit Then 'リミットのサイズより取得結果が少なくなれば、もう取得する必要がないため停止
                                 recordStillExist = False
                             End If
                         End If
                     Next
 
-                Catch ex As kintoneException
-                    kex = ex
+                Catch ae As AggregateException
+                    Dim ex As AggregateException = ae.Flatten
+                    kex = New kintoneException(ex.Message, ex)
+                    Dim kerror As kintoneError = ex.InnerExceptions.Where(Function(x) TypeOf x Is kintoneException).Select(Function(x) CType(x, kintoneException).Detail).FirstOrDefault
+                    kex.Detail = kerror
                 Catch ex As Exception
-                    Dim kerror = New kintoneError
-                    kerror.message = ex.Message
-                    kex = New kintoneException(kerror)
-                Finally
-                    If kex IsNot Nothing Then
-                        recordStillExist = False '例外が発生した場合終了する
-                    End If
+                    kex = New kintoneException(ex.Message, ex)
                 End Try
 
-                If stepCount > 150 Then '無限ループを回避するための保険 threadCount * 150 * ReadLimit (大体 4 * 150 * 100 = 60000件)　で無理ならあきらめたほうがいい
+                If stepCount * threadCount * KINTONE_REC_LIMIT > RECORD_LIMIT Then
+                    kex = New kintoneException("レコード件数が多すぎます(" + RECORD_LIMIT + " 以上)")
                     recordStillExist = False
+                End If
+
+                If kex IsNot Nothing Then
+                    recordStillExist = False '例外が発生した場合終了する
                 End If
 
                 stepCount += 1
@@ -290,7 +314,10 @@ Namespace API
 
         End Function
 
-        Private Function createTask(Of T As AbskintoneModel)(baseQuery As String, offset As Integer) As Task(Of List(Of T))
+        ''' <summary>
+        ''' 検索を行うタスクを生成するための内部処理
+        ''' </summary>
+        Private Function makeTaskForFind(Of T As AbskintoneModel)(baseQuery As String, offset As Integer) As Task(Of List(Of T))
 
             Dim task As New Task(Of List(Of T))(Function()
                                                     Dim query = baseQuery + HttpUtility.UrlEncode(" limit " + ReadLimit.ToString + " offset " + offset.ToString)
@@ -305,45 +332,83 @@ Namespace API
             Return task
         End Function
 
+        ''' <summary>
+        ''' 検索処理の実体
+        ''' </summary>
         Private Function FindBase(Of T As AbskintoneModel)(ByVal query As String, Optional ByRef kerror As kintoneError = Nothing) As List(Of T)
 
             Dim serialized As kintoneRecords(Of T) = Nothing
             Dim result As New List(Of T)
 
             Dim request As HttpWebRequest = makeHttpHeader("records", "GET", query)
+            Dim responseStr As String = ""
+
             Using response As HttpWebResponse = getResponse(request, kerror)
                 If Not response Is Nothing Then
-                    Dim js As New JavaScriptSerializer
-                    Dim kc As New kintoneContentConvertor(Of T)
-                    js.RegisterConverters(New List(Of JavaScriptConverter) From {kc})
                     Dim reader As New StreamReader(response.GetResponseStream)
-                    serialized = js.Deserialize(Of kintoneRecords(Of T))(reader.ReadToEnd)
-
-                    For Each record As T In serialized.records
-                        result.Add(record)
-                    Next
-
+                    responseStr = reader.ReadToEnd
                 End If
             End Using
+
+            If Not String.IsNullOrEmpty(responseStr) Then
+                Dim js As New JavaScriptSerializer
+                Dim kc As New kintoneContentConvertor(Of T)
+                js.RegisterConverters(New List(Of JavaScriptConverter) From {kc})
+
+                serialized = js.Deserialize(Of kintoneRecords(Of T))(responseStr)
+
+                For Each record As T In serialized.records
+                    result.Add(record)
+                Next
+
+            End If
 
             Return result
 
         End Function
 
         ''' <summary>
-        ''' レコード登録を行う
+        ''' レコード登録を行う(単一)
         ''' </summary>
+        ''' <typeparam name="T"></typeparam>
         ''' <param name="obj"></param>
         ''' <returns></returns>
         ''' <remarks></remarks>
-        Public Function Create(Of T As AbskintoneModel)(ByVal obj As T) As List(Of String)
+        Public Function Create(Of T As AbskintoneModel)(ByVal obj As T) As String
+            Return taskCreate(Of T)(New List(Of T) From {obj}).FirstOrDefault
+        End Function
+
+        ''' <summary>
+        ''' レコード登録を行う(複数件)
+        ''' </summary>
+        ''' <typeparam name="T"></typeparam>
+        ''' <param name="objs"></param>
+        ''' <returns></returns>
+        ''' <remarks></remarks>
+        Public Function Create(Of T As AbskintoneModel)(ByVal objs As List(Of T)) As List(Of String)
+            Dim result As List(Of List(Of String)) = executeParallel(Of T, List(Of String))(objs, AddressOf taskCreate(Of T))
+            Dim flatten As New List(Of String)
+            For Each li As List(Of String) In result
+                flatten.AddRange(li)
+            Next
+            Return flatten
+        End Function
+
+        ''' <summary>
+        ''' レコード登録処理の実体
+        ''' </summary>
+        ''' <typeparam name="T"></typeparam>
+        ''' <param name="objs"></param>
+        ''' <returns></returns>
+        ''' <remarks></remarks>
+        Private Function taskCreate(Of T As AbskintoneModel)(ByVal objs As List(Of T)) As List(Of String)
             'JsonオブジェクトをRequestに書き出し
             'http://stackoverflow.com/questions/9145667/how-to-post-json-to-the-server
 
             Dim request As HttpWebRequest = makeHttpHeader("records", "POST")
             Dim sendData As New kintoneRecords(Of T)
             sendData.app = AppId
-            sendData.records.Add(obj)
+            sendData.records = objs
 
             'Request Body にJSONデータを書き込み
             Dim js As New JavaScriptSerializer
@@ -374,16 +439,41 @@ Namespace API
         End Function
 
         ''' <summary>
-        ''' レコードの更新を行う
+        ''' レコードの更新を行う(単一)
         ''' </summary>
         ''' <param name="obj"></param>
         ''' <returns></returns>
         ''' <remarks></remarks>
         Public Function Update(Of T As AbskintoneModel)(ByVal obj As T) As Boolean
+            Return taskUpdate(Of T)(New List(Of T) From {obj})
+        End Function
+
+        ''' <summary>
+        ''' レコードの更新を行う(複数件)
+        ''' </summary>
+        ''' <typeparam name="T"></typeparam>
+        ''' <param name="objs"></param>
+        ''' <returns></returns>
+        ''' <remarks></remarks>
+        Public Function Update(Of T As AbskintoneModel)(ByVal objs As List(Of T)) As Boolean
+            Dim result As List(Of Boolean) = executeParallel(Of T, Boolean)(objs, AddressOf taskUpdate(Of T))
+            Dim falseIndex As Integer = result.IndexOf(False)
+            Return If(falseIndex < 0, True, False)
+
+        End Function
+
+        ''' <summary>
+        ''' レコード更新処理の実体
+        ''' </summary>
+        ''' <typeparam name="T"></typeparam>
+        ''' <param name="objs"></param>
+        ''' <returns></returns>
+        ''' <remarks></remarks>
+        Private Function taskUpdate(Of T As AbskintoneModel)(ByVal objs As List(Of T)) As Boolean
             Dim request As HttpWebRequest = makeHttpHeader("records", "PUT")
             Dim sendData As New kintoneRecords(Of kintoneRecord(Of T))
             sendData.app = AppId
-            sendData.records.Add(New kintoneRecord(Of T)(obj))
+            sendData.records = objs.Select(Function(x) New kintoneRecord(Of T)(x)).ToList
 
             'Request Body にJSONデータを書き込み
             Dim js As New JavaScriptSerializer
@@ -408,12 +498,38 @@ Namespace API
         End Function
 
         ''' <summary>
-        ''' レコードの削除を行う
+        ''' レコードの削除を行う(単一)
         ''' </summary>
+        ''' <typeparam name="T"></typeparam>
+        ''' <param name="id"></param>
+        ''' <returns></returns>
+        ''' <remarks></remarks>
+        Public Function Delete(Of T As AbskintoneModel)(ByVal id As String) As Boolean
+            Return taskDelete(Of T)(New List(Of String) From {id})
+        End Function
+
+        ''' <summary>
+        ''' レコードの削除を行う(複数件)
+        ''' </summary>
+        ''' <typeparam name="T"></typeparam>
         ''' <param name="ids"></param>
         ''' <returns></returns>
         ''' <remarks></remarks>
         Public Function Delete(Of T As AbskintoneModel)(ByVal ids As List(Of String)) As Boolean
+            Dim result As List(Of Boolean) = executeParallel(Of String, Boolean)(ids, AddressOf taskDelete(Of T))
+            Dim falseIndex As Integer = result.IndexOf(False)
+            Return If(falseIndex < 0, True, False)
+
+        End Function
+
+        ''' <summary>
+        ''' 削除処理の実体
+        ''' </summary>
+        ''' <typeparam name="T"></typeparam>
+        ''' <param name="ids"></param>
+        ''' <returns></returns>
+        ''' <remarks></remarks>
+        Private Function taskDelete(Of T As AbskintoneModel)(ByVal ids As List(Of String)) As Boolean
 
             Dim request As HttpWebRequest = makeHttpHeader("records", "DELETE")
             Dim sendData As New kintoneIds()
@@ -442,9 +558,39 @@ Namespace API
 
         End Function
 
+        ''' <summary>
+        ''' ファイルのアップロードを行う(単一)<br/>
+        ''' </summary>
+        ''' <param name="file"></param>
+        ''' <returns></returns>
+        ''' <remarks></remarks>
+        Public Shared Function UploadFile(ByVal file As HttpPostedFile) As String
+            Return UploadFile(file.ToHttpPostedFileBase)
+        End Function
 
         ''' <summary>
-        ''' ファイルのアップロードを行う<br/>
+        ''' ファイルのアップロードを行う(単一) <br/>
+        ''' HttpPostedFileは非常に特殊な型でWeb上でファイルアップロードを行っている以外の場合は使用しにくいため、上位クラスのHttpPostedFileBaseを引数にとるメソッドを用意
+        ''' </summary>
+        ''' <param name="file"></param>
+        ''' <returns></returns>
+        ''' <remarks>
+        ''' <example>
+        ''' <para>
+        ''' PostedFile型を使用することで通常のFileStreamを処理できます
+        ''' <code>
+        '''   Dim file As PostedFile = New PostedFile("C:\temp\xxxx.PNG"))
+        '''   kintoneAPI.UploadFile(file)
+        ''' </code>
+        ''' </para>
+        ''' </example>
+        ''' </remarks>
+        Public Shared Function UploadFile(ByVal file As HttpPostedFileBase) As String
+            Return UploadFile(New ReadOnlyCollection(Of HttpPostedFileBase)(New List(Of HttpPostedFileBase) From {file}))
+        End Function
+
+        ''' <summary>
+        ''' ファイルのアップロードを行う(複数件)<br/>
         ''' kintone上、複数ファイルをアップロードしてもキーは単一になる。このためアップロードに使用したキーとファイルダウンロードのキーは異なるので注意
         ''' </summary>
         ''' <param name="files"></param>
@@ -514,17 +660,14 @@ Namespace API
 
         End Function
 
-        Public Shared Function UploadFile(ByVal file As HttpPostedFile) As String
-            Return UploadFile(file.ToHttpPostedFileBase)
-        End Function
-
-
+        ''' <summary>
+        ''' ファイルのアップロードを行う(複数件)
+        ''' </summary>
+        ''' <param name="files"></param>
+        ''' <returns></returns>
+        ''' <remarks></remarks>
         Public Shared Function UploadFile(ByVal files As ReadOnlyCollection(Of HttpPostedFile)) As String
             Return UploadFile(files.ToHttpPostedFileBaseList)
-        End Function
-
-        Public Shared Function UploadFile(ByVal file As HttpPostedFileBase) As String
-            Return UploadFile(New ReadOnlyCollection(Of HttpPostedFileBase)(New List(Of HttpPostedFileBase) From {file}))
         End Function
 
         ''' <summary>
@@ -573,25 +716,90 @@ Namespace API
                 response = request.GetResponse
             Catch ex As WebException
                 result = False
-                response = ex.Response
                 kerror = New kintoneError
                 kerror.message = ex.Message + vbCrLf + ex.StackTrace
+                response = ex.Response
             End Try
 
             If result Then
                 Return response
             Else
                 If Not response Is Nothing Then
-                    Dim reader As New StreamReader(response.GetResponseStream)
-                    Dim serialized As kintoneError = js.Deserialize(Of kintoneError)(reader.ReadToEnd)
-                    If Not serialized Is Nothing Then
-                        kerror = serialized
-                    End If
-                End If
+                    Try
+                        Dim responseStr As String = ""
+                        Using res As HttpWebResponse = response
+                            Dim reader As New StreamReader(response.GetResponseStream)
+                            responseStr = reader.ReadToEnd
+                        End Using
 
+                        Dim serialized As kintoneError = js.Deserialize(Of kintoneError)(responseStr)
+                        kerror = serialized
+
+                    Catch ex As Exception
+                        '今のところ何もなし
+                    End Try
+                End If
                 Return Nothing
+
             End If
         End Function
+
+        ''' <summary>
+        ''' 並列処理のための共通関数
+        ''' </summary>
+        ''' <typeparam name="T">モデルの型</typeparam>
+        ''' <typeparam name="R">各処理での返り値の型</typeparam>
+        ''' <param name="objs">モデルの配列</param>
+        ''' <param name="executor">スレッドで使用する関数</param>
+        ''' <returns></returns>
+        ''' <remarks></remarks>
+        Private Function executeParallel(Of T, R)(ByVal objs As List(Of T), ByVal executor As Func(Of List(Of T), R))
+            Dim tasks As New List(Of Task(Of R))
+            Dim result As New List(Of R)
+
+            If objs.Count > RECORD_LIMIT Then Throw New kintoneException("レコード件数が多すぎます")
+
+            Dim splited = Enumerable.Range(0, (objs.Count + (ExecuteLimit - 1)) \ ExecuteLimit) _
+                          .Select(Function(i) objs.Skip(i * ExecuteLimit).Take(ExecuteLimit).ToList) _
+                          .ToList
+
+            For Each target In splited
+                Dim tgt As New Task(Of R)(Function()
+                                              Return executor(target)
+                                          End Function)
+                tasks.Add(tgt)
+            Next
+
+            '並列処理実行
+            Dim taskRuns As Task(Of R)() = tasks.ToArray
+            Dim kex As kintoneException = Nothing
+
+            Try
+                Array.ForEach(taskRuns, Sub(tx) tx.Start())
+                Task.WaitAll(taskRuns)
+
+                '処理結果マージ
+                For Each tx In taskRuns
+                    If tx.IsCompleted Then
+                        result.Add(tx.Result)
+                    End If
+                Next
+
+            Catch ae As AggregateException
+                Dim ex As AggregateException = ae.Flatten
+                kex = New kintoneException(ex.Message, ex)
+                Dim kerror As kintoneError = ex.InnerExceptions.Where(Function(x) TypeOf x Is kintoneException).Select(Function(x) CType(x, kintoneException).Detail).FirstOrDefault
+                kex.Detail = kerror
+            Catch ex As Exception
+                kex = New kintoneException(ex.Message, ex)
+            End Try
+
+            If kex IsNot Nothing Then Throw kex
+
+            Return result
+
+        End Function
+
 
     End Class
 

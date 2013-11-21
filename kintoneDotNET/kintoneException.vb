@@ -41,6 +41,11 @@ Namespace API
             _message = message
         End Sub
 
+        Public Sub New(ByVal message As String, ByVal ex As Exception)
+            MyBase.New(message, ex)
+            _message = message
+        End Sub
+
     End Class
 
 End Namespace

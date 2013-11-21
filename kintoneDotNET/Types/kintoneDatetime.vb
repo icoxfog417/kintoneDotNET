@@ -60,7 +60,7 @@ Namespace API.Types
         ''' <param name="format"></param>
         ''' <returns></returns>
         ''' <remarks></remarks>
-        Public Shared Function toKintoneDate(ByVal vdate As DateTime, Optional ByVal format As String = "") As String
+        Public Shared Function toKintoneFormat(ByVal vdate As DateTime, Optional ByVal format As String = "") As String
 
             Dim result As String = ""
             Dim value As DateTime = vdate
@@ -84,6 +84,16 @@ Namespace API.Types
 
             Return result
 
+        End Function
+
+        Public Shared Function toKintoneDateTime(ByVal vdate As DateTime) As String
+            Return toKintoneFormat(vdate, "DATETIME")
+        End Function
+        Public Shared Function toKintoneYMD(ByVal vdate As DateTime) As String
+            Return toKintoneFormat(vdate, "YMD")
+        End Function
+        Public Shared Function toKintoneTime(ByVal vdate As DateTime) As String
+            Return toKintoneFormat(vdate, "TIME")
         End Function
 
         ''' <summary>

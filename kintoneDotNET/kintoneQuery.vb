@@ -17,7 +17,7 @@ Namespace API
         ''' <param name="nameConvertor">クエリ上の項目名を特定の項目名に変換したい場合、変換用ディクショナリを設定</param>
         ''' <returns></returns>
         ''' <remarks></remarks>
-        Public Shared Function toQuery(Of T As AbskintoneModel)(ByVal expression As Expression(Of Func(Of T, Boolean)), _
+        Public Shared Function Make(Of T As AbskintoneModel)(ByVal expression As Expression(Of Func(Of T, Boolean)), _
                                                                 Optional ByVal nameConvertor As Dictionary(Of String, String) = Nothing) As String
             'Linq Expressions :http://msdn.microsoft.com/ja-jp/library/system.linq.expressions(v=vs.100).aspx
             'Linq ExpressionType :http://msdn.microsoft.com/ja-jp/library/bb361179(v=vs.100).aspx
@@ -119,10 +119,10 @@ Namespace API
                 End If
             End If
 
-            left = extractMember(left)
-            If left Is Nothing Then Throw New InvalidExpressionException("左辺となるべきプロパティが見つかりません")
+            Dim leftMember As MemberExpression = extractMember(left)
+            If leftMember Is Nothing Then Throw New InvalidExpressionException("左辺となるべきプロパティが見つかりません")
 
-            name = CType(left, MemberExpression).Member.Name
+            name = leftMember.Member.Name
             value = extractValue(right)
 
             If operand = ExpressionType.Not Then

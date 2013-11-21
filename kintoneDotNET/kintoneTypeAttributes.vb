@@ -13,7 +13,7 @@ Namespace API
 
         ''' <summary>
         ''' kintone上のタイプを明示的に指定する。
-        ''' 例：Datetime型の場合、日付時刻/日付/時刻で3タイプあるため明示的に指定するなど
+        ''' 例：Datetime型の場合、日付時刻(DATETIME)/日付(YMD)/時刻(TIME)で3タイプあるため明示的に指定するなど
         ''' </summary>
         ''' <value></value>
         ''' <returns></returns>

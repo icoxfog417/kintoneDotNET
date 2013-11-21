@@ -86,10 +86,11 @@ Namespace API
                 Select Case pType
                     Case GetType(DateTime)
                         Dim d As DateTime = value
-                        If value Is Nothing Then
-                            d = kintoneDatetime.InitialValue
+                        If value Is Nothing OrElse d.Equals(DateTime.MinValue) Then
+                            result = "" 'Requiredの場合kintoneDatetime.InitialValueをセットした方がいいかも
+                        Else
+                            result = kintoneDatetime.toKintoneFormat(d, attr.FieldType)
                         End If
-                        result = kintoneDatetime.toKintoneDate(d, attr.FieldType)
                     Case GetType(kintoneFile)
                         Dim obj As kintoneFile = CType(value, kintoneFile)
                         result = New With {.fileKey = obj.fileKey}

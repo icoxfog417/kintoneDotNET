@@ -57,31 +57,31 @@ Public Class APITest
         Dim querys As New Dictionary(Of String, String)
         Dim q As String = ""
         'Simple Expression
-        q = kintoneQuery.toQuery(Of kintoneTestModel)(Function(x) x.status > "a", AbskintoneModel.GetPropertyToDefaultDic)
+        q = kintoneQuery.Make(Of kintoneTestModel)(Function(x) x.status > "a", AbskintoneModel.GetPropertyToDefaultDic)
         Console.WriteLine("querySimple1:" + q)
         Assert.AreEqual("ステータス > ""a""", q)
 
-        q = kintoneQuery.toQuery(Of kintoneTestModel)(Function(x) Not x.status > "a", AbskintoneModel.GetPropertyToDefaultDic)
+        q = kintoneQuery.Make(Of kintoneTestModel)(Function(x) Not x.status > "a", AbskintoneModel.GetPropertyToDefaultDic)
         Console.WriteLine("querySimple2:" + q)
         Assert.AreEqual("ステータス <= ""a""", q)
 
         'Equal
-        q = kintoneQuery.toQuery(Of kintoneTestModel)(Function(x) x.status.Equals(1) Or x.record_id <> 1 And Not x.numberField = 1)
+        q = kintoneQuery.Make(Of kintoneTestModel)(Function(x) x.status.Equals(1) Or x.record_id <> 1 And Not x.numberField = 1)
         Console.WriteLine("queryEqual:" + q)
         Assert.AreEqual("status = 1 or record_id != 1 and numberField != 1", q)
 
         'like
-        q = kintoneQuery.toQuery(Of kintoneTestModel)(Function(x) x.status Like "A" And Not x.link Like "http")
+        q = kintoneQuery.Make(Of kintoneTestModel)(Function(x) x.status Like "A" And Not x.link Like "http")
         Console.WriteLine("queryLike:" + q)
         Assert.AreEqual("status like ""A"" and link not like ""http""", q)
 
         'IN
-        q = kintoneQuery.toQuery(Of kintoneTestModel)(Function(x) {"1", "a"}.Contains(x.radio) And Not New List(Of String)() From {"c", "d"}.Contains(x.radio))
+        q = kintoneQuery.Make(Of kintoneTestModel)(Function(x) {"1", "a"}.Contains(x.radio) And Not New List(Of String)() From {"c", "d"}.Contains(x.radio))
         Console.WriteLine("queryArray&List:" + q)
         Assert.AreEqual("radio in (""1"",""a"") and radio not in (""c"",""d"")", q)
 
         'method Equal
-        q = kintoneQuery.toQuery(Of kintoneTestModel)(Function(x) x.status = String.Empty And x.created_time < kintoneDatetime.toKintoneDate(DateTime.MaxValue, "DATETIME"))
+        q = kintoneQuery.Make(Of kintoneTestModel)(Function(x) x.status = String.Empty And x.created_time < kintoneDatetime.toKintoneDateTime(DateTime.MaxValue))
         Console.WriteLine("queryMethodCall:" + q)
         Assert.AreEqual("status = """" and created_time < ""9999-12-31T23:59:59+09:00""", q)
 
@@ -115,23 +115,64 @@ Public Class APITest
 
 
     ''' <summary>
-    ''' Create/Deleteのテスト
+    ''' レコードの登録/更新/削除
+    ''' ※複数のTestMethodに分かれて行うとidが消えたり削除されたりして予期せずエラーになる場合があるので、一つにまとめる
     ''' </summary>
     ''' <remarks></remarks>
     <TestMethod()>
-    Public Sub ExcecuteCreateDelete()
-        Const METHOD_NAME As String = "ExcecuteCreateDelete"
+    Public Sub ExecuteCreateDelete()
+        Const METHOD_NAME As String = "ExecuteCreateDelete"
 
+        '事前に削除
+        Dim remained As List(Of kintoneTestModel) = kintoneTestModel.Find(Of kintoneTestModel)(Function(x) x.methodinfo = METHOD_NAME).OrderBy(Function(x) x.textarea).ToList
+        kintoneTestModel.Delete(Of kintoneTestModel)(remained.Select(Function(x) x.record_id).ToList)
+
+        '単一のケース -------------------------------------------------------------
         Dim item As New kintoneTestModel
         item.methodinfo = METHOD_NAME
 
-        Dim ids As List(Of String) = item.Create
+        Dim id As String = item.Create
+        Assert.IsFalse(String.IsNullOrEmpty(id))
+        item.record_id = id
 
-        Assert.IsTrue(ids.Count > 0)
-
-        item.Delete(ids)
-
+        Assert.IsTrue(item.Delete())
         Dim result As List(Of kintoneTestModel) = kintoneTestModel.Find(Of kintoneTestModel)("methodinfo=""" + METHOD_NAME + """")
+
+
+        '複合のケース -------------------------------------------------------------
+        Dim list As New List(Of kintoneTestModel)
+
+        Dim before As Integer = kintoneAPI.ExecuteLimit
+        kintoneAPI.ExecuteLimit = 1
+
+        For i As Integer = 0 To 2
+            Dim m As New kintoneTestModel
+            m.methodinfo = METHOD_NAME
+            m.textarea = "bulk insert " + (i + 1).ToString
+            list.Add(m)
+        Next
+
+        '登録
+        Dim ids As List(Of kintoneTestModel) = kintoneTestModel.Create(list)
+        Assert.AreEqual(list.Count, ids.Count)
+        Dim inserted As List(Of kintoneTestModel) = kintoneTestModel.Find(Of kintoneTestModel)(Function(x) x.methodinfo = METHOD_NAME).OrderBy(Function(x) x.textarea).ToList
+
+        For i As Integer = 0 To 2
+            Assert.AreEqual(list(i).textarea, inserted(i).textarea)
+            inserted(i).textarea = "bulk updated " + (i + 1).ToString
+        Next
+
+        '更新
+        Assert.IsTrue(kintoneTestModel.Update(inserted))
+        Dim updated As List(Of kintoneTestModel) = kintoneTestModel.Find(Of kintoneTestModel)(Function(x) x.methodinfo = METHOD_NAME).OrderBy(Function(x) x.textarea).ToList
+        For i As Integer = 0 To 2
+            Assert.AreEqual(inserted(i).textarea, updated(i).textarea)
+        Next
+
+        '削除
+        Assert.IsTrue(kintoneTestModel.Delete(Of kintoneTestModel)(updated.Select(Function(x) x.record_id).ToList))
+
+        kintoneAPI.ExecuteLimit = before
 
     End Sub
 
