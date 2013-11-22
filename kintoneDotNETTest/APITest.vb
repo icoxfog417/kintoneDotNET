@@ -81,7 +81,7 @@ Public Class APITest
         Assert.AreEqual("radio in (""1"",""a"") and radio not in (""c"",""d"")", q)
 
         'method Equal
-        q = kintoneQuery.Make(Of kintoneTestModel)(Function(x) x.status = String.Empty And x.created_time < kintoneDatetime.toKintoneDateTime(DateTime.MaxValue))
+        q = kintoneQuery.Make(Of kintoneTestModel)(Function(x) x.status = String.Empty And x.created_time < DateTime.MaxValue)
         Console.WriteLine("queryMethodCall:" + q)
         Assert.AreEqual("status = """" and created_time < ""9999-12-31T23:59:59+09:00""", q)
 

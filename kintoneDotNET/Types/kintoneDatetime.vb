@@ -8,6 +8,10 @@ Namespace API.Types
     ''' <remarks></remarks>
     Public Class kintoneDatetime
 
+        Public Const DateTimeType As String = "DATETIME"
+        Public Const TimeType As String = "TIME"
+        Public Const YMDType As String = "YMD"
+
         ''' <summary>
         ''' kintone上の日付の初期値を取得する
         ''' </summary>
@@ -69,13 +73,13 @@ Namespace API.Types
             End If
 
             Select Case format
-                Case "DATETIME"
+                Case DateTimeType
                     result = value.ToString("yyyy-MM-ddTHH:mm:ss")
                     Dim utc As DateTime = value.ToUniversalTime()
                     Dim span As TimeSpan = value - utc 'UTC時刻どの差分を計算し末尾に付与する
                     If span >= TimeSpan.Zero Then result += "+" Else result += "-"
                     result += span.ToString("hh\:mm")
-                Case "TIME"
+                Case TimeType
                     result = value.ToString("HH:mm:ss")
                 Case Else 'デフォルト日付として扱う
                     'kintone上はハイフン区切りのStringになる
@@ -84,16 +88,6 @@ Namespace API.Types
 
             Return result
 
-        End Function
-
-        Public Shared Function toKintoneDateTime(ByVal vdate As DateTime) As String
-            Return toKintoneFormat(vdate, "DATETIME")
-        End Function
-        Public Shared Function toKintoneYMD(ByVal vdate As DateTime) As String
-            Return toKintoneFormat(vdate, "YMD")
-        End Function
-        Public Shared Function toKintoneTime(ByVal vdate As DateTime) As String
-            Return toKintoneFormat(vdate, "TIME")
         End Function
 
         ''' <summary>

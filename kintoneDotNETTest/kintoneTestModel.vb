@@ -5,36 +5,36 @@ Imports System.Configuration
 Public Class kintoneTestModel
     Inherits AbskintoneModel
 
-    <UploadTarget>
+    <kintoneItem>
     Public Property methodinfo As String = ""
-    <UploadTarget>
+    <kintoneItem>
     Public Property stringField As String = ""
-    <UploadTarget>
+    <kintoneItem>
     Public Property numberField As Decimal = 0
-    <UploadTarget(InitialValue:="radio1")>
+    <kintoneItem(InitialValue:="radio1")>
     Public Property radio As String = ""
-    <UploadTarget>
+    <kintoneItem>
     Public Property checkbox As New List(Of String)
-    <UploadTarget(InitialValue:="drop1")>
+    <kintoneItem(InitialValue:="drop1")>
     Public Property dropdown As String = ""
-    <UploadTarget>
+    <kintoneItem>
     Public Property textarea As String = ""
-    <UploadTarget>
+    <kintoneItem>
     Public Property editor As String = ""
-    <UploadTarget>
+    <kintoneItem>
     Public Property multiselect As New List(Of String)
-    <UploadTarget>
+    <kintoneItem>
     Public Property dateField As DateTime = Nothing
-    <UploadTarget(FieldType:="TIME")>
+    <kintoneItem(FieldType:=kintoneDatetime.TimeType)>
     Public Property time As DateTime = Nothing
-    <UploadTarget(FieldType:="DATETIME")>
+    <kintoneItem(FieldType:=kintoneDatetime.DateTimeType)>
     Public Property datetimeField As DateTime = Nothing
-    <UploadTarget>
+    <kintoneItem>
     Public Property link As String = ""
-    <UploadTarget>
+    <kintoneItem>
     Public Property attachfile As New List(Of kintoneFile)
 
-    <UploadTarget>
+    <kintoneItem>
     Public Property changeLogs As New List(Of ChangeLog)
 
     Private _app As String = ConfigurationManager.AppSettings("testAppId")
@@ -60,10 +60,10 @@ End Class
 Public Class ChangeLog
     Inherits kintoneSubTableItem
 
-    <UploadTarget>
+    <kintoneItem>
     Public Property changeYMD As DateTime = Nothing
 
-    <UploadTarget>
+    <kintoneItem>
     Public Property historyDesc As String = ""
 
     Public Sub New()

@@ -1,5 +1,6 @@
 ﻿Imports System.Reflection
 Imports System.Linq.Expressions
+Imports kintoneDotNET.API.Types
 
 Namespace API
 
@@ -62,7 +63,7 @@ Namespace API
                     Dim expRight As List(Of kintoneFieldConnector) = searchExpression(CType(exp, BinaryExpression).Right)
 
                     If expLeft.Count > 0 Then result.AddRange(expLeft)
-                    
+
                     If expRight.Count > 0 Then
                         expRight.First.isAnd = isAndParam 'Left/Rightの境界を設定
                         result.AddRange(expRight)
@@ -87,9 +88,10 @@ Namespace API
 
             Dim left As Expression = Nothing
             Dim right As Expression = Nothing
+            Dim prop As PropertyInfo = Nothing
             Dim name As String = ""
             Dim opr As String = ""
-            Dim value As String = ""
+            Dim value As Object = ""
 
             If TypeOf exp Is BinaryExpression Then
                 left = CType(exp, BinaryExpression).Left
@@ -124,6 +126,7 @@ Namespace API
 
             name = leftMember.Member.Name
             value = extractValue(right)
+            prop = leftMember.Member.DeclaringType.GetProperty(name)
 
             If operand = ExpressionType.Not Then
                 opr = "not "
@@ -152,7 +155,15 @@ Namespace API
                     End Select
             End Select
 
-            field = New kintoneQueryField(name, opr, value)
+            If prop.PropertyType = GetType(DateTime) Then 'DateTime型の場合比較値が特殊になるため、対応を行う
+                Dim attr As kintoneItemAttribute = prop.GetCustomAttributes(GetType(kintoneItemAttribute), True).SingleOrDefault
+                If attr IsNot Nothing Then
+                    Dim dateFormat As String = If(Not String.IsNullOrEmpty(attr.FieldType), attr.FieldType, kintoneDatetime.YMDType)
+                    value = kintoneDatetime.toKintoneFormat(value, dateFormat)
+                End If
+            End If
+
+            field = New kintoneQueryField(name, opr, valueToString(value))
 
             Return field
 
@@ -172,15 +183,15 @@ Namespace API
             End If
         End Function
 
-        Private Shared Function extractValue(ByVal exp As Expression) As String
+        Private Shared Function extractValue(ByVal exp As Expression) As Object
             If TypeOf exp Is MethodCallExpression Then
                 Dim method As MethodCallExpression = CType(exp, MethodCallExpression)
                 Dim value As Object = method.Method.Invoke(method.Object, evalValues(method.Arguments).ToArray)
-                Return valueToString(value)
+                Return value
             ElseIf TypeOf exp Is UnaryExpression Then
                 Return extractValue(CType(exp, UnaryExpression).Operand)
             Else
-                Return valueToString(evalValue(exp))
+                Return evalValue(exp)
             End If
 
         End Function

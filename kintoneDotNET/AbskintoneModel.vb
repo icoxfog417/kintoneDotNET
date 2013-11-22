@@ -8,9 +8,8 @@ Namespace API
     ''' kintoneのレコードに対応するモデルの基となる、抽象クラス
     ''' </summary>
     ''' <remarks>
-    ''' 読込は全てのプロパティに対して行われるが、kintoneへ送信するのはUploadTargetAttribute属性がついている項目のみとしている
-    ''' このため、kintone側で更新したいプロパティについては&lt;UploadTarget()&gt;を付与する。
-    ''' 
+    ''' 読込は全てのプロパティに対して行われるが、kintoneへ送信するのはkintoneItemAttribute属性が付与されており、isUpload=Trueのもの(デフォルトTrue)<br/>
+    ''' このため、kintone側で更新したいプロパティについては&lt;kintoneItem()&gt;を付与する。<br/>
     ''' リスト型のデータ(チェックボックスリストや添付ファイルなど)については、List(Of )で宣言を行う必要あり
     ''' </remarks>
     Public MustInherit Class AbskintoneModel
@@ -28,11 +27,13 @@ Namespace API
         ''' <summary>
         ''' [共通]登録時刻
         ''' </summary>
+        <kintoneItem(FieldType:=kintoneDatetime.DateTimeType, isUpload:=False)>
         Public Overridable Property created_time As DateTime = DateTime.MinValue
 
         ''' <summary>
         ''' [共通]更新時刻
         ''' </summary>
+        <kintoneItem(FieldType:=kintoneDatetime.DateTimeType, isUpload:=False)>
         Public Overridable Property updated_time As DateTime = DateTime.MinValue
 
         ''' <summary>
@@ -90,8 +91,10 @@ Namespace API
         ''' <para>
         ''' <code>
         '''   'AbskintoneModelを継承して作成したBookModelを使用し、検索を行う
-        '''   Dim list  AS List(Of BookModel) = BookModel.Find(Of BookModel)(Function(x) x.title Like "Mathematics" And x.price &lt; 3000 )
-        '''   Dim upded AS List(Of BookModel) = BookModel.Find(Of BookModel)(Function(x) x.updated_time >= kintoneDatetime.toKintoneDateTime(DateTime.Now))
+        '''   Dim list AS List(Of BookModel) = BookModel.Find(Of BookModel)(Function(x) x.title Like "Mathematics" And x.price &lt; 3000 )
+        '''   
+        '''   'Attributeを設定しておけば、日付型の条件指定もDateTime型オブジェクトから直接行えます
+        '''   Dim upds AS List(Of BookModel) = BookModel.Find(Of BookModel)(Function(x) x.updated_time >= DateTime.Now)
         ''' </code>
         ''' </para>
         ''' </example>

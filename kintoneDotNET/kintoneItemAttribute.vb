@@ -6,7 +6,7 @@ Namespace API
     ''' </summary>
     ''' <remarks></remarks>
     <AttributeUsage(AttributeTargets.Property)>
-    Public Class UploadTargetAttribute
+    Public Class kintoneItemAttribute
         Inherits Attribute
         Public Sub New()
         End Sub
@@ -18,7 +18,7 @@ Namespace API
         ''' <value></value>
         ''' <returns></returns>
         ''' <remarks></remarks>
-        Public Property FieldType As String
+        Public Property FieldType As String = ""
 
         ''' <summary>
         ''' 値がNothingの場合の初期値(空白文字列も対象となる。String.isNullOrEmptyの場合設定値が適用される)
@@ -27,7 +27,15 @@ Namespace API
         ''' <value></value>
         ''' <returns></returns>
         ''' <remarks></remarks>
-        Public Property InitialValue As Object
+        Public Property InitialValue As Object = Nothing
+
+        ''' <summary>
+        ''' 更新対象か否かのフラグ。デフォルトTrue
+        ''' </summary>
+        ''' <value></value>
+        ''' <returns></returns>
+        ''' <remarks></remarks>
+        Public Property isUpload As Boolean = True
 
 
     End Class

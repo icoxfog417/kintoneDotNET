@@ -23,7 +23,6 @@ Namespace API
 
         ''' <summary>
         ''' kintoneへ送信する際のシリアライズを行う
-        ''' kintoneへ送信するのは、UploadTargetAttribute属性がついている項目のみ
         ''' </summary>
         ''' <param name="obj"></param>
         ''' <param name="serializer"></param>
@@ -33,12 +32,12 @@ Namespace API
 
             Dim result As New Dictionary(Of String, Object)
 
-            'UploadTargetAttributeがセットされている項目を取得してシリアライズ
+            'kintoneItemAttributeがセットされていて、更新対象である項目を取得してシリアライズ
             Dim objType As Type = obj.GetType
             Dim props As PropertyInfo() = objType.GetProperties()
             Dim targets = From p As PropertyInfo In props
-                          Let attribute As UploadTargetAttribute = p.GetCustomAttributes(GetType(UploadTargetAttribute), True).SingleOrDefault
-                          Where Not attribute Is Nothing
+                          Let attribute As kintoneItemAttribute = p.GetCustomAttributes(GetType(kintoneItemAttribute), True).SingleOrDefault
+                          Where Not attribute Is Nothing AndAlso attribute.isUpload
                           Select p, attribute
 
             For Each tgt In targets
@@ -67,7 +66,7 @@ Namespace API
         ''' <param name="value"></param>
         ''' <returns></returns>
         ''' <remarks></remarks>
-        Private Function makeKintoneItem(ByVal pType As Type, ByVal attr As UploadTargetAttribute, ByVal value As Object, ByVal serializer As JavaScriptSerializer, Optional ByVal isRaw As Boolean = False) As Object
+        Private Function makeKintoneItem(ByVal pType As Type, ByVal attr As kintoneItemAttribute, ByVal value As Object, ByVal serializer As JavaScriptSerializer, Optional ByVal isRaw As Boolean = False) As Object
             Dim result As Object = Nothing
 
             If pType.BaseType = GetType(kintoneSubTableItem) Then '内部テーブル項目

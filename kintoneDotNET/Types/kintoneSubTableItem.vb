@@ -8,7 +8,7 @@ Namespace API.Types
     Public MustInherit Class kintoneSubTableItem
         Implements IkintoneType
 
-        <UploadTarget()>
+        <kintoneItemAttribute()>
         Public Overridable Property id As String = ""
 
     End Class

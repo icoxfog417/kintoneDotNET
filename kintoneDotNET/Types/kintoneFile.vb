@@ -9,7 +9,7 @@ Namespace API.Types
         Implements IkintoneType
 
         Public Property contentType As String
-        <UploadTarget()>
+        <kintoneItemAttribute()>
         Public Property fileKey As String
         Public Property name As String
         Public Property size As String

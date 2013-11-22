@@ -78,7 +78,7 @@
     <Compile Include="Types\kintoneFile.vb" />
     <Compile Include="Types\kintoneSubTableItem.vb" />
     <Compile Include="Types\kintoneType.vb" />
-    <Compile Include="kintoneTypeAttributes.vb" />
+    <Compile Include="kintoneItemAttribute.vb" />
     <Compile Include="kintoneTypeExtension.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
