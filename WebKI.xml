@@ -47,6 +47,7 @@
   </HelpKINode>
   <HelpKINode Title="created_time property" Url="html/db50728f-f05f-48b4-e0e9-040897d3e445.htm" />
   <HelpKINode Title="create_usr property" Url="html/fea22229-51ac-d595-a9b9-589a46763993.htm" />
+  <HelpKINode Title="DateTimeType field" Url="html/586b60de-2ed9-647e-85d8-a48d9552e1d5.htm" />
   <HelpKINode Title="Delete method">
     <HelpKINode Title="AbskintoneModel.Delete Method " Url="html/f44dcff7-4892-5f7b-0c4c-e45ea8505ddf.htm" />
     <HelpKINode Title="kintoneAPI.Delete Method " Url="html/31c81cc1-7e7c-f90c-c727-65f4a8749a1a.htm" />
@@ -61,7 +62,7 @@
   <HelpKINode Title="ExecuteLimit property" Url="html/9120c080-7480-9028-2fa9-2088a7c27f97.htm" />
   <HelpKINode Title="Field property" Url="html/5f8ba039-9ef4-bf72-7049-e9282cc76100.htm" />
   <HelpKINode Title="FieldName property" Url="html/d2e2a94f-f4da-7c71-e5cc-67254452f727.htm" />
-  <HelpKINode Title="FieldType property" Url="html/0a8d9e77-471f-b88b-9d4d-2ee37aca8a4e.htm" />
+  <HelpKINode Title="FieldType property" Url="html/536a18bf-7d1f-c898-b162-d6d0ac04690a.htm" />
   <HelpKINode Title="fileKey property" Url="html/c1fa97ca-26cc-ec6a-6300-f0be6869369b.htm" />
   <HelpKINode Title="FileName property" Url="html/e3119f2a-5699-5bba-cae6-3534a62dafc1.htm" />
   <HelpKINode Title="Find method" Url="html/1ea67fc5-6b24-d53e-15af-3640ac894770.htm" />
@@ -87,10 +88,11 @@
   </HelpKINode>
   <HelpKINode Title="InitialValue property">
     <HelpKINode Title="kintoneDatetime.InitialValue Property " Url="html/e9b10050-20da-761b-3b98-d67457b6820c.htm" />
-    <HelpKINode Title="UploadTargetAttribute.InitialValue Property " Url="html/962cd3b3-e1bb-bf61-07ff-840360c65f7c.htm" />
+    <HelpKINode Title="kintoneItemAttribute.InitialValue Property " Url="html/a5ec863b-ae5e-509f-8215-ce9385a1ef6b.htm" />
   </HelpKINode>
   <HelpKINode Title="InputStream property" Url="html/b85b7905-c0e3-db97-1764-f9c4536b2335.htm" />
   <HelpKINode Title="isAnd property" Url="html/ab2f7ee6-bdd8-e185-e2be-2a82723609de.htm" />
+  <HelpKINode Title="isUpload property" Url="html/96f47185-a35e-047b-0202-f3886386e415.htm" />
   <HelpKINode Title="kintoneAPI class">
     <HelpKINode Title="kintoneAPI Class" Url="html/ad1a71a0-bee3-790a-760f-63c46fa69fe0.htm" />
     <HelpKINode Title="kintoneAPI Members" Url="html/7f47c380-2019-7456-17a9-b3de8189a482.htm" />
@@ -159,17 +161,18 @@
     <HelpKINode Title="about kintoneDatetime class" Url="html/c3967b5d-fb06-cab1-1984-f59963fe8860.htm" />
     <HelpKINode Title="all members" Url="html/d44693fd-677b-8418-74e9-6603c70f1edb.htm" />
     <HelpKINode Title="constructor" Url="html/17b452db-ee3c-4e0e-4f07-259d956c9a4b.htm" />
+    <HelpKINode Title="fields" Url="html/b0a6a7df-a2fa-8f2f-07e7-88f4d100f7b7.htm" />
     <HelpKINode Title="methods" Url="html/e3b64438-2ec5-9d44-5ded-7a08da2291ab.htm" />
     <HelpKINode Title="properties" Url="html/f59b2286-e0ef-8ccf-0d8d-245c1d60fd25.htm" />
   </HelpKINode>
+  <HelpKINode Title="kintoneDatetime.DateTimeType field" Url="html/586b60de-2ed9-647e-85d8-a48d9552e1d5.htm" />
   <HelpKINode Title="kintoneDatetime.InitialValue property" Url="html/e9b10050-20da-761b-3b98-d67457b6820c.htm" />
   <HelpKINode Title="kintoneDatetime.kintoneDatetime constructor" Url="html/17b452db-ee3c-4e0e-4f07-259d956c9a4b.htm" />
   <HelpKINode Title="kintoneDatetime.kintoneToDatetime method" Url="html/210b3898-a9ba-833c-9c16-ca043612899f.htm" />
+  <HelpKINode Title="kintoneDatetime.TimeType field" Url="html/26c97558-c100-b169-abcc-b0004fdb1858.htm" />
   <HelpKINode Title="kintoneDatetime.toDatetime method" Url="html/a3fc7717-cea4-91d8-6659-1dbadd32e4b6.htm" />
-  <HelpKINode Title="kintoneDatetime.toKintoneDateTime method" Url="html/4f4b84e9-7a7c-8b84-9bf5-7586d9fa6016.htm" />
   <HelpKINode Title="kintoneDatetime.toKintoneFormat method" Url="html/75bf3b3c-d8c8-dd5f-762d-4b3fbe5553e2.htm" />
-  <HelpKINode Title="kintoneDatetime.toKintoneTime method" Url="html/79f7db7f-c0f3-f515-846b-6903567f2192.htm" />
-  <HelpKINode Title="kintoneDatetime.toKintoneYMD method" Url="html/98eb49fb-ad94-17d1-4e80-7b6656711772.htm" />
+  <HelpKINode Title="kintoneDatetime.YMDType field" Url="html/e5ee6efd-80f5-0268-f28e-4ddefe9d9212.htm" />
   <HelpKINode Title="kintoneDotNET.API namespace" Url="html/724b228d-441a-70e1-de7a-2c17d2bdb28a.htm" />
   <HelpKINode Title="kintoneDotNET.API.AbskintoneModel class">
     <HelpKINode Title="AbskintoneModel Class" Url="html/e3357b85-5ae4-6559-8584-70f47c91b029.htm" />
@@ -194,6 +197,10 @@
   <HelpKINode Title="kintoneDotNET.API.kintoneFieldConnector class">
     <HelpKINode Title="kintoneFieldConnector Class" Url="html/a4ddc2b1-70b8-41d9-ce14-055a958c33b3.htm" />
     <HelpKINode Title="kintoneFieldConnector Members" Url="html/fbe7ee05-6091-4474-4ecf-7b63ed5f7127.htm" />
+  </HelpKINode>
+  <HelpKINode Title="kintoneDotNET.API.kintoneItemAttribute class">
+    <HelpKINode Title="kintoneItemAttribute Class" Url="html/aae45e29-33c4-13b7-caa0-47c122a3fe6e.htm" />
+    <HelpKINode Title="kintoneItemAttribute Members" Url="html/9a081150-e057-2b03-193a-91518fe304b1.htm" />
   </HelpKINode>
   <HelpKINode Title="kintoneDotNET.API.kintoneQuery class">
     <HelpKINode Title="kintoneQuery Class" Url="html/806e28f2-8bb7-4cee-4dcf-5d4b44d017fc.htm" />
@@ -256,10 +263,6 @@
   <HelpKINode Title="kintoneDotNET.API.Types.PostedFile class">
     <HelpKINode Title="PostedFile Class" Url="html/1321bf77-f3bf-7431-8c86-915833d2a884.htm" />
     <HelpKINode Title="PostedFile Members" Url="html/0036b344-ba09-a2e3-7145-89e6ccbd294a.htm" />
-  </HelpKINode>
-  <HelpKINode Title="kintoneDotNET.API.UploadTargetAttribute class">
-    <HelpKINode Title="UploadTargetAttribute Class" Url="html/88177812-7487-84b4-140f-ce324806284f.htm" />
-    <HelpKINode Title="UploadTargetAttribute Members" Url="html/1c469488-3e9f-2216-67a4-8f557fc4b023.htm" />
   </HelpKINode>
   <HelpKINode Title="kintoneError class">
     <HelpKINode Title="kintoneError Class" Url="html/cfe34933-6974-ee7a-fae9-a2de4c177538.htm" />
@@ -339,6 +342,19 @@
   <HelpKINode Title="kintoneItem.kintoneItem constructor" Url="html/214b0aba-019e-8889-f59f-24987b76d1b5.htm" />
   <HelpKINode Title="kintoneItem.type property" Url="html/2319c4de-0ce6-c987-58d6-77a45c60ed1d.htm" />
   <HelpKINode Title="kintoneItem.value property" Url="html/f5f363c9-d8e8-4235-e530-25e63acf7f46.htm" />
+  <HelpKINode Title="kintoneItemAttribute class">
+    <HelpKINode Title="kintoneItemAttribute Class" Url="html/aae45e29-33c4-13b7-caa0-47c122a3fe6e.htm" />
+    <HelpKINode Title="kintoneItemAttribute Members" Url="html/9a081150-e057-2b03-193a-91518fe304b1.htm" />
+    <HelpKINode Title="about kintoneItemAttribute class" Url="html/aae45e29-33c4-13b7-caa0-47c122a3fe6e.htm" />
+    <HelpKINode Title="all members" Url="html/9a081150-e057-2b03-193a-91518fe304b1.htm" />
+    <HelpKINode Title="constructor" Url="html/d88729d0-4486-ddf9-f6da-0e2d0986b336.htm" />
+    <HelpKINode Title="methods" Url="html/c24bebbe-0dbe-f562-e56d-3c4dd64b12c9.htm" />
+    <HelpKINode Title="properties" Url="html/1df52361-af28-1ec3-b1e2-27a9c116fedd.htm" />
+  </HelpKINode>
+  <HelpKINode Title="kintoneItemAttribute.FieldType property" Url="html/536a18bf-7d1f-c898-b162-d6d0ac04690a.htm" />
+  <HelpKINode Title="kintoneItemAttribute.InitialValue property" Url="html/a5ec863b-ae5e-509f-8215-ce9385a1ef6b.htm" />
+  <HelpKINode Title="kintoneItemAttribute.isUpload property" Url="html/96f47185-a35e-047b-0202-f3886386e415.htm" />
+  <HelpKINode Title="kintoneItemAttribute.kintoneItemAttribute constructor" Url="html/d88729d0-4486-ddf9-f6da-0e2d0986b336.htm" />
   <HelpKINode Title="kintoneQuery class">
     <HelpKINode Title="kintoneQuery Class" Url="html/806e28f2-8bb7-4cee-4dcf-5d4b44d017fc.htm" />
     <HelpKINode Title="kintoneQuery Members" Url="html/b3082d02-3273-7266-3a45-bc78bdd5fb1d.htm" />
@@ -490,13 +506,11 @@
   <HelpKINode Title="size property" Url="html/c7a387bf-cd6d-0b0d-8b5f-36bbd6d82654.htm" />
   <HelpKINode Title="status property" Url="html/c2942655-9f29-742e-a766-b4d8bb5db2cd.htm" />
   <HelpKINode Title="SupportedTypes property" Url="html/8256eba7-a48d-d4fc-6906-f2586306bf66.htm" />
+  <HelpKINode Title="TimeType field" Url="html/26c97558-c100-b169-abcc-b0004fdb1858.htm" />
   <HelpKINode Title="toDatetime method" Url="html/a3fc7717-cea4-91d8-6659-1dbadd32e4b6.htm" />
   <HelpKINode Title="ToHttpPostedFileBase method" Url="html/93a28f6d-4321-f4d1-3f92-e20d2f8ac3a0.htm" />
   <HelpKINode Title="ToHttpPostedFileBaseList method" Url="html/03aa7276-1dac-451a-06e4-d4b2296600ab.htm" />
-  <HelpKINode Title="toKintoneDateTime method" Url="html/4f4b84e9-7a7c-8b84-9bf5-7586d9fa6016.htm" />
   <HelpKINode Title="toKintoneFormat method" Url="html/75bf3b3c-d8c8-dd5f-762d-4b3fbe5553e2.htm" />
-  <HelpKINode Title="toKintoneTime method" Url="html/79f7db7f-c0f3-f515-846b-6903567f2192.htm" />
-  <HelpKINode Title="toKintoneYMD method" Url="html/98eb49fb-ad94-17d1-4e80-7b6656711772.htm" />
   <HelpKINode Title="ToString method" Url="html/83b9270b-193c-1422-3a92-c4e6e556d713.htm" />
   <HelpKINode Title="type property" Url="html/2319c4de-0ce6-c987-58d6-77a45c60ed1d.htm" />
   <HelpKINode Title="Update method">
@@ -509,19 +523,8 @@
     <HelpKINode Title="kintoneAPI.UploadFile Method " Url="html/6e036750-8ee9-be7f-742c-b5ae0b8870c0.htm" />
     <HelpKINode Title="kintoneTypeExtension.UploadFile Method " Url="html/713bc592-c44f-d013-1ab9-052238442ceb.htm" />
   </HelpKINode>
-  <HelpKINode Title="UploadTargetAttribute class">
-    <HelpKINode Title="UploadTargetAttribute Class" Url="html/88177812-7487-84b4-140f-ce324806284f.htm" />
-    <HelpKINode Title="UploadTargetAttribute Members" Url="html/1c469488-3e9f-2216-67a4-8f557fc4b023.htm" />
-    <HelpKINode Title="about UploadTargetAttribute class" Url="html/88177812-7487-84b4-140f-ce324806284f.htm" />
-    <HelpKINode Title="all members" Url="html/1c469488-3e9f-2216-67a4-8f557fc4b023.htm" />
-    <HelpKINode Title="constructor" Url="html/bb8a7e5c-20d7-b748-4aa0-cafb75aa95c2.htm" />
-    <HelpKINode Title="methods" Url="html/2af82669-feee-6975-f27d-7ef04ce7090c.htm" />
-    <HelpKINode Title="properties" Url="html/09a3cb1a-b578-b579-0e81-23453c4d3157.htm" />
-  </HelpKINode>
-  <HelpKINode Title="UploadTargetAttribute.FieldType property" Url="html/0a8d9e77-471f-b88b-9d4d-2ee37aca8a4e.htm" />
-  <HelpKINode Title="UploadTargetAttribute.InitialValue property" Url="html/962cd3b3-e1bb-bf61-07ff-840360c65f7c.htm" />
-  <HelpKINode Title="UploadTargetAttribute.UploadTargetAttribute constructor" Url="html/bb8a7e5c-20d7-b748-4aa0-cafb75aa95c2.htm" />
-  <HelpKINode Title="value property" Url="html/f5f363c9-d8e8-4235-e530-25e63acf7f46.htm" />
   <HelpKINode Title="Value property" Url="html/77850202-06d6-f9b9-4eac-8aa002913376.htm" />
+  <HelpKINode Title="value property" Url="html/f5f363c9-d8e8-4235-e530-25e63acf7f46.htm" />
   <HelpKINode Title="work_usr property" Url="html/7a530038-0276-320b-5eaa-44968953ce53.htm" />
+  <HelpKINode Title="YMDType field" Url="html/e5ee6efd-80f5-0268-f28e-4ddefe9d9212.htm" />
 </HelpKI>
