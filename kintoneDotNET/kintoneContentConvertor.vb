@@ -130,7 +130,9 @@ Namespace API
                     Dim defaultProp As PropertyInfo = objType.GetProperty(item.Value)
                     If defaultProp IsNot Nothing Then
                         Dim value As Object = readKintoneItem(defaultProp.PropertyType, dictionary(item.Key)("value"), serializer)
-                        defaultProp.SetValue(m, value, Nothing)
+                        If defaultProp.GetSetMethod() IsNot Nothing Then 'Setterが存在する場合、値をセット
+                            defaultProp.SetValue(m, value, Nothing)
+                        End If
                     End If
                 End If
             Next
@@ -140,7 +142,9 @@ Namespace API
             For Each p As PropertyInfo In props
                 If dictionary.ContainsKey(p.Name) Then
                     Dim value As Object = readKintoneItem(p.PropertyType, dictionary(p.Name)("value"), serializer)
-                    p.SetValue(m, value, Nothing)
+                    If p.GetSetMethod() IsNot Nothing Then 'Setterが存在する場合、値をセット
+                        p.SetValue(m, value, Nothing)
+                    End If
                 End If
             Next
 

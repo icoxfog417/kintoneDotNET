@@ -11,31 +11,7 @@ Imports System.IO
 ''' <remarks></remarks>
 <TestClass()>
 Public Class APITest
-
-    ''' <summary>
-    ''' テスト対象のアプリケーションIDをConfigファイルから読込
-    ''' </summary>
-    ''' <value></value>
-    ''' <returns></returns>
-    ''' <remarks></remarks>
-    Public ReadOnly Property TargetAppId As String
-        Get
-            Return ConfigurationManager.AppSettings("testAppId")
-        End Get
-    End Property
-
-    ''' <summary>
-    ''' 更新/読込テストを行うのに使用するレコードの抽出条件を設定
-    ''' </summary>
-    ''' <value></value>
-    ''' <returns></returns>
-    ''' <remarks></remarks>
-    Public ReadOnly Property QueryForUpdateAndRead As String
-        Get
-            Return "methodinfo=""ExecuteUpdateAndRead""" '文字列の比較について""でのくくりが必要
-        End Get
-    End Property
-
+    Inherits AbskintoneTest
 
     ''' <summary>
     ''' Readのテスト(単純に読み込みで例外が発生しないことを確認)
@@ -318,58 +294,6 @@ Public Class APITest
         Assert.AreEqual(updLog.historyDesc, log.historyDesc)
 
     End Sub
-
-    ''' <summary>
-    ''' Read/Write用レコードを抽出するユーティリティ関数
-    ''' </summary>
-    ''' <returns></returns>
-    ''' <remarks></remarks>
-    Private Function getRecordForUpdateAndRead() As kintoneTestModel
-
-        Dim result As List(Of kintoneTestModel) = kintoneTestModel.Find(Of kintoneTestModel)(QueryForUpdateAndRead)
-
-        If result IsNot Nothing AndAlso result.Count = 1 Then
-            Return result(0)
-        Else
-            Return Nothing
-        End If
-
-    End Function
-
-    Private Function ListEqual(Of T)(ByVal left As List(Of T), ByVal right As List(Of T)) As Boolean
-        Dim result As Boolean = True
-        If left.Count <> right.Count Then
-            result = False
-        End If
-
-        If result Then
-            For i As Integer = 0 To left.Count - 1
-                If Not left(i).Equals(right(i)) Then
-                    result = False
-                End If
-            Next
-        End If
-
-        Return result
-
-    End Function
-
-    ''' <summary>
-    ''' Read/Write用レコードを初期化するユーティリティ関数
-    ''' </summary>
-    ''' <returns></returns>
-    ''' <remarks></remarks>
-    Private Function getInitializedRecord() As kintoneTestModel
-
-        Dim record As kintoneTestModel = getRecordForUpdateAndRead()
-        Dim item As New kintoneTestModel
-        item.record_id = record.record_id
-        item.methodinfo = "ExecuteUpdateAndRead"
-        item.Update()
-
-        Return item
-
-    End Function
 
     ''' <summary>
     ''' テストファイル保管用フォルダへのパスを取得する

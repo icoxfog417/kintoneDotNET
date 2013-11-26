@@ -54,7 +54,7 @@ Namespace API
         ''' アプリケーションのドメイン。単一で使用することはまずないので、Protected化
         ''' </summary>
         ''' <value></value>
-        Protected Shared ReadOnly Property Domain As String
+        Private Shared ReadOnly Property Domain As String
             Get
                 If String.IsNullOrEmpty(_domain) Then _domain = ConfigurationManager.AppSettings("ktDomain")
                 Return _domain
@@ -127,7 +127,7 @@ Namespace API
         ''' <value></value>
         ''' <returns></returns>
         ''' <remarks></remarks>
-        Public Shared ReadOnly Property AccessKey As String
+        Private Shared ReadOnly Property AccessKey As String
             Get
                 Dim id As String = ConfigurationManager.AppSettings("ktAccessId")
                 Dim password As String = ConfigurationManager.AppSettings("ktAccessPassword")
@@ -142,7 +142,7 @@ Namespace API
         ''' <value></value>
         ''' <returns></returns>
         ''' <remarks></remarks>
-        Public Shared ReadOnly Property LoginKey As String
+        Private Shared ReadOnly Property LoginKey As String
             Get
                 Dim id As String = ConfigurationManager.AppSettings("ktLoginId")
                 Dim password As String = ConfigurationManager.AppSettings("ktLoginPassword")
@@ -157,7 +157,7 @@ Namespace API
         ''' <value></value>
         ''' <returns></returns>
         ''' <remarks></remarks>
-        Public Shared ReadOnly Property Proxy As WebProxy
+        Private Shared ReadOnly Property Proxy As WebProxy
             Get
                 Dim myProxy As New WebProxy()
                 Dim proxyAddress As String = ConfigurationManager.AppSettings("proxy")
@@ -185,15 +185,14 @@ Namespace API
         End Sub
 
         ''' <summary>
-        ''' kintoneにアクセスするためのHTTPヘッダを作成する<br/>
+        ''' kintoneにアクセスするためのHTTPヘッダを作成する
         ''' </summary>
         ''' <param name="command">record/records、fileなどのREST APIの名称</param>
-        ''' <param name="method">POST/GETなど</param>
+        ''' <param name="method">POST/GETなどのメソッドタイプ</param>
         ''' <param name="query">クエリ引数</param>
         ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
-        Protected Shared Function makeHttpHeader(ByVal command As String, ByVal method As String, Optional ByVal query As String = "") As HttpWebRequest
+        ''' <remarks></remarks>
+        Private Shared Function makeHeader(ByVal command As String, ByVal method As String, Optional ByVal query As String = "") As HttpWebRequest
             Dim uri As String = String.Format(KINTONE_API_FORMAT, Host, command)
             If Not String.IsNullOrEmpty(query) Then
                 uri += "?" + query
@@ -220,6 +219,7 @@ Namespace API
             Return request
 
         End Function
+
 
         ''' <summary>
         ''' レコードの検索を行う<br/>
@@ -289,8 +289,8 @@ Namespace API
                 Catch ae As AggregateException
                     Dim ex As AggregateException = ae.Flatten
                     kex = New kintoneException(ex.Message, ex)
-                    Dim kerror As kintoneError = ex.InnerExceptions.Where(Function(x) TypeOf x Is kintoneException).Select(Function(x) CType(x, kintoneException).Detail).FirstOrDefault
-                    kex.Detail = kerror
+                    Dim kerror As kintoneError = ex.InnerExceptions.Where(Function(x) TypeOf x Is kintoneException).Select(Function(x) CType(x, kintoneException).error).FirstOrDefault
+                    kex.error = kerror
                 Catch ex As Exception
                     kex = New kintoneException(ex.Message, ex)
                 End Try
@@ -340,7 +340,7 @@ Namespace API
             Dim serialized As kintoneRecords(Of T) = Nothing
             Dim result As New List(Of T)
 
-            Dim request As HttpWebRequest = makeHttpHeader("records", "GET", query)
+            Dim request As HttpWebRequest = makeHeader("records", "GET", query)
             Dim responseStr As String = ""
 
             Using response As HttpWebResponse = getResponse(request, kerror)
@@ -405,7 +405,7 @@ Namespace API
             'JsonオブジェクトをRequestに書き出し
             'http://stackoverflow.com/questions/9145667/how-to-post-json-to-the-server
 
-            Dim request As HttpWebRequest = makeHttpHeader("records", "POST")
+            Dim request As HttpWebRequest = makeHeader("records", "POST")
             Dim sendData As New kintoneRecords(Of T)
             sendData.app = AppId
             sendData.records = objs
@@ -416,12 +416,7 @@ Namespace API
             js.RegisterConverters(New List(Of JavaScriptConverter) From {kc})
 
             Dim jsonData As String = js.Serialize(sendData)
-
-            Using bodyWriter As New StreamWriter(request.GetRequestStream)
-                bodyWriter.Write(jsonData)
-                bodyWriter.Flush()
-                bodyWriter.Close()
-            End Using
+            writeToRequestBody(request, jsonData)
 
             Dim list As New List(Of String)
             Dim kerror As kintoneError = Nothing
@@ -470,7 +465,7 @@ Namespace API
         ''' <returns></returns>
         ''' <remarks></remarks>
         Private Function taskUpdate(Of T As AbskintoneModel)(ByVal objs As List(Of T)) As Boolean
-            Dim request As HttpWebRequest = makeHttpHeader("records", "PUT")
+            Dim request As HttpWebRequest = makeHeader("records", "PUT")
             Dim sendData As New kintoneRecords(Of kintoneRecord(Of T))
             sendData.app = AppId
             sendData.records = objs.Select(Function(x) New kintoneRecord(Of T)(x)).ToList
@@ -481,12 +476,7 @@ Namespace API
             js.RegisterConverters(New List(Of JavaScriptConverter) From {kc})
 
             Dim jsonData As String = js.Serialize(sendData)
-
-            Using bodyWriter As New StreamWriter(request.GetRequestStream)
-                bodyWriter.Write(jsonData)
-                bodyWriter.Flush()
-                bodyWriter.Close()
-            End Using
+            writeToRequestBody(request, jsonData)
 
             Dim kerror As kintoneError = Nothing
             Using response As HttpWebResponse = getResponse(request, kerror)
@@ -531,7 +521,7 @@ Namespace API
         ''' <remarks></remarks>
         Private Function taskDelete(Of T As AbskintoneModel)(ByVal ids As List(Of String)) As Boolean
 
-            Dim request As HttpWebRequest = makeHttpHeader("records", "DELETE")
+            Dim request As HttpWebRequest = makeHeader("records", "DELETE")
             Dim sendData As New kintoneIds()
             sendData.app = Me.AppId
             sendData.ids = ids
@@ -542,12 +532,7 @@ Namespace API
             js.RegisterConverters(New List(Of JavaScriptConverter) From {kc})
 
             Dim jsonData As String = js.Serialize(sendData)
-
-            Using bodyWriter As New StreamWriter(request.GetRequestStream)
-                bodyWriter.Write(jsonData)
-                bodyWriter.Flush()
-                bodyWriter.Close()
-            End Using
+            writeToRequestBody(request, jsonData)
 
             Dim kerror As kintoneError = Nothing
             Using response As HttpWebResponse = getResponse(request, kerror)
@@ -557,6 +542,18 @@ Namespace API
             Return True
 
         End Function
+
+        Private Sub writeToRequestBody(ByRef request As HttpWebRequest, ByVal body As String)
+
+            Using reqStream As IO.Stream = request.GetRequestStream
+                Using bodyWriter As New StreamWriter(reqStream)
+                    bodyWriter.Write(body)
+                    bodyWriter.Flush()
+                    bodyWriter.Close()
+                End Using
+            End Using
+
+        End Sub
 
         ''' <summary>
         ''' ファイルのアップロードを行う(単一)<br/>
@@ -610,7 +607,7 @@ Namespace API
                 Return String.Empty
             End If
 
-            Dim request As HttpWebRequest = makeHttpHeader("file", "POST")
+            Dim request As HttpWebRequest = makeHeader("file", "POST")
             request.ContentType = String.Format(request.ContentType, boundary) 'boundaryをセット
 
             Dim js As New JavaScriptSerializer
@@ -679,7 +676,7 @@ Namespace API
         Public Shared Function DownloadFile(ByVal fileKey As String) As MemoryStream
 
             Dim result As New MemoryStream
-            Dim request As HttpWebRequest = makeHttpHeader("file", "GET", "fileKey=" + fileKey)
+            Dim request As HttpWebRequest = makeHeader("file", "GET", "fileKey=" + fileKey)
             Dim kerror As kintoneError = Nothing
             Using response As HttpWebResponse = getResponse(request, kerror)
                 If Not response Is Nothing Then
@@ -709,38 +706,44 @@ Namespace API
         Private Shared Function getResponse(ByVal request As HttpWebRequest, ByRef kerror As kintoneError) As HttpWebResponse
 
             Dim response As HttpWebResponse = Nothing
-            Dim js As New JavaScriptSerializer
             Dim result As Boolean = True
 
             Try
                 response = request.GetResponse
             Catch ex As WebException
                 result = False
+                response = Nothing
                 kerror = New kintoneError
                 kerror.message = ex.Message + vbCrLf + ex.StackTrace
-                response = ex.Response
+
+                If ex.Response IsNot Nothing Then
+                    Try
+                        Dim responseStr As String = ""
+                        Using res As HttpWebResponse = ex.Response
+                            Using reader As New StreamReader(res.GetResponseStream)
+                                responseStr = reader.ReadToEnd
+                            End Using
+                        End Using
+
+                        Dim js As New JavaScriptSerializer
+                        js.RegisterConverters({New kintoneErrorConvertor})
+                        Dim serialized As kintoneError = js.Deserialize(Of kintoneError)(responseStr)
+                        kerror = serialized
+
+                    Catch resEx As Exception
+                        '今のところ何もなし
+                    End Try
+                End If
+
+            Finally
+                'リクエストを閉じる(要否不明だが・・)
+                request.ServicePoint.CloseConnectionGroup(request.ConnectionGroupName)
             End Try
 
             If result Then
                 Return response
             Else
-                If Not response Is Nothing Then
-                    Try
-                        Dim responseStr As String = ""
-                        Using res As HttpWebResponse = response
-                            Dim reader As New StreamReader(response.GetResponseStream)
-                            responseStr = reader.ReadToEnd
-                        End Using
-
-                        Dim serialized As kintoneError = js.Deserialize(Of kintoneError)(responseStr)
-                        kerror = serialized
-
-                    Catch ex As Exception
-                        '今のところ何もなし
-                    End Try
-                End If
                 Return Nothing
-
             End If
         End Function
 
@@ -788,8 +791,8 @@ Namespace API
             Catch ae As AggregateException
                 Dim ex As AggregateException = ae.Flatten
                 kex = New kintoneException(ex.Message, ex)
-                Dim kerror As kintoneError = ex.InnerExceptions.Where(Function(x) TypeOf x Is kintoneException).Select(Function(x) CType(x, kintoneException).Detail).FirstOrDefault
-                kex.Detail = kerror
+                Dim kerror As kintoneError = ex.InnerExceptions.Where(Function(x) TypeOf x Is kintoneException).Select(Function(x) CType(x, kintoneException).error).FirstOrDefault
+                kex.error = kerror
             Catch ex As Exception
                 kex = New kintoneException(ex.Message, ex)
             End Try

@@ -84,6 +84,7 @@
     <Import Include="Microsoft.VisualStudio.TestTools.UnitTesting" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AbskintoneTest.vb" />
     <Compile Include="APITestException.vb" />
     <Compile Include="kintoneTestModel.vb" />
     <Compile Include="APITest.vb" />

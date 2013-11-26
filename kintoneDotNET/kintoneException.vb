@@ -9,21 +9,21 @@ Namespace API
     Public Class kintoneException
         Inherits Exception
 
-        Private _detail As kintoneError = Nothing
-        Public Property Detail() As kintoneError
+        Private _error As kintoneError = Nothing
+        Public Property [error]() As kintoneError
             Get
-                Return _detail
+                Return _error
             End Get
             Set(ByVal value As kintoneError)
-                _detail = value
+                _error = value
             End Set
         End Property
 
         Private _message As String = ""
         Public Overrides ReadOnly Property Message As String
             Get
-                If _detail IsNot Nothing Then
-                    Return _detail.message
+                If _error IsNot Nothing Then
+                    Return _error.message
                 Else
                     Return _message
                 End If
@@ -34,7 +34,7 @@ Namespace API
         End Sub
 
         Public Sub New(ByVal kerror As kintoneDotNET.API.Types.kintoneError)
-            _detail = kerror
+            _error = kerror
         End Sub
 
         Public Sub New(ByVal message As String)

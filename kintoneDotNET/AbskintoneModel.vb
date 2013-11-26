@@ -154,7 +154,7 @@ Namespace API
         ''' <returns></returns>
         ''' <remarks></remarks>
         Public Shared Function Create(Of T As AbskintoneModel)(ByVal objs As List(Of T)) As List(Of T)
-            Dim ids As List(Of String) = GetAPI(Of T).Create(Of T)(objs)
+            Dim ids As List(Of String) = GetAPI(Of T)().Create(Of T)(objs)
 
             'TODO 本当は変換が必要かどうか判断する必要があるが、今のところ変換なしで行うパターンはほぼないため無視する
             If ids.Count <= kintoneAPI.ReadLimit Then

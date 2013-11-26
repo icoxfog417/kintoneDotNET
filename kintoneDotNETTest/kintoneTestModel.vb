@@ -35,6 +35,9 @@ Public Class kintoneTestModel
     Public Property attachfile As New List(Of kintoneFile)
 
     <kintoneItem>
+    Public Property validationFld As String = "ABCDE"
+
+    <kintoneItem>
     Public Property changeLogs As New List(Of ChangeLog)
 
     Private _app As String = ConfigurationManager.AppSettings("testAppId")
