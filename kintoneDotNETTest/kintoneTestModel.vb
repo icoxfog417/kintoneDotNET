@@ -5,6 +5,9 @@ Imports System.Configuration
 Public Class kintoneTestModel
     Inherits AbskintoneModel
 
+    <kintoneItem(isUpload:=False, isKey:=True)>
+    Public Overrides Property record_id As String = ""
+
     <kintoneItem>
     Public Property methodinfo As String = ""
     <kintoneItem>

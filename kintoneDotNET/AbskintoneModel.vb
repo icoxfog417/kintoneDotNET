@@ -118,6 +118,41 @@ Namespace API
         End Function
 
         ''' <summary>
+        ''' id指定によるレコードの検索
+        ''' </summary>
+        ''' <typeparam name="T"></typeparam>
+        ''' <param name="id"></param>
+        ''' <returns></returns>
+        ''' <remarks></remarks>
+        Public Shared Function FindById(Of T As AbskintoneModel)(ByVal id As String) As T
+            Dim result As List(Of T) = Find(Of T)(Function(x) x.record_id = id)
+            If result IsNot Nothing AndAlso result.Count > 0 Then
+                Return result.First
+            Else
+                Return Nothing
+            End If
+        End Function
+
+        ''' <summary>
+        ''' idの複数指定によるレコードの検索
+        ''' </summary>
+        ''' <typeparam name="T"></typeparam>
+        ''' <param name="ids"></param>
+        ''' <returns></returns>
+        ''' <remarks></remarks>
+        Public Shared Function FindByIds(Of T As AbskintoneModel)(ByVal ids As List(Of String)) As List(Of T)
+            Dim result As List(Of T) = Nothing
+            If ids Is Nothing Then Return Nothing
+
+            If ids.Count > kintoneAPI.ReadLimit Then
+                result = FindAll(Of T)(Function(x) ids.Contains(x.record_id))
+            Else
+                result = Find(Of T)(Function(x) ids.Contains(x.record_id))
+            End If
+            Return result
+        End Function
+
+        ''' <summary>
         ''' レコードの検索を行う(全件)(expression指定)<br/>
         ''' kintone APIの上限値を超える件数のレコードを取得します
         ''' </summary>
@@ -155,14 +190,7 @@ Namespace API
         ''' <remarks></remarks>
         Public Shared Function Create(Of T As AbskintoneModel)(ByVal objs As List(Of T)) As List(Of T)
             Dim ids As List(Of String) = GetAPI(Of T)().Create(Of T)(objs)
-
-            'TODO 本当は変換が必要かどうか判断する必要があるが、今のところ変換なしで行うパターンはほぼないため無視する
-            If ids.Count <= kintoneAPI.ReadLimit Then
-                Return Find(Of T)(Function(x) x.record_id >= ids.Min And x.record_id <= ids.Max)
-            Else
-                Return FindAll(Of T)(Function(x) x.record_id >= ids.Min And x.record_id <= ids.Max)
-            End If
-
+            Return FindByIds(Of T)(ids)
         End Function
 
         ''' <summary>
@@ -174,6 +202,20 @@ Namespace API
         ''' <remarks></remarks>
         Public Shared Function Update(Of T As AbskintoneModel)(ByVal objs As List(Of T)) As Boolean
             Return GetAPI(Of T).Update(Of T)(objs)
+        End Function
+
+        ''' <summary>
+        ''' レコードの保存を行う<br/>
+        ''' モデル上 isKey = True と設定された項目をキーとし、一致するキーがある場合はUpdate、なければCreateを行う
+        ''' </summary>
+        ''' <typeparam name="T"></typeparam>
+        ''' <param name="objs"></param>
+        ''' <returns></returns>
+        ''' <remarks></remarks>
+        Public Shared Function Save(Of T As AbskintoneModel)(ByVal objs As List(Of T)) As List(Of T)
+            Dim ids As List(Of String) = GetAPI(Of T)().Save(Of T)(objs)
+            Return FindByIds(Of T)(ids)
+
         End Function
 
         ''' <summary>
@@ -205,6 +247,29 @@ Namespace API
         ''' </summary>
         Public Function Update() As Boolean
             Return GetAPI.Update(Me)
+        End Function
+
+        ''' <summary>
+        ''' レコードの保存を行う<br/>
+        ''' isKey = True で設定されたレコードがある場合更新、なければ登録を行います。
+        ''' </summary>
+        ''' <returns></returns>
+        ''' <remarks></remarks>
+        Public Function Save() As String
+
+            Dim result As Object = getMethodForSingle("Save").Invoke(GetAPI, {Me})
+            Dim id As String = result.ToString
+
+            If Not String.IsNullOrEmpty(id) Then
+                Me.record_id = id
+            End If
+            Return id
+        End Function
+
+        Private Function getMethodForSingle(ByVal methodName As String) As MethodInfo
+            Dim method As MethodInfo = (From m As MethodInfo In GetType(kintoneAPI).GetMethods Where m.Name = methodName And Not TypeOf m.ReturnType Is IList).FirstOrDefault
+            Dim generic As MethodInfo = method.MakeGenericMethod(Me.GetType)
+            Return generic
         End Function
 
         ''' <summary>

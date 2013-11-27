@@ -37,6 +37,15 @@ Namespace API
         ''' <remarks></remarks>
         Public Property isUpload As Boolean = True
 
+        ''' <summary>
+        ''' 重複を禁止するキーである項目に付与<br/>
+        ''' Saveを行う際、データの存在判定に使用される
+        ''' </summary>
+        ''' <value></value>
+        ''' <returns></returns>
+        ''' <remarks></remarks>
+        Public Property isKey As Boolean = False
+
 
     End Class
 

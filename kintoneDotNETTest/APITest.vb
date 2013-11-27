@@ -52,9 +52,10 @@ Public Class APITest
         Assert.AreEqual("status like ""A"" and link not like ""http""", q)
 
         'IN
-        q = kintoneQuery.Make(Of kintoneTestModel)(Function(x) {"1", "a"}.Contains(x.radio) And Not New List(Of String)() From {"c", "d"}.Contains(x.radio))
+        Dim ids As New List(Of String)() From {"1", "2", "3"}
+        q = kintoneQuery.Make(Of kintoneTestModel)(Function(x) {"1", "a"}.Contains(x.radio) And Not ids.Contains(x.record_id) And New List(Of Integer)() From {1, 2}.Contains(x.numberField))
         Console.WriteLine("queryArray&List:" + q)
-        Assert.AreEqual("radio in (""1"",""a"") and radio not in (""c"",""d"")", q)
+        Assert.AreEqual("radio in (""1"",""a"") and record_id not in (""1"",""2"",""3"") and numberField in (1,2)", q)
 
         'method Equal
         q = kintoneQuery.Make(Of kintoneTestModel)(Function(x) x.status = String.Empty And x.created_time < DateTime.MaxValue)
@@ -92,39 +93,73 @@ Public Class APITest
 
     ''' <summary>
     ''' レコードの登録/更新/削除
-    ''' ※複数のTestMethodに分かれて行うとidが消えたり削除されたりして予期せずエラーになる場合があるので、一つにまとめる
+    ''' ※複数のTestMethodに分かれてCreate/Deleteを行うとidが混線して?予期しないエラーになる場合があるので、一つにまとめる
     ''' </summary>
     ''' <remarks></remarks>
     <TestMethod()>
-    Public Sub ExecuteCreateDelete()
-        Const METHOD_NAME As String = "ExecuteCreateDelete"
+    Public Sub ExecuteCreateDeleteUnit()
+        Const METHOD_NAME As String = "ExecuteCreateDeleteUnit"
 
         '事前に削除
-        Dim remained As List(Of kintoneTestModel) = kintoneTestModel.Find(Of kintoneTestModel)(Function(x) x.methodinfo = METHOD_NAME).OrderBy(Function(x) x.textarea).ToList
+        Dim remained As List(Of kintoneTestModel) = kintoneTestModel.Find(Of kintoneTestModel)(Function(x) x.methodinfo = METHOD_NAME).ToList
         kintoneTestModel.Delete(Of kintoneTestModel)(remained.Select(Function(x) x.record_id).ToList)
 
         '単一のケース -------------------------------------------------------------
         Dim item As New kintoneTestModel
         item.methodinfo = METHOD_NAME
 
+        '登録
         Dim id As String = item.Create
         Assert.IsFalse(String.IsNullOrEmpty(id))
-        item.record_id = id
+        Dim created As kintoneTestModel = kintoneTestModel.FindById(Of kintoneTestModel)(id)
+        Assert.IsFalse(created Is Nothing)
 
+        '削除
         Assert.IsTrue(item.Delete())
-        Dim result As List(Of kintoneTestModel) = kintoneTestModel.Find(Of kintoneTestModel)("methodinfo=""" + METHOD_NAME + """")
+        Dim deleted As kintoneTestModel = kintoneTestModel.FindById(Of kintoneTestModel)(item.record_id)
+        Assert.IsTrue(deleted Is Nothing)
 
+        'Save(登録)
+        id = item.Save
+        Assert.IsFalse(String.IsNullOrEmpty(id))
+        Dim savedc As kintoneTestModel = kintoneTestModel.FindById(Of kintoneTestModel)(id)
+        Assert.IsFalse(savedc Is Nothing)
+
+        '更新
+        item.textarea = "update from unit"
+        Assert.IsTrue(item.Update())
+        Dim updated As kintoneTestModel = kintoneTestModel.FindById(Of kintoneTestModel)(item.record_id)
+        Assert.AreEqual(item.textarea, updated.textarea)
+
+        'Save(更新)
+        item.textarea = "save from unit"
+        Assert.IsTrue(String.IsNullOrEmpty(item.Save))
+        Dim saved As kintoneTestModel = kintoneTestModel.FindById(Of kintoneTestModel)(item.record_id)
+        Assert.AreEqual(item.textarea, saved.textarea)
+
+        '削除して終了
+        Assert.IsTrue(item.Delete())
+
+     End Sub
+
+    <TestMethod()>
+    Public Sub ExecuteCreateDeleteMulti()
+        Const METHOD_NAME As String = "ExecuteCreateDeleteMulti"
+        Const CNT_TEST_DATA As Integer = 2
+        Dim before As Integer = kintoneAPI.ExecuteLimit
+
+        '事前に削除
+        Dim remained As List(Of kintoneTestModel) = kintoneTestModel.Find(Of kintoneTestModel)(Function(x) x.methodinfo = METHOD_NAME).ToList
+        kintoneTestModel.Delete(Of kintoneTestModel)(remained.Select(Function(x) x.record_id).ToList)
 
         '複合のケース -------------------------------------------------------------
         Dim list As New List(Of kintoneTestModel)
+        kintoneAPI.ExecuteLimit = 1 '並列実行を検証するため、Limitを下げる
 
-        Dim before As Integer = kintoneAPI.ExecuteLimit
-        kintoneAPI.ExecuteLimit = 1
-
-        For i As Integer = 0 To 2
+        For i As Integer = 0 To CNT_TEST_DATA
             Dim m As New kintoneTestModel
             m.methodinfo = METHOD_NAME
-            m.textarea = "bulk insert " + (i + 1).ToString
+            m.textarea = "bulk insert " + i.ToString
             list.Add(m)
         Next
 
@@ -132,25 +167,47 @@ Public Class APITest
         Dim ids As List(Of kintoneTestModel) = kintoneTestModel.Create(list)
         Assert.AreEqual(list.Count, ids.Count)
         Dim inserted As List(Of kintoneTestModel) = kintoneTestModel.Find(Of kintoneTestModel)(Function(x) x.methodinfo = METHOD_NAME).OrderBy(Function(x) x.textarea).ToList
-
-        For i As Integer = 0 To 2
+        For i As Integer = 0 To CNT_TEST_DATA
             Assert.AreEqual(list(i).textarea, inserted(i).textarea)
-            inserted(i).textarea = "bulk updated " + (i + 1).ToString
-        Next
-
-        '更新
-        Assert.IsTrue(kintoneTestModel.Update(inserted))
-        Dim updated As List(Of kintoneTestModel) = kintoneTestModel.Find(Of kintoneTestModel)(Function(x) x.methodinfo = METHOD_NAME).OrderBy(Function(x) x.textarea).ToList
-        For i As Integer = 0 To 2
-            Assert.AreEqual(inserted(i).textarea, updated(i).textarea)
+            list(i).textarea = "bulk saved " + i.ToString
         Next
 
         '削除
-        Assert.IsTrue(kintoneTestModel.Delete(Of kintoneTestModel)(updated.Select(Function(x) x.record_id).ToList))
+        Assert.IsTrue(kintoneTestModel.Delete(Of kintoneTestModel)(inserted.Select(Function(x) x.record_id).ToList))
+
+        'Save(登録)
+        ids = kintoneTestModel.Save(list)
+        Assert.AreEqual(inserted.Count, ids.Count)
+        Dim savedc As List(Of kintoneTestModel) = kintoneTestModel.Find(Of kintoneTestModel)(Function(x) x.methodinfo = METHOD_NAME).OrderBy(Function(x) x.textarea).ToList
+        For i As Integer = 0 To CNT_TEST_DATA
+            Assert.AreEqual(list(i).textarea, savedc(i).textarea)
+            list(i).textarea = "bulk updated " + i.ToString
+            list(i).record_id = savedc(i).record_id
+        Next
+
+        '更新
+        Assert.IsTrue(kintoneTestModel.Update(list))
+        Dim updated As List(Of kintoneTestModel) = kintoneTestModel.Find(Of kintoneTestModel)(Function(x) x.methodinfo = METHOD_NAME).OrderBy(Function(x) x.textarea).ToList
+        For i As Integer = 0 To CNT_TEST_DATA
+            Assert.AreEqual(list(i).textarea, updated(i).textarea)
+            list(i).textarea = "bulk updated by save " + i.ToString
+        Next
+
+        'Save(更新)
+        ids = kintoneTestModel.Save(list)
+        Assert.IsTrue(ids Is Nothing)
+        Dim saved As List(Of kintoneTestModel) = kintoneTestModel.Find(Of kintoneTestModel)(Function(x) x.methodinfo = METHOD_NAME).OrderBy(Function(x) x.textarea).ToList
+        For i As Integer = 0 To CNT_TEST_DATA
+            Assert.AreEqual(list(i).textarea, saved(i).textarea)
+        Next
+
+        '削除
+        Assert.IsTrue(kintoneTestModel.Delete(Of kintoneTestModel)(saved.Select(Function(x) x.record_id).ToList))
 
         kintoneAPI.ExecuteLimit = before
 
     End Sub
+
 
     ''' <summary>
     ''' 文字列フィールドのRead/Writeテスト

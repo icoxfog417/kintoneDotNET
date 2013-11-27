@@ -488,6 +488,89 @@ Namespace API
         End Function
 
         ''' <summary>
+        ''' レコードの保存処理(単一)<br/>
+        ''' モデル上 isKey = True と設定された項目をキーとし、一致するキーがある場合はUpdate、なければCreateを行う
+        ''' </summary>
+        ''' <typeparam name="T"></typeparam>
+        ''' <param name="obj"></param>
+        ''' <returns></returns>
+        ''' <remarks></remarks>
+        Public Function Save(Of T As AbskintoneModel)(ByVal obj As T) As String
+            Dim ids As List(Of String) = Save(Of T)(New List(Of T) From {obj})
+            If ids IsNot Nothing AndAlso ids.Count > 0 Then
+                Return ids.First
+            Else
+                Return String.Empty
+            End If
+        End Function
+
+        ''' <summary>
+        ''' レコードの保存処理(複数件)
+        ''' </summary>
+        ''' <typeparam name="T"></typeparam>
+        ''' <param name="objs"></param>
+        ''' <returns></returns>
+        ''' <remarks></remarks>
+        Public Function Save(Of T As AbskintoneModel)(ByVal objs As List(Of T)) As List(Of String)
+            Dim key = From p As PropertyInfo In GetType(T).GetProperties
+            Let attribute As kintoneItemAttribute = p.GetCustomAttributes(GetType(kintoneItemAttribute), True).SingleOrDefault
+            Where attribute IsNot Nothing AndAlso attribute.isKey
+            Select p, attribute
+
+            If key Is Nothing OrElse key.Count <> 1 Then
+                If key Is Nothing OrElse key.Count = 0 Then Throw New kintoneException("モデルにキーが設定されていません")
+                If key.Count > 1 Then Throw New kintoneException("モデルにキーが重複して設定されています")
+            End If
+
+            '更新対象のオブジェクトの検索
+            Dim keyName As String = key.First.p.Name
+            Dim dic As Dictionary(Of String, String) = AbskintoneModel.GetPropertyToDefaultDic() 'プロパティ名を変換
+            Dim query As String = If(dic.ContainsKey(keyName), dic(keyName), keyName) + " in "
+            Dim params As New List(Of String)
+            For Each obj As T In objs
+                params.Add("""" + key.First.p.GetValue(obj, Nothing).ToString + """")
+            Next
+            query += "(" + String.Join(",", params) + ")"
+
+            Dim list As List(Of T) = Nothing
+
+            If objs.Count > ReadLimit Then
+                list = FindAll(Of T)(query)
+            Else
+                list = Find(Of T)(query)
+            End If
+
+            'Update/Create分を振り分け
+            Dim creates As New List(Of T)
+            Dim updates As New List(Of T)
+
+            For Each tgt As T In objs
+                Dim tgtKey As Object = key.First.p.GetValue(tgt, Nothing)
+                Dim sameKey As List(Of T) = (From x As T In list Where tgtKey = key.First.p.GetValue(x, Nothing) Select x).ToList
+                If sameKey.Count = 0 Then
+                    creates.Add(tgt)
+                ElseIf sameKey.Count = 1 Then
+                    updates.Add(tgt)
+                Else
+                    Throw New kintoneException("kintone上にキーとして指定された項目(" + keyName + ")で値が重複するデータが存在します")
+                End If
+            Next
+
+            'Update/Createの実行
+            Dim result As Boolean = True
+            Dim ids As List(Of String) = Nothing
+            If updates.Count > 0 Then
+                result = Update(Of T)(updates)
+            End If
+            If creates.Count > 0 Then
+                ids = Create(Of T)(creates)
+            End If
+
+            Return ids
+
+        End Function
+
+        ''' <summary>
         ''' レコードの削除を行う(単一)
         ''' </summary>
         ''' <typeparam name="T"></typeparam>
