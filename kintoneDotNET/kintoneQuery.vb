@@ -161,6 +161,8 @@ Namespace API
                 If attr IsNot Nothing Then
                     Dim dateFormat As String = If(Not String.IsNullOrEmpty(attr.FieldType), attr.FieldType, kintoneDatetime.YMDType)
                     value = kintoneDatetime.toKintoneFormat(value, dateFormat)
+                Else
+                    value = kintoneDatetime.toKintoneFormat(value)
                 End If
             End If
 

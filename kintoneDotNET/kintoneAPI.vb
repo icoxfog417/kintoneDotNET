@@ -550,6 +550,7 @@ Namespace API
                 If sameKey.Count = 0 Then
                     creates.Add(tgt)
                 ElseIf sameKey.Count = 1 Then
+                    tgt.record_id = sameKey.First.record_id '更新のためにidをセット
                     updates.Add(tgt)
                 Else
                     Throw New kintoneException("kintone上にキーとして指定された項目(" + keyName + ")で値が重複するデータが存在します")
