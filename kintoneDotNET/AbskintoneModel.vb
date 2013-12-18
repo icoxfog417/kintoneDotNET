@@ -257,13 +257,20 @@ Namespace API
         ''' <remarks></remarks>
         Public Function Save() As String
 
-            Dim result As Object = getMethodForSingle("Save").Invoke(GetAPI, {Me})
-            Dim id As String = result.ToString
+            Try
+                Dim result As Object = getMethodForSingle("Save").Invoke(GetAPI, {Me})
+                Dim id As String = result.ToString
 
-            If Not String.IsNullOrEmpty(id) Then
-                Me.record_id = id
-            End If
-            Return id
+                If Not String.IsNullOrEmpty(id) Then
+                    Me.record_id = id
+                End If
+                Return id
+
+            Catch ex As System.Reflection.TargetInvocationException
+                'リフレクションによる呼び出しの場合本来の例外が内部に隠蔽されるため、取り出し
+                Throw ex.InnerException
+            End Try
+
         End Function
 
         Private Function getMethodForSingle(ByVal methodName As String) As MethodInfo
@@ -277,12 +284,17 @@ Namespace API
         ''' 自身のIDに一致するレコードを削除します
         ''' </summary>
         Public Function Delete() As Boolean
+            Try
+                'Generic型と引数型が異なるため、型推論がきかない。なので強制的にコールする
+                Dim method As MethodInfo = GetType(kintoneAPI).GetMethod("Delete", {GetType(String)})
+                Dim generic As MethodInfo = method.MakeGenericMethod(Me.GetType)
+                Dim result As Object = generic.Invoke(GetAPI, {Me.record_id})
+                Return CBool(result)
 
-            'Generic型と引数型が異なるため、型推論がきかない。なので強制的にコールする
-            Dim method As MethodInfo = GetType(kintoneAPI).GetMethod("Delete", {GetType(String)})
-            Dim generic As MethodInfo = method.MakeGenericMethod(Me.GetType)
-            Dim result As Object = generic.Invoke(GetAPI, {Me.record_id})
-            Return CBool(result)
+            Catch ex As System.Reflection.TargetInvocationException
+                'リフレクションによる呼び出しの場合本来の例外が内部に隠蔽されるため、取り出し
+                Throw ex.InnerException
+            End Try
 
         End Function
 

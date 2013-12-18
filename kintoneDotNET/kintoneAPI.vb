@@ -518,8 +518,8 @@ Namespace API
             Select p, attribute
 
             If key Is Nothing OrElse key.Count <> 1 Then
-                If key Is Nothing OrElse key.Count = 0 Then Throw New kintoneException("モデルにキーが設定されていません")
-                If key.Count > 1 Then Throw New kintoneException("モデルにキーが重複して設定されています")
+                If key Is Nothing OrElse key.Count = 0 Then Throw New kintoneException(GetType(T).ToString + " にキーが設定されていません")
+                If key.Count > 1 Then Throw New kintoneException(GetType(T).ToString + "にキーが複数設定されています")
             End If
 
             '更新対象のオブジェクトの検索
@@ -553,7 +553,7 @@ Namespace API
                     tgt.record_id = sameKey.First.record_id '更新のためにidをセット
                     updates.Add(tgt)
                 Else
-                    Throw New kintoneException("kintone上にキーとして指定された項目(" + keyName + ")で値が重複するデータが存在します")
+                    Throw New kintoneException(GetType(T).ToString + "でキーとして指定された項目(" + keyName + ")の値が重複するデータが存在します")
                 End If
             Next
 

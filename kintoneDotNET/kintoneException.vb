@@ -23,7 +23,7 @@ Namespace API
         Public Overrides ReadOnly Property Message As String
             Get
                 If _error IsNot Nothing Then
-                    Return _error.message
+                    Return _error.ToString
                 Else
                     Return _message
                 End If
