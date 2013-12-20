@@ -62,6 +62,12 @@ Public Class APITest
         Console.WriteLine("queryMethodCall:" + q)
         Assert.AreEqual("status = """" and created_time < ""9999-12-31T23:59:59+09:00""", q)
 
+        'MemberEqual
+        Dim m As New kintoneTestModel
+        m.status = "X"
+        q = kintoneQuery.Make(Of kintoneTestModel)(Function(x) x.status = m.status)
+        Console.WriteLine("queryMemberEval:" + q)
+        Assert.AreEqual("status = ""X""", q)
 
     End Sub
 

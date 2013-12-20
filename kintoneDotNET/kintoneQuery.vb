@@ -114,8 +114,11 @@ Namespace API
                     right = methodExp.Arguments(1)
                 End If
 
+                Dim leftEval As Expression = extractMember(left)
                 Dim rightMember As MemberExpression = extractMember(right)
-                If rightMember IsNot Nothing AndAlso TypeOf rightMember.Member Is PropertyInfo Then 'プロパティが右辺にくる場合逆転
+
+                If Not (TypeOf leftEval Is MemberExpression AndAlso TypeOf CType(leftEval, MemberExpression).Member Is PropertyInfo) AndAlso _
+                    (rightMember IsNot Nothing AndAlso TypeOf rightMember.Member Is PropertyInfo) Then 'プロパティが右辺にくる場合逆転
                     Dim temp As Expression = left
                     left = rightMember
                     right = temp
