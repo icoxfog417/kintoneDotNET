@@ -31,7 +31,8 @@
       <DocumentationSource sourceFile="..\kintoneDotNET\bin\Debug\kintoneDotNET.dll" />
       <DocumentationSource sourceFile="..\kintoneDotNET\bin\Debug\kintoneDotNET.xml" />
     </DocumentationSources>
-    <ProjectSummary>サイボウズkintoneを.NET Framworkで扱うためのライブラリ</ProjectSummary>
+    <ProjectSummary>kintoneDotNet v1.0.0
+サイボウズkintoneを.NET Framworkで扱うためのライブラリ</ProjectSummary>
     <NamespaceSummaries>
       <NamespaceSummaryItem name="(global)" isDocumented="False" />
       <NamespaceSummaryItem name="kintoneDotNET.API" isDocumented="True">kintoneに対する読み取り/更新操作を行うためのAPI</NamespaceSummaryItem>
