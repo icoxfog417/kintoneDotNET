@@ -4,7 +4,7 @@ kintoneDotNET (v1.0)
 kintoneDotNETは、[kintone API](https://developers.cybozu.com/ja/kintone-api/common-appapi.html) を.NET Framework上で扱うためのライブラリです。  .NET Frameworkは4.0以上で動作します。
 
 ## Feature
-詳細な仕様はこちらをご参照ください。[[How to use | How-to-use-kintoneDotNET]]・[API Document](http://icoxfog417.github.io/kintoneDotNET/Index.html)  
+詳細な仕様はこちらをご参照ください。[How to use](https://github.com/icoxfog417/kintoneDotNET/wiki/How-to-use-kintoneDotNET)・[API Document](http://icoxfog417.github.io/kintoneDotNET/Index.html)  
 
 特徴的な機能は、以下になります。 
 
