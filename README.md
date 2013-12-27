@@ -22,7 +22,7 @@ Dim popular As List(Of BookModel) = BookModel.Find(Of BookModel)(Function(x) x.u
 ```
 
 ### Save
-事前にModelクラスにKeyを設定しておくことで、Save(キーに一致するレコードがあればUpdate/なければInsert)処理を行えます。  
+事前にModelクラスにKeyを設定しておくことで、Save処理を行えます(キーに一致するレコードがあればUpdate/なければInsert)。  
 
 ```
 BookModel book = new BookModel();
