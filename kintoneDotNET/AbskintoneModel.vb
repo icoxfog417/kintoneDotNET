@@ -56,7 +56,7 @@ Namespace API
         ''' </summary>
         Public Overridable Property work_usr As New kintoneUser()
 
-        Private Shared _convertDic As New Dictionary(Of String, String) From {
+        Private _convertDictionary As New Dictionary(Of String, String) From {
                                     {"レコード番号", "record_id"},
                                     {"作成日時", "created_time"},
                                     {"更新日時", "updated_time"},
@@ -65,6 +65,15 @@ Namespace API
                                     {"ステータス", "status"},
                                     {"作業者", "work_usr"}
                                 }
+        Protected Overridable Property ConvertDictionary As Dictionary(Of String, String)
+            Get
+                Return _convertDictionary
+            End Get
+            Set(value As Dictionary(Of String, String))
+                _convertDictionary = value
+            End Set
+        End Property
+
 
         ''' <summary>
         ''' kintone上でのレコードURL
@@ -101,7 +110,8 @@ Namespace API
         ''' </remarks>
         Public Shared Function Find(Of T As AbskintoneModel)(ByVal expression As Expression(Of Func(Of T, Boolean)), _
                                                                 Optional ByVal isConvert As Boolean = True) As List(Of T)
-            Dim query As String = kintoneQuery.Make(Of T)(expression, If(isConvert, AbskintoneModel.GetPropertyToDefaultDic, Nothing))
+            Dim model As T = Activator.CreateInstance(Of T)()
+            Dim query As String = kintoneQuery.Make(Of T)(expression, If(isConvert, model.GetPropertyToDefaultDic, Nothing))
             Return Find(Of T)(query)
         End Function
 
@@ -189,7 +199,7 @@ Namespace API
         ''' <returns></returns>
         ''' <remarks></remarks>
         Public Shared Function Create(Of T As AbskintoneModel)(ByVal objs As List(Of T)) As List(Of T)
-            Dim ids As List(Of String) = GetAPI(Of T)().Create(Of T)(objs)
+            Dim ids As List(Of String) = GetAPI(Of T)().BulkCreate(Of T)(objs)
             Return FindByIds(Of T)(ids)
         End Function
 
@@ -201,7 +211,7 @@ Namespace API
         ''' <returns></returns>
         ''' <remarks></remarks>
         Public Shared Function Update(Of T As AbskintoneModel)(ByVal objs As List(Of T)) As Boolean
-            Return GetAPI(Of T).Update(Of T)(objs)
+            Return GetAPI(Of T).BulkUpdate(Of T)(objs)
         End Function
 
         ''' <summary>
@@ -213,7 +223,7 @@ Namespace API
         ''' <returns></returns>
         ''' <remarks></remarks>
         Public Shared Function Save(Of T As AbskintoneModel)(ByVal objs As List(Of T)) As List(Of T)
-            Dim ids As List(Of String) = GetAPI(Of T)().Save(Of T)(objs)
+            Dim ids As List(Of String) = GetAPI(Of T)().BulkSave(Of T)(objs)
             Return FindByIds(Of T)(ids)
 
         End Function
@@ -226,19 +236,35 @@ Namespace API
         ''' <returns></returns>
         ''' <remarks></remarks>
         Public Shared Function Delete(Of T As AbskintoneModel)(ByVal ids As List(Of String)) As Boolean
-            Return GetAPI(Of T).Delete(Of T)(ids)
+            Return GetAPI(Of T).BulkDelete(Of T)(ids)
         End Function
+
+        Public Shared Function Delete(Of T As AbskintoneModel)(ByVal objs As List(Of T)) As Boolean
+            Dim model As T = Activator.CreateInstance(Of T)()
+            objs = model.UpdateHook(objs) 'idをセット
+
+            Dim result As Boolean = GetAPI(Of T).BulkDelete(Of T)((From x As T In objs Select x.record_id).ToList)
+
+            If result Then '成功した場合、objsに設定されていたidをクリアする(削除されたため)
+                objs.ForEach(Function(x) x.record_id = String.Empty)
+            End If
+
+            Return result
+
+        End Function
+
 
         ''' <summary>
         ''' レコードの登録(単一)を行う<br/>
         ''' 自身をkintone上に登録します
         ''' </summary>
-        Public Overridable Function Create() As String
-            Dim id As String = GetAPI.Create(Me)
-            If Not String.IsNullOrEmpty(id) Then
-                Me.record_id = id
+        Public Function Create() As String
+            Dim result As Object = execute("Create", Me)
+
+            If Not String.IsNullOrEmpty(result.ToString) Then
+                Me.record_id = result.ToString
             End If
-            Return id
+            Return Me.record_id
         End Function
 
         ''' <summary>
@@ -246,7 +272,8 @@ Namespace API
         ''' 自身のレコードを更新します
         ''' </summary>
         Public Function Update() As Boolean
-            Return GetAPI.Update(Me)
+            Dim result As Boolean = CBool(execute("Update", Me))
+            Return result
         End Function
 
         ''' <summary>
@@ -256,27 +283,14 @@ Namespace API
         ''' <returns></returns>
         ''' <remarks></remarks>
         Public Function Save() As String
+            Dim result As String = CStr(execute("Save", Me))
 
-            Try
-                Dim result As Object = getMethodForSingle("Save").Invoke(GetAPI, {Me})
-                Dim id As String = result.ToString
+            If Not String.IsNullOrEmpty(result) Then
+                Me.record_id = result
+            End If
 
-                If Not String.IsNullOrEmpty(id) Then
-                    Me.record_id = id
-                End If
-                Return id
+            Return result
 
-            Catch ex As System.Reflection.TargetInvocationException
-                'リフレクションによる呼び出しの場合本来の例外が内部に隠蔽されるため、取り出し
-                Throw ex.InnerException
-            End Try
-
-        End Function
-
-        Private Function getMethodForSingle(ByVal methodName As String) As MethodInfo
-            Dim method As MethodInfo = (From m As MethodInfo In GetType(kintoneAPI).GetMethods Where m.Name = methodName And Not TypeOf m.ReturnType Is IList).FirstOrDefault
-            Dim generic As MethodInfo = method.MakeGenericMethod(Me.GetType)
-            Return generic
         End Function
 
         ''' <summary>
@@ -284,19 +298,90 @@ Namespace API
         ''' 自身のIDに一致するレコードを削除します
         ''' </summary>
         Public Function Delete() As Boolean
-            Try
-                'Generic型と引数型が異なるため、型推論がきかない。なので強制的にコールする
-                Dim method As MethodInfo = GetType(kintoneAPI).GetMethod("Delete", {GetType(String)})
-                Dim generic As MethodInfo = method.MakeGenericMethod(Me.GetType)
-                Dim result As Object = generic.Invoke(GetAPI, {Me.record_id})
-                Return CBool(result)
 
+            If String.IsNullOrEmpty(Me.record_id) Then
+                'レコードidの設定がない場合、keyからidの取得を試みる
+                execute("SetIdToModel", Me)
+            End If
+
+            Dim result As Boolean = CBool(execute("Delete", Me.record_id))
+            If result Then '削除に成功したら、idをクリアする
+                Me.record_id = String.Empty
+            End If
+
+            Return result
+
+        End Function
+
+        ''' <summary>
+        ''' 実体である自身のタイプでkintoneAPIのジェネリクスメソッドをコールする
+        ''' </summary>
+        ''' <param name="methodName"></param>
+        ''' <param name="params"></param>
+        ''' <returns></returns>
+        ''' <remarks></remarks>
+        Private Function execute(ByVal methodName As String, ParamArray params As Object()) As Object
+            Dim method As MethodInfo = (From m As MethodInfo In GetType(kintoneAPI).GetMethods Where m.Name = methodName).FirstOrDefault
+            Dim generic As MethodInfo = method.MakeGenericMethod(Me.GetType)
+            Dim result As Object = Nothing
+
+            Try
+                result = generic.Invoke(GetAPI, params)
             Catch ex As System.Reflection.TargetInvocationException
                 'リフレクションによる呼び出しの場合本来の例外が内部に隠蔽されるため、取り出し
                 Throw ex.InnerException
             End Try
 
+            Return result
+
         End Function
+
+
+        ''' <summary>
+        ''' Create処理実行前に行われる処理<br/>
+        ''' 事前に行っておくべき処理(値設定/対象の追加・削除)があればここに実装する
+        ''' </summary>
+        ''' <typeparam name="T"></typeparam>
+        ''' <param name="objs">Create対象オブジェクト</param>
+        ''' <returns></returns>
+        ''' <remarks></remarks>
+        Public Overridable Function CreateHook(Of T As AbskintoneModel)(ByVal objs As List(Of T)) As List(Of T)
+            Return objs
+        End Function
+
+        ''' <summary>
+        ''' Update処理実行前に行われる処理<br/>
+        ''' 事前に行っておくべき処理(値設定/対象の追加・削除)があればここに実装する
+        ''' </summary>
+        ''' <typeparam name="T"></typeparam>
+        ''' <param name="objs">>Update対象オブジェクト</param>
+        ''' <returns></returns>
+        ''' <remarks></remarks>
+        Public Overridable Function UpdateHook(Of T As AbskintoneModel)(ByVal objs As List(Of T)) As List(Of T)
+
+            Dim ids As List(Of String) = (From x As T In objs Select x.record_id).ToList
+            Dim idline As String = String.Join("", ids)
+
+            If String.IsNullOrEmpty(idline) Then 'レコードidの設定がない場合、keyからidの取得を試みる
+                GetAPI(Of T).SetIdsToModels(Of T)(objs)
+            End If
+
+            Return objs
+
+        End Function
+
+        ''' <summary>
+        ''' Delete処理実行前に行われる処理<br/>
+        ''' 事前に行っておくべき処理(値設定/対象の追加・削除)があればここに実装する
+        ''' </summary>
+        ''' <typeparam name="T"></typeparam>
+        ''' <param name="ids">Delete対象id</param>
+        ''' <returns></returns>
+        ''' <remarks></remarks>
+        Public Overridable Function DeleteHook(Of T As AbskintoneModel)(ByVal ids As List(Of String)) As List(Of String)
+            Return ids
+        End Function
+
 
         ''' <summary>
         ''' 自身を操作するAPIを取得する
@@ -318,14 +403,14 @@ Namespace API
         ''' <summary>
         ''' kintone上デフォルトで日本語である項目("レコード番号","作成日時" など)をプロパティ名(record_id,updated_time etc)に変換するためのDictionaryを取得する
         ''' </summary>
-        Public Shared Function GetDefaultToPropertyDic() As Dictionary(Of String, String)
+        Public Function GetDefaultToPropertyDic() As Dictionary(Of String, String)
             Return GetNameConvertDic(True)
         End Function
 
         ''' <summary>
         ''' プロパティ名をkintone上のデフォルト名称に変換するためのDictionaryを取得する
         ''' </summary>
-        Public Shared Function GetPropertyToDefaultDic() As Dictionary(Of String, String)
+        Public Function GetPropertyToDefaultDic() As Dictionary(Of String, String)
             Return GetNameConvertDic(False)
         End Function
 
@@ -333,12 +418,12 @@ Namespace API
         ''' 変換用Dictionaryを取得するための内部処理
         ''' </summary>
         ''' <param name="isDefaultToProperty"></param>
-        Private Shared Function GetNameConvertDic(Optional ByVal isDefaultToProperty As Boolean = True) As Dictionary(Of String, String)
+        Private Function GetNameConvertDic(Optional ByVal isDefaultToProperty As Boolean = True) As Dictionary(Of String, String)
             If isDefaultToProperty Then
-                Return _convertDic
+                Return _convertDictionary
             Else
                 Dim opposit As New Dictionary(Of String, String)
-                For Each item As KeyValuePair(Of String, String) In _convertDic
+                For Each item As KeyValuePair(Of String, String) In _convertDictionary
                     opposit.Add(item.Value, item.Key) '逆にする
                 Next
                 Return opposit

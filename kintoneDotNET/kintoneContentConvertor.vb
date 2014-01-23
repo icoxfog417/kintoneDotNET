@@ -125,17 +125,19 @@ Namespace API
             Dim m = Activator.CreateInstance(objType)
 
             'デフォルトプロパティ格納
-            For Each item As KeyValuePair(Of String, String) In AbskintoneModel.GetDefaultToPropertyDic
-                If dictionary.ContainsKey(item.Key) Then 'デフォルト名称が使用されている場合
-                    Dim defaultProp As PropertyInfo = objType.GetProperty(item.Value)
-                    If defaultProp IsNot Nothing Then
-                        Dim value As Object = readKintoneItem(defaultProp.PropertyType, dictionary(item.Key)("value"), serializer)
-                        If defaultProp.GetSetMethod() IsNot Nothing Then 'Setterが存在する場合、値をセット
-                            defaultProp.SetValue(m, value, Nothing)
+            If TypeOf m Is AbskintoneModel Then
+                For Each item As KeyValuePair(Of String, String) In m.GetDefaultToPropertyDic
+                    If dictionary.ContainsKey(item.Key) Then 'デフォルト名称が使用されている場合
+                        Dim defaultProp As PropertyInfo = objType.GetProperty(item.Value)
+                        If defaultProp IsNot Nothing Then
+                            Dim value As Object = readKintoneItem(defaultProp.PropertyType, dictionary(item.Key)("value"), serializer)
+                            If defaultProp.GetSetMethod() IsNot Nothing Then 'Setterが存在する場合、値をセット
+                                defaultProp.SetValue(m, value, Nothing)
+                            End If
                         End If
                     End If
-                End If
-            Next
+                Next
+            End If
 
             'その他プロパティ処理
             Dim props As PropertyInfo() = objType.GetProperties()

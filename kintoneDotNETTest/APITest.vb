@@ -33,39 +33,39 @@ Public Class APITest
         Dim querys As New Dictionary(Of String, String)
         Dim q As String = ""
         'Simple Expression
-        q = kintoneQuery.Make(Of kintoneTestModel)(Function(x) x.status > "a", AbskintoneModel.GetPropertyToDefaultDic)
+        q = kintoneQuery.Make(Of kintoneTestModel)(Function(x) x.status > "a")
         Console.WriteLine("querySimple1:" + q)
         Assert.AreEqual("ステータス > ""a""", q)
 
-        q = kintoneQuery.Make(Of kintoneTestModel)(Function(x) Not x.status > "a", AbskintoneModel.GetPropertyToDefaultDic)
+        q = kintoneQuery.Make(Of kintoneTestModel)(Function(x) Not x.status > "a")
         Console.WriteLine("querySimple2:" + q)
         Assert.AreEqual("ステータス <= ""a""", q)
 
         'Equal
-        q = kintoneQuery.Make(Of kintoneTestModel)(Function(x) x.status.Equals(1) Or x.record_id <> 1 And Not x.numberField = 1)
+        q = kintoneQuery.Make(Of kintoneTestModel)(Function(x) x.status.Equals(1) Or x.record_id <> 1 And Not x.numberField = 1, Nothing)
         Console.WriteLine("queryEqual:" + q)
         Assert.AreEqual("status = 1 or record_id != 1 and numberField != 1", q)
 
         'like
-        q = kintoneQuery.Make(Of kintoneTestModel)(Function(x) x.status Like "A" And Not x.link Like "http")
+        q = kintoneQuery.Make(Of kintoneTestModel)(Function(x) x.status Like "A" And Not x.link Like "http", Nothing)
         Console.WriteLine("queryLike:" + q)
         Assert.AreEqual("status like ""A"" and link not like ""http""", q)
 
         'IN
         Dim ids As New List(Of String)() From {"1", "2", "3"}
-        q = kintoneQuery.Make(Of kintoneTestModel)(Function(x) {"1", "a"}.Contains(x.radio) And Not ids.Contains(x.record_id) And New List(Of Integer)() From {1, 2}.Contains(x.numberField))
+        q = kintoneQuery.Make(Of kintoneTestModel)(Function(x) {"1", "a"}.Contains(x.radio) And Not ids.Contains(x.record_id) And New List(Of Integer)() From {1, 2}.Contains(x.numberField), Nothing)
         Console.WriteLine("queryArray&List:" + q)
         Assert.AreEqual("radio in (""1"",""a"") and record_id not in (""1"",""2"",""3"") and numberField in (1,2)", q)
 
         'method Equal
-        q = kintoneQuery.Make(Of kintoneTestModel)(Function(x) x.status = String.Empty And x.created_time < DateTime.MaxValue)
+        q = kintoneQuery.Make(Of kintoneTestModel)(Function(x) x.status = String.Empty And x.created_time < DateTime.MaxValue, Nothing)
         Console.WriteLine("queryMethodCall:" + q)
         Assert.AreEqual("status = """" and created_time < ""9999-12-31T23:59:59+09:00""", q)
 
         'MemberEqual
         Dim m As New kintoneTestModel
         m.status = "X"
-        q = kintoneQuery.Make(Of kintoneTestModel)(Function(x) x.status = m.status)
+        q = kintoneQuery.Make(Of kintoneTestModel)(Function(x) x.status = m.status, Nothing)
         Console.WriteLine("queryMemberEval:" + q)
         Assert.AreEqual("status = ""X""", q)
 
@@ -147,6 +147,41 @@ Public Class APITest
         Assert.IsTrue(item.Delete())
 
      End Sub
+
+    ''' <summary>
+    ''' モデルのキーを使用した更新のテスト。<br/>
+    ''' record_idがない場合、key項目を使用しkintoneで検索を行い、一致していればそのオブジェクトのidを使用して更新を行う
+    ''' </summary>
+    ''' <remarks></remarks>
+    <TestMethod()>
+    Public Sub ExecuteUnitByKey()
+        Const METHOD_NAME As String = "ExecuteUnitByKey"
+
+        '事前に削除
+        Dim remained As List(Of kintoneTestModel) = kintoneTestModel.Find(Of kintoneTestModel)(Function(x) x.methodinfo = METHOD_NAME).ToList
+        kintoneTestModel.Delete(Of kintoneTestModel)(remained.Select(Function(x) x.record_id).ToList)
+
+        Dim item As New kintoneTestModel
+        item.methodinfo = METHOD_NAME
+
+        '更新対象レコードを事前登録
+        Dim id As String = item.Create
+        Assert.IsFalse(String.IsNullOrEmpty(item.record_id))
+
+        'キー推定による更新
+        item.record_id = String.Empty 'レコードidをクリア
+        item.numberField = 10.111
+        Assert.IsTrue(item.Update())
+        Dim updated As kintoneTestModel = kintoneTestModel.FindById(Of kintoneTestModel)(id)
+        Assert.AreEqual(item.numberField, updated.numberField)
+
+        'キー推定による削除
+        item.record_id = String.Empty 'レコードidをクリア
+        Assert.IsTrue(item.Delete())
+        Dim deleted As kintoneTestModel = kintoneTestModel.FindById(Of kintoneTestModel)(id)
+        Assert.IsTrue(deleted Is Nothing)
+
+    End Sub
 
     <TestMethod()>
     Public Sub ExecuteCreateDeleteMulti()

@@ -12,6 +12,20 @@ Namespace API
 
         ''' <summary>
         ''' LINQのExpressionからクエリ式を生成する<br/>
+        ''' 変換用のディクショナリはモデルから取得
+        ''' </summary>
+        ''' <typeparam name="T"></typeparam>
+        ''' <param name="expression"></param>
+        ''' <returns></returns>
+        ''' <remarks></remarks>
+        Public Shared Function Make(Of T As AbskintoneModel)(ByVal expression As Expression(Of Func(Of T, Boolean))) As String
+            Dim model As T = Activator.CreateInstance(Of T)()
+            Return Make(expression, model.GetPropertyToDefaultDic)
+        End Function
+
+
+        ''' <summary>
+        ''' LINQのExpressionからクエリ式を生成する<br/>
         ''' </summary>
         ''' <typeparam name="T"></typeparam>
         ''' <param name="expression">Booleanを返却するexpression</param>
@@ -19,7 +33,7 @@ Namespace API
         ''' <returns></returns>
         ''' <remarks></remarks>
         Public Shared Function Make(Of T As AbskintoneModel)(ByVal expression As Expression(Of Func(Of T, Boolean)), _
-                                                                Optional ByVal nameConvertor As Dictionary(Of String, String) = Nothing) As String
+                                                             ByVal nameConvertor As Dictionary(Of String, String)) As String
             'Linq Expressions :http://msdn.microsoft.com/ja-jp/library/system.linq.expressions(v=vs.100).aspx
             'Linq ExpressionType :http://msdn.microsoft.com/ja-jp/library/bb361179(v=vs.100).aspx
 

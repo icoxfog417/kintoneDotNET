@@ -14,6 +14,7 @@ Namespace API
     ''' REST APIについては<a href="https://developers.cybozu.com/ja/kintone-api/common-appapi.html">サイボウズ公式のドキュメント</a>参照
     ''' </summary>
     ''' <remarks>
+    ''' ジェネリクスクラスにするとSharedで使用できなくなるデメリットが大きいため、あくまでメソッド単位に留める
     ''' </remarks>
     Public Class kintoneAPI
 
@@ -184,6 +185,11 @@ Namespace API
             Me._appId = id
         End Sub
 
+        Private Function getModel(Of T As AbskintoneModel)() As T
+            Dim model As T = Activator.CreateInstance(Of T)()
+            Return model
+        End Function
+
         ''' <summary>
         ''' kintoneにアクセスするためのHTTPヘッダを作成する
         ''' </summary>
@@ -232,7 +238,7 @@ Namespace API
         ''' <returns></returns>
         ''' <remarks></remarks>
         Public Function Find(Of T As AbskintoneModel)(Optional ByVal query As String = "") As List(Of T)
-            Dim model As T = Activator.CreateInstance(Of T)()
+            Dim model As T = getModel(Of T)()
             Dim q As String = "app=" + model.app + If(Not String.IsNullOrEmpty(query), "&query=" + HttpUtility.UrlEncode(query), String.Empty)
 
             Dim kerror As kintoneError = Nothing
@@ -251,7 +257,7 @@ Namespace API
         ''' <returns></returns>
         ''' <remarks></remarks>
         Public Function FindAll(Of T As AbskintoneModel)(Optional ByVal query As String = "") As List(Of T)
-            Dim model As T = Activator.CreateInstance(Of T)()
+            Dim model As T = getModel(Of T)()
             Dim q As String = "app=" + model.app + If(Not String.IsNullOrEmpty(query), "&query=" + HttpUtility.UrlEncode(query), "&query=") 'limitを指定する必要があるので、条件指定がなくてもqueryパラメータは付与
 
             Dim stepCount As Integer = 1
@@ -385,7 +391,7 @@ Namespace API
         ''' <param name="objs"></param>
         ''' <returns></returns>
         ''' <remarks></remarks>
-        Public Function Create(Of T As AbskintoneModel)(ByVal objs As List(Of T)) As List(Of String)
+        Public Function BulkCreate(Of T As AbskintoneModel)(ByVal objs As List(Of T)) As List(Of String)
             Dim result As List(Of List(Of String)) = executeParallel(Of T, List(Of String))(objs, AddressOf taskCreate(Of T))
             Dim flatten As New List(Of String)
             For Each li As List(Of String) In result
@@ -405,10 +411,12 @@ Namespace API
             'JsonオブジェクトをRequestに書き出し
             'http://stackoverflow.com/questions/9145667/how-to-post-json-to-the-server
 
+            Dim creates As List(Of T) = getModel(Of T)().CreateHook(objs)
+
             Dim request As HttpWebRequest = makeHeader("records", "POST")
             Dim sendData As New kintoneRecords(Of T)
             sendData.app = AppId
-            sendData.records = objs
+            sendData.records = creates
 
             'Request Body にJSONデータを書き込み
             Dim js As New JavaScriptSerializer
@@ -418,18 +426,18 @@ Namespace API
             Dim jsonData As String = js.Serialize(sendData)
             writeToRequestBody(request, jsonData)
 
-            Dim list As New List(Of String)
+            Dim ids As New List(Of String)
             Dim kerror As kintoneError = Nothing
             Using response As HttpWebResponse = getResponse(request, kerror)
                 If Not response Is Nothing Then
                     Dim reader As New StreamReader(response.GetResponseStream)
                     Dim serialized As kintoneIds = js.Deserialize(Of kintoneIds)(reader.ReadToEnd)
-                    list = serialized.ids
+                    ids = serialized.ids
                 End If
             End Using
             If kerror IsNot Nothing Then Throw New kintoneException(kerror)
 
-            Return list
+            Return ids
 
         End Function
 
@@ -450,7 +458,7 @@ Namespace API
         ''' <param name="objs"></param>
         ''' <returns></returns>
         ''' <remarks></remarks>
-        Public Function Update(Of T As AbskintoneModel)(ByVal objs As List(Of T)) As Boolean
+        Public Function BulkUpdate(Of T As AbskintoneModel)(ByVal objs As List(Of T)) As Boolean
             Dim result As List(Of Boolean) = executeParallel(Of T, Boolean)(objs, AddressOf taskUpdate(Of T))
             Dim falseIndex As Integer = result.IndexOf(False)
             Return If(falseIndex < 0, True, False)
@@ -465,10 +473,13 @@ Namespace API
         ''' <returns></returns>
         ''' <remarks></remarks>
         Private Function taskUpdate(Of T As AbskintoneModel)(ByVal objs As List(Of T)) As Boolean
+
+            Dim updates As List(Of T) = getModel(Of T).UpdateHook(objs)
+
             Dim request As HttpWebRequest = makeHeader("records", "PUT")
             Dim sendData As New kintoneRecords(Of kintoneRecord(Of T))
             sendData.app = AppId
-            sendData.records = objs.Select(Function(x) New kintoneRecord(Of T)(x)).ToList
+            sendData.records = updates.Select(Function(x) New kintoneRecord(Of T)(x)).ToList
 
             'Request Body にJSONデータを書き込み
             Dim js As New JavaScriptSerializer
@@ -496,7 +507,7 @@ Namespace API
         ''' <returns></returns>
         ''' <remarks></remarks>
         Public Function Save(Of T As AbskintoneModel)(ByVal obj As T) As String
-            Dim ids As List(Of String) = Save(Of T)(New List(Of T) From {obj})
+            Dim ids As List(Of String) = BulkSave(Of T)(New List(Of T) From {obj})
             If ids IsNot Nothing AndAlso ids.Count > 0 Then
                 Return ids.First
             Else
@@ -504,27 +515,33 @@ Namespace API
             End If
         End Function
 
-        ''' <summary>
-        ''' レコードの保存処理(複数件)
-        ''' </summary>
-        ''' <typeparam name="T"></typeparam>
-        ''' <param name="objs"></param>
-        ''' <returns></returns>
-        ''' <remarks></remarks>
-        Public Function Save(Of T As AbskintoneModel)(ByVal objs As List(Of T)) As List(Of String)
-            Dim key = From p As PropertyInfo In GetType(T).GetProperties
-            Let attribute As kintoneItemAttribute = p.GetCustomAttributes(GetType(kintoneItemAttribute), True).SingleOrDefault
-            Where attribute IsNot Nothing AndAlso attribute.isKey
-            Select p, attribute
+        Public Sub SetIdToModel(Of T As AbskintoneModel)(ByRef obj As T)
+            SetIdsToModels(Of T)(New List(Of T) From {obj})
+        End Sub
 
+        ''' <summary>
+        ''' 受け取ったオブジェクトとキーが一致するレコードをkintoneから検索し、idをセットする
+        ''' </summary>
+        ''' <typeparam name="t"></typeparam>
+        ''' <param name="objs"></param>
+        ''' <remarks></remarks>
+        Public Sub SetIdsToModels(Of T As AbskintoneModel)(ByRef objs As List(Of T))
+
+            'モデルのキー項目を取得
+            Dim key = From p As PropertyInfo In GetType(T).GetProperties
+                        Let attribute As kintoneItemAttribute = p.GetCustomAttributes(GetType(kintoneItemAttribute), True).SingleOrDefault
+                        Where attribute IsNot Nothing AndAlso attribute.isKey
+                        Select p, attribute
+
+            'キー項目のチェック
             If key Is Nothing OrElse key.Count <> 1 Then
-                If key Is Nothing OrElse key.Count = 0 Then Throw New kintoneException(GetType(T).ToString + " にキーが設定されていません")
-                If key.Count > 1 Then Throw New kintoneException(GetType(T).ToString + "にキーが複数設定されています")
+                If key Is Nothing OrElse key.Count = 0 Then Throw New kintoneException(GetType(T).ToString + "にはキーとなるkintoneItemが設定されていません")
+                If key.Count > 1 Then Throw New kintoneException(GetType(T).ToString + "にはキーとなるkintoneItemが複数設定されています")
             End If
 
-            '更新対象のオブジェクトの検索
+            'オブジェクトに設定されたキーでkintoneを検索(inで一括検索)
             Dim keyName As String = key.First.p.Name
-            Dim dic As Dictionary(Of String, String) = AbskintoneModel.GetPropertyToDefaultDic() 'プロパティ名を変換
+            Dim dic As Dictionary(Of String, String) = getModel(Of T).GetPropertyToDefaultDic() 'プロパティ名を変換
             Dim query As String = If(dic.ContainsKey(keyName), dic(keyName), keyName) + " in "
             Dim params As New List(Of String)
             For Each obj As T In objs
@@ -540,20 +557,40 @@ Namespace API
                 list = Find(Of T)(query)
             End If
 
+            '取得したオブジェクトからidをセット
+            For Each tgt As T In objs
+                Dim tgtKey As Object = key.First.p.GetValue(tgt, Nothing)
+                Dim sameKey As List(Of T) = (From x As T In list Where tgtKey = key.First.p.GetValue(x, Nothing) Select x).ToList
+                If sameKey.Count = 1 Then
+                    'idをセット
+                    'TODO id以外に、登録日や更新情報、ステータスなどの情報を同期した方がいいか検討
+                    tgt.record_id = sameKey.First.record_id
+                ElseIf sameKey.Count > 1 Then
+                    Throw New kintoneException(GetType(T).ToString + "でキーとして指定されたkintoneItem(" + keyName + ")の値が重複するデータが存在します")
+                End If
+            Next
+
+        End Sub
+
+        ''' <summary>
+        ''' レコードの保存処理(複数件)
+        ''' </summary>
+        ''' <typeparam name="T"></typeparam>
+        ''' <param name="objs"></param>
+        ''' <returns></returns>
+        ''' <remarks></remarks>
+        Public Function BulkSave(Of T As AbskintoneModel)(ByVal objs As List(Of T)) As List(Of String)
+            SetIdsToModels(objs) 'kintoneに存在するものについてはidがセットされる
+
             'Update/Create分を振り分け
             Dim creates As New List(Of T)
             Dim updates As New List(Of T)
 
             For Each tgt As T In objs
-                Dim tgtKey As Object = key.First.p.GetValue(tgt, Nothing)
-                Dim sameKey As List(Of T) = (From x As T In list Where tgtKey = key.First.p.GetValue(x, Nothing) Select x).ToList
-                If sameKey.Count = 0 Then
+                If String.IsNullOrEmpty(tgt.record_id) Then 'レコードidがないならCreate
                     creates.Add(tgt)
-                ElseIf sameKey.Count = 1 Then
-                    tgt.record_id = sameKey.First.record_id '更新のためにidをセット
-                    updates.Add(tgt)
                 Else
-                    Throw New kintoneException(GetType(T).ToString + "でキーとして指定された項目(" + keyName + ")の値が重複するデータが存在します")
+                    updates.Add(tgt)
                 End If
             Next
 
@@ -561,10 +598,10 @@ Namespace API
             Dim result As Boolean = True
             Dim ids As List(Of String) = Nothing
             If updates.Count > 0 Then
-                result = Update(Of T)(updates)
+                result = BulkUpdate(Of T)(updates)
             End If
             If creates.Count > 0 Then
-                ids = Create(Of T)(creates)
+                ids = BulkCreate(Of T)(creates)
             End If
 
             Return ids
@@ -579,6 +616,7 @@ Namespace API
         ''' <returns></returns>
         ''' <remarks></remarks>
         Public Function Delete(Of T As AbskintoneModel)(ByVal id As String) As Boolean
+            'TODO Delete処理でもidだけでなくkeyを指定した処理ができるようにする
             Return taskDelete(Of T)(New List(Of String) From {id})
         End Function
 
@@ -589,7 +627,7 @@ Namespace API
         ''' <param name="ids"></param>
         ''' <returns></returns>
         ''' <remarks></remarks>
-        Public Function Delete(Of T As AbskintoneModel)(ByVal ids As List(Of String)) As Boolean
+        Public Function BulkDelete(Of T As AbskintoneModel)(ByVal ids As List(Of String)) As Boolean
             Dim result As List(Of Boolean) = executeParallel(Of String, Boolean)(ids, AddressOf taskDelete(Of T))
             Dim falseIndex As Integer = result.IndexOf(False)
             Return If(falseIndex < 0, True, False)
@@ -606,9 +644,11 @@ Namespace API
         Private Function taskDelete(Of T As AbskintoneModel)(ByVal ids As List(Of String)) As Boolean
 
             Dim request As HttpWebRequest = makeHeader("records", "DELETE")
+
+            Dim deletes As List(Of String) = getModel(Of T).DeleteHook(Of T)(ids)
             Dim sendData As New kintoneIds()
             sendData.app = Me.AppId
-            sendData.ids = ids
+            sendData.ids = deletes
 
             'Request Body にJSONデータを書き込み
             Dim js As New JavaScriptSerializer

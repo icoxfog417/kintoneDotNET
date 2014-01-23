@@ -5,8 +5,12 @@ Imports System.Configuration
 Public Class kintoneTestModel
     Inherits AbskintoneModel
 
-    <kintoneItem(isUpload:=False, isKey:=True)>
-    Public Overrides Property record_id As String = ""
+    '特にキーを設定せず、record_idをそのまま一意キーとして使用したい場合は以下のように設定する
+    '<kintoneItem(isUpload:=False, isKey:=True)>
+    'Public Overrides Property record_id As String = ""
+
+    <kintoneItem(isKey:=True)>
+    Public Property my_key As String = System.Guid.NewGuid().ToString
 
     <kintoneItem>
     Public Property methodinfo As String = ""
