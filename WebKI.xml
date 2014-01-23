@@ -11,10 +11,15 @@
   </HelpKINode>
   <HelpKINode Title="AbskintoneModel.AbskintoneModel constructor" Url="html/4cf63383-2989-dcdb-218f-3522388efc92.htm" />
   <HelpKINode Title="AbskintoneModel.app property" Url="html/33770366-9977-0fcf-1434-d6135f07baea.htm" />
+  <HelpKINode Title="AbskintoneModel.ConvertDictionary property" Url="html/9b3b6e70-6a73-ef4f-4946-e828d69f14e4.htm" />
   <HelpKINode Title="AbskintoneModel.Create method" Url="html/0eccf912-bced-fd8b-2f6f-7fcccd38ee74.htm" />
   <HelpKINode Title="AbskintoneModel.created_time property" Url="html/db50728f-f05f-48b4-e0e9-040897d3e445.htm" />
+  <HelpKINode Title="AbskintoneModel.CreateHook(Of T) method" Url="html/c2206423-60b7-27ac-e101-09de2d9cb5e3.htm" />
+  <HelpKINode Title="AbskintoneModel.CreateHook&lt;T&gt; method" Url="html/c2206423-60b7-27ac-e101-09de2d9cb5e3.htm" />
   <HelpKINode Title="AbskintoneModel.create_usr property" Url="html/fea22229-51ac-d595-a9b9-589a46763993.htm" />
   <HelpKINode Title="AbskintoneModel.Delete method" Url="html/f44dcff7-4892-5f7b-0c4c-e45ea8505ddf.htm" />
+  <HelpKINode Title="AbskintoneModel.DeleteHook(Of T) method" Url="html/8a0af710-b4bc-ffca-5686-e6c2aa228c34.htm" />
+  <HelpKINode Title="AbskintoneModel.DeleteHook&lt;T&gt; method" Url="html/8a0af710-b4bc-ffca-5686-e6c2aa228c34.htm" />
   <HelpKINode Title="AbskintoneModel.Find method" Url="html/1ea67fc5-6b24-d53e-15af-3640ac894770.htm" />
   <HelpKINode Title="AbskintoneModel.FindAll method" Url="html/a8887e88-491c-6f35-bc86-38c7fe207bc5.htm" />
   <HelpKINode Title="AbskintoneModel.FindById(Of T) method" Url="html/d69fa4cc-b1b9-3c61-e181-0d9510a3c854.htm" />
@@ -29,6 +34,8 @@
   <HelpKINode Title="AbskintoneModel.status property" Url="html/c2942655-9f29-742e-a766-b4d8bb5db2cd.htm" />
   <HelpKINode Title="AbskintoneModel.Update method" Url="html/057f3fd5-7310-c48a-a940-55b962d662cc.htm" />
   <HelpKINode Title="AbskintoneModel.updated_time property" Url="html/80bf2ee5-3794-1a7a-4e21-64531eb8fe05.htm" />
+  <HelpKINode Title="AbskintoneModel.UpdateHook(Of T) method" Url="html/15dce8d5-88d6-0ba9-c463-fc55e7d4f4b3.htm" />
+  <HelpKINode Title="AbskintoneModel.UpdateHook&lt;T&gt; method" Url="html/15dce8d5-88d6-0ba9-c463-fc55e7d4f4b3.htm" />
   <HelpKINode Title="AbskintoneModel.update_usr property" Url="html/b984ab5f-feea-22d0-c628-484e7a98b7c5.htm" />
   <HelpKINode Title="AbskintoneModel.work_usr property" Url="html/7a530038-0276-320b-5eaa-44968953ce53.htm" />
   <HelpKINode Title="ApiEncoding property" Url="html/84769719-9e1b-2899-addf-46cefc5ff41c.htm" />
@@ -38,6 +45,14 @@
     <HelpKINode Title="kintoneRecords(T).app Property " Url="html/45588744-da43-c780-a15e-797b961eea67.htm" />
   </HelpKINode>
   <HelpKINode Title="AppId property" Url="html/37b6b3f1-05ba-900f-e9ef-0426a422bd88.htm" />
+  <HelpKINode Title="BulkCreate(Of T) method" Url="html/0131b44f-1aed-5191-6ca6-abc1cf58f893.htm" />
+  <HelpKINode Title="BulkCreate&lt;T&gt; method" Url="html/0131b44f-1aed-5191-6ca6-abc1cf58f893.htm" />
+  <HelpKINode Title="BulkDelete(Of T) method" Url="html/6370892b-a63c-8b65-da32-d3f97178d980.htm" />
+  <HelpKINode Title="BulkDelete&lt;T&gt; method" Url="html/6370892b-a63c-8b65-da32-d3f97178d980.htm" />
+  <HelpKINode Title="BulkSave(Of T) method" Url="html/b0f8efa2-41a4-1e2e-adba-1cd9876d559b.htm" />
+  <HelpKINode Title="BulkSave&lt;T&gt; method" Url="html/b0f8efa2-41a4-1e2e-adba-1cd9876d559b.htm" />
+  <HelpKINode Title="BulkUpdate(Of T) method" Url="html/4413e253-cecc-b571-90df-ce350c970a92.htm" />
+  <HelpKINode Title="BulkUpdate&lt;T&gt; method" Url="html/4413e253-cecc-b571-90df-ce350c970a92.htm" />
   <HelpKINode Title="code property">
     <HelpKINode Title="kintoneError.code Property " Url="html/8f8e8db1-67e9-a91d-c123-b62cc6884bc5.htm" />
     <HelpKINode Title="kintoneUser.code Property " Url="html/614e88f1-2ec3-176a-cedc-ca2bf3c239b7.htm" />
@@ -45,17 +60,20 @@
   <HelpKINode Title="ContentLength property" Url="html/c5b75f16-41c3-e846-1b0b-cff2b23be6e4.htm" />
   <HelpKINode Title="ContentType property" Url="html/cb92d1c6-caac-62d0-17dd-1348f3d46e64.htm" />
   <HelpKINode Title="contentType property" Url="html/8d141380-fc16-1237-9865-b22eec15e6ff.htm" />
-  <HelpKINode Title="Create method">
-    <HelpKINode Title="AbskintoneModel.Create Method " Url="html/0eccf912-bced-fd8b-2f6f-7fcccd38ee74.htm" />
-    <HelpKINode Title="kintoneAPI.Create Method " Url="html/09bb1210-4822-73e3-8f67-561e335b5854.htm" />
-  </HelpKINode>
+  <HelpKINode Title="ConvertDictionary property" Url="html/9b3b6e70-6a73-ef4f-4946-e828d69f14e4.htm" />
+  <HelpKINode Title="Create method" Url="html/0eccf912-bced-fd8b-2f6f-7fcccd38ee74.htm" />
+  <HelpKINode Title="Create(Of T) method" Url="html/0e2d4148-c089-99cc-9ed9-d04debdb2642.htm" />
+  <HelpKINode Title="Create&lt;T&gt; method" Url="html/0e2d4148-c089-99cc-9ed9-d04debdb2642.htm" />
   <HelpKINode Title="created_time property" Url="html/db50728f-f05f-48b4-e0e9-040897d3e445.htm" />
+  <HelpKINode Title="CreateHook(Of T) method" Url="html/c2206423-60b7-27ac-e101-09de2d9cb5e3.htm" />
+  <HelpKINode Title="CreateHook&lt;T&gt; method" Url="html/c2206423-60b7-27ac-e101-09de2d9cb5e3.htm" />
   <HelpKINode Title="create_usr property" Url="html/fea22229-51ac-d595-a9b9-589a46763993.htm" />
   <HelpKINode Title="DateTimeType field" Url="html/586b60de-2ed9-647e-85d8-a48d9552e1d5.htm" />
-  <HelpKINode Title="Delete method">
-    <HelpKINode Title="AbskintoneModel.Delete Method " Url="html/f44dcff7-4892-5f7b-0c4c-e45ea8505ddf.htm" />
-    <HelpKINode Title="kintoneAPI.Delete Method " Url="html/31c81cc1-7e7c-f90c-c727-65f4a8749a1a.htm" />
-  </HelpKINode>
+  <HelpKINode Title="Delete method" Url="html/f44dcff7-4892-5f7b-0c4c-e45ea8505ddf.htm" />
+  <HelpKINode Title="Delete(Of T) method" Url="html/61ded334-1cfe-f698-fd9c-8f755036cfba.htm" />
+  <HelpKINode Title="Delete&lt;T&gt; method" Url="html/61ded334-1cfe-f698-fd9c-8f755036cfba.htm" />
+  <HelpKINode Title="DeleteHook(Of T) method" Url="html/8a0af710-b4bc-ffca-5686-e6c2aa228c34.htm" />
+  <HelpKINode Title="DeleteHook&lt;T&gt; method" Url="html/8a0af710-b4bc-ffca-5686-e6c2aa228c34.htm" />
   <HelpKINode Title="Deserialize method">
     <HelpKINode Title="kintoneContentConvertor(T).Deserialize Method " Url="html/75882130-4f99-5f52-73aa-f67e9fe5dd6e.htm" />
     <HelpKINode Title="kintoneErrorConvertor.Deserialize Method " Url="html/6213d7fb-50a6-82e6-f12b-e85597dddd10.htm" />
@@ -118,8 +136,18 @@
   </HelpKINode>
   <HelpKINode Title="kintoneAPI.ApiEncoding property" Url="html/84769719-9e1b-2899-addf-46cefc5ff41c.htm" />
   <HelpKINode Title="kintoneAPI.AppId property" Url="html/37b6b3f1-05ba-900f-e9ef-0426a422bd88.htm" />
-  <HelpKINode Title="kintoneAPI.Create method" Url="html/09bb1210-4822-73e3-8f67-561e335b5854.htm" />
-  <HelpKINode Title="kintoneAPI.Delete method" Url="html/31c81cc1-7e7c-f90c-c727-65f4a8749a1a.htm" />
+  <HelpKINode Title="kintoneAPI.BulkCreate(Of T) method" Url="html/0131b44f-1aed-5191-6ca6-abc1cf58f893.htm" />
+  <HelpKINode Title="kintoneAPI.BulkCreate&lt;T&gt; method" Url="html/0131b44f-1aed-5191-6ca6-abc1cf58f893.htm" />
+  <HelpKINode Title="kintoneAPI.BulkDelete(Of T) method" Url="html/6370892b-a63c-8b65-da32-d3f97178d980.htm" />
+  <HelpKINode Title="kintoneAPI.BulkDelete&lt;T&gt; method" Url="html/6370892b-a63c-8b65-da32-d3f97178d980.htm" />
+  <HelpKINode Title="kintoneAPI.BulkSave(Of T) method" Url="html/b0f8efa2-41a4-1e2e-adba-1cd9876d559b.htm" />
+  <HelpKINode Title="kintoneAPI.BulkSave&lt;T&gt; method" Url="html/b0f8efa2-41a4-1e2e-adba-1cd9876d559b.htm" />
+  <HelpKINode Title="kintoneAPI.BulkUpdate(Of T) method" Url="html/4413e253-cecc-b571-90df-ce350c970a92.htm" />
+  <HelpKINode Title="kintoneAPI.BulkUpdate&lt;T&gt; method" Url="html/4413e253-cecc-b571-90df-ce350c970a92.htm" />
+  <HelpKINode Title="kintoneAPI.Create(Of T) method" Url="html/0e2d4148-c089-99cc-9ed9-d04debdb2642.htm" />
+  <HelpKINode Title="kintoneAPI.Create&lt;T&gt; method" Url="html/0e2d4148-c089-99cc-9ed9-d04debdb2642.htm" />
+  <HelpKINode Title="kintoneAPI.Delete(Of T) method" Url="html/61ded334-1cfe-f698-fd9c-8f755036cfba.htm" />
+  <HelpKINode Title="kintoneAPI.Delete&lt;T&gt; method" Url="html/61ded334-1cfe-f698-fd9c-8f755036cfba.htm" />
   <HelpKINode Title="kintoneAPI.DownloadFile method" Url="html/0742b24c-f441-159c-0b6d-c1eef40374bf.htm" />
   <HelpKINode Title="kintoneAPI.ExecuteLimit property" Url="html/9120c080-7480-9028-2fa9-2088a7c27f97.htm" />
   <HelpKINode Title="kintoneAPI.Find(Of T) method" Url="html/468feadc-f39d-c788-e706-1e0515f3612f.htm" />
@@ -135,8 +163,14 @@
   <HelpKINode Title="kintoneAPI.KINTONE_REC_LIMIT field" Url="html/e34805dc-eff4-99d9-8a61-8809e24f8e30.htm" />
   <HelpKINode Title="kintoneAPI.ReadLimit property" Url="html/9a650811-ef4b-aed5-dbbd-4d76852e19b9.htm" />
   <HelpKINode Title="kintoneAPI.RECORD_LIMIT field" Url="html/87a97028-455b-ec13-2c24-16b12590b5c2.htm" />
-  <HelpKINode Title="kintoneAPI.Save method" Url="html/fc55518c-5a57-f5a3-bcbc-94a361f32760.htm" />
-  <HelpKINode Title="kintoneAPI.Update method" Url="html/79787a95-44ee-87ec-26b9-5b5ef6f73184.htm" />
+  <HelpKINode Title="kintoneAPI.Save(Of T) method" Url="html/39e1a56e-77f5-73d6-ad10-b69101131b3e.htm" />
+  <HelpKINode Title="kintoneAPI.Save&lt;T&gt; method" Url="html/39e1a56e-77f5-73d6-ad10-b69101131b3e.htm" />
+  <HelpKINode Title="kintoneAPI.SetIdsToModels(Of T) method" Url="html/50496c0b-e158-ef51-65bc-eb9871f5e92e.htm" />
+  <HelpKINode Title="kintoneAPI.SetIdsToModels&lt;T&gt; method" Url="html/50496c0b-e158-ef51-65bc-eb9871f5e92e.htm" />
+  <HelpKINode Title="kintoneAPI.SetIdToModel(Of T) method" Url="html/946e6977-6e85-8c5d-3f0f-30a37ac31156.htm" />
+  <HelpKINode Title="kintoneAPI.SetIdToModel&lt;T&gt; method" Url="html/946e6977-6e85-8c5d-3f0f-30a37ac31156.htm" />
+  <HelpKINode Title="kintoneAPI.Update(Of T) method" Url="html/57b87b91-0654-6d85-dca9-6ee270b6e557.htm" />
+  <HelpKINode Title="kintoneAPI.Update&lt;T&gt; method" Url="html/57b87b91-0654-6d85-dca9-6ee270b6e557.htm" />
   <HelpKINode Title="kintoneAPI.UploadFile method" Url="html/6e036750-8ee9-be7f-742c-b5ae0b8870c0.htm" />
   <HelpKINode Title="kintoneContentConvertor(Of T) class">
     <HelpKINode Title="kintoneContentConvertor(T) Class" Url="html/6738845a-c98b-73a9-49f0-1cf53be16188.htm" />
@@ -410,8 +444,7 @@
     <HelpKINode Title="methods" Url="html/fa9b45a2-8e9b-7afd-a9ae-a33ba8410646.htm" />
   </HelpKINode>
   <HelpKINode Title="kintoneQuery.kintoneQuery constructor" Url="html/d9c0b3d1-ff62-7924-1ba6-b8c5336c109b.htm" />
-  <HelpKINode Title="kintoneQuery.Make(Of T) method" Url="html/1de8c0a6-9e22-498f-743c-3ba801e840a5.htm" />
-  <HelpKINode Title="kintoneQuery.Make&lt;T&gt; method" Url="html/1de8c0a6-9e22-498f-743c-3ba801e840a5.htm" />
+  <HelpKINode Title="kintoneQuery.Make method" Url="html/60bc1214-d298-2885-328a-b09e5b2c1c66.htm" />
   <HelpKINode Title="kintoneQueryField class">
     <HelpKINode Title="kintoneQueryField Class" Url="html/801d08f6-3053-e37d-908e-604e9dd671a9.htm" />
     <HelpKINode Title="kintoneQueryField Members" Url="html/26f2b94e-de4d-8b0f-2da1-02e2750c1dc9.htm" />
@@ -513,10 +546,9 @@
   <HelpKINode Title="KINTONE_HOST field" Url="html/e63066a4-6126-7aab-6df9-3a133d22ce67.htm" />
   <HelpKINode Title="KINTONE_PORT field" Url="html/4efc837d-2bd9-0d60-506d-8974e3652bdc.htm" />
   <HelpKINode Title="KINTONE_REC_LIMIT field" Url="html/e34805dc-eff4-99d9-8a61-8809e24f8e30.htm" />
-  <HelpKINode Title="Make(Of T) method" Url="html/1de8c0a6-9e22-498f-743c-3ba801e840a5.htm" />
-  <HelpKINode Title="Make&lt;T&gt; method" Url="html/1de8c0a6-9e22-498f-743c-3ba801e840a5.htm" />
-  <HelpKINode Title="Message property" Url="html/a9578579-537e-f653-0c09-aa8d5f6099de.htm" />
+  <HelpKINode Title="Make method" Url="html/60bc1214-d298-2885-328a-b09e5b2c1c66.htm" />
   <HelpKINode Title="message property" Url="html/7af71a83-a63b-bfdd-37ca-a86754530cd0.htm" />
+  <HelpKINode Title="Message property" Url="html/a9578579-537e-f653-0c09-aa8d5f6099de.htm" />
   <HelpKINode Title="messages property" Url="html/bbb8deb3-682b-5521-1ac5-58772d5598b5.htm" />
   <HelpKINode Title="name property">
     <HelpKINode Title="kintoneFile.name Property " Url="html/00162f8c-ff98-1644-5de3-133a43aa91e5.htm" />
@@ -545,15 +577,18 @@
   <HelpKINode Title="record_id property" Url="html/881627ed-155c-24e0-f82e-83b7d333665d.htm" />
   <HelpKINode Title="RECORD_LIMIT field" Url="html/87a97028-455b-ec13-2c24-16b12590b5c2.htm" />
   <HelpKINode Title="record_show_url property" Url="html/727d06df-e1f2-06c4-7871-9b13a01e5765.htm" />
-  <HelpKINode Title="Save method">
-    <HelpKINode Title="AbskintoneModel.Save Method " Url="html/76d04605-be7f-bbf7-3012-2350f0ac5930.htm" />
-    <HelpKINode Title="kintoneAPI.Save Method " Url="html/fc55518c-5a57-f5a3-bcbc-94a361f32760.htm" />
-  </HelpKINode>
+  <HelpKINode Title="Save method" Url="html/76d04605-be7f-bbf7-3012-2350f0ac5930.htm" />
+  <HelpKINode Title="Save(Of T) method" Url="html/39e1a56e-77f5-73d6-ad10-b69101131b3e.htm" />
+  <HelpKINode Title="Save&lt;T&gt; method" Url="html/39e1a56e-77f5-73d6-ad10-b69101131b3e.htm" />
   <HelpKINode Title="SaveAs method" Url="html/bad1d0e0-2283-0f31-6fa6-0bfa877b3e28.htm" />
   <HelpKINode Title="Serialize method">
     <HelpKINode Title="kintoneContentConvertor(T).Serialize Method " Url="html/c9a46805-bfeb-6565-1fc0-a3acd8e3b3de.htm" />
     <HelpKINode Title="kintoneErrorConvertor.Serialize Method " Url="html/ca2dc864-8273-0442-ed2a-6f41037c0bee.htm" />
   </HelpKINode>
+  <HelpKINode Title="SetIdsToModels(Of T) method" Url="html/50496c0b-e158-ef51-65bc-eb9871f5e92e.htm" />
+  <HelpKINode Title="SetIdsToModels&lt;T&gt; method" Url="html/50496c0b-e158-ef51-65bc-eb9871f5e92e.htm" />
+  <HelpKINode Title="SetIdToModel(Of T) method" Url="html/946e6977-6e85-8c5d-3f0f-30a37ac31156.htm" />
+  <HelpKINode Title="SetIdToModel&lt;T&gt; method" Url="html/946e6977-6e85-8c5d-3f0f-30a37ac31156.htm" />
   <HelpKINode Title="size property" Url="html/c7a387bf-cd6d-0b0d-8b5f-36bbd6d82654.htm" />
   <HelpKINode Title="status property" Url="html/c2942655-9f29-742e-a766-b4d8bb5db2cd.htm" />
   <HelpKINode Title="SupportedTypes property">
@@ -571,18 +606,19 @@
     <HelpKINode Title="kintoneQueryField.ToString Method " Url="html/83b9270b-193c-1422-3a92-c4e6e556d713.htm" />
   </HelpKINode>
   <HelpKINode Title="type property" Url="html/2319c4de-0ce6-c987-58d6-77a45c60ed1d.htm" />
-  <HelpKINode Title="Update method">
-    <HelpKINode Title="AbskintoneModel.Update Method " Url="html/057f3fd5-7310-c48a-a940-55b962d662cc.htm" />
-    <HelpKINode Title="kintoneAPI.Update Method " Url="html/79787a95-44ee-87ec-26b9-5b5ef6f73184.htm" />
-  </HelpKINode>
+  <HelpKINode Title="Update method" Url="html/057f3fd5-7310-c48a-a940-55b962d662cc.htm" />
+  <HelpKINode Title="Update(Of T) method" Url="html/57b87b91-0654-6d85-dca9-6ee270b6e557.htm" />
+  <HelpKINode Title="Update&lt;T&gt; method" Url="html/57b87b91-0654-6d85-dca9-6ee270b6e557.htm" />
   <HelpKINode Title="updated_time property" Url="html/80bf2ee5-3794-1a7a-4e21-64531eb8fe05.htm" />
+  <HelpKINode Title="UpdateHook(Of T) method" Url="html/15dce8d5-88d6-0ba9-c463-fc55e7d4f4b3.htm" />
+  <HelpKINode Title="UpdateHook&lt;T&gt; method" Url="html/15dce8d5-88d6-0ba9-c463-fc55e7d4f4b3.htm" />
   <HelpKINode Title="update_usr property" Url="html/b984ab5f-feea-22d0-c628-484e7a98b7c5.htm" />
   <HelpKINode Title="UploadFile method">
     <HelpKINode Title="kintoneAPI.UploadFile Method " Url="html/6e036750-8ee9-be7f-742c-b5ae0b8870c0.htm" />
     <HelpKINode Title="kintoneTypeExtension.UploadFile Method " Url="html/713bc592-c44f-d013-1ab9-052238442ceb.htm" />
   </HelpKINode>
-  <HelpKINode Title="value property" Url="html/f5f363c9-d8e8-4235-e530-25e63acf7f46.htm" />
   <HelpKINode Title="Value property" Url="html/77850202-06d6-f9b9-4eac-8aa002913376.htm" />
+  <HelpKINode Title="value property" Url="html/f5f363c9-d8e8-4235-e530-25e63acf7f46.htm" />
   <HelpKINode Title="work_usr property" Url="html/7a530038-0276-320b-5eaa-44968953ce53.htm" />
   <HelpKINode Title="YMDType field" Url="html/e5ee6efd-80f5-0268-f28e-4ddefe9d9212.htm" />
 </HelpKI>
