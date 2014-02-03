@@ -243,7 +243,8 @@ Namespace API
             Dim model As T = Activator.CreateInstance(Of T)()
             objs = model.UpdateHook(objs) 'idをセット
 
-            Dim result As Boolean = GetAPI(Of T).BulkDelete(Of T)((From x As T In objs Select x.record_id).ToList)
+            Dim ids As List(Of String) = (From x As T In objs Where Not String.IsNullOrEmpty(x.record_id) Select x.record_id).ToList
+            Dim result As Boolean = GetAPI(Of T).BulkDelete(Of T)(ids)
 
             If result Then '成功した場合、objsに設定されていたidをクリアする(削除されたため)
                 objs.ForEach(Function(x) x.record_id = String.Empty)
@@ -303,6 +304,8 @@ Namespace API
                 'レコードidの設定がない場合、keyからidの取得を試みる
                 execute("SetIdToModel", Me)
             End If
+
+            If String.IsNullOrEmpty(Me.record_id) Then Return True '既に削除されている場合、Trueを返却
 
             Dim result As Boolean = CBool(execute("Delete", Me.record_id))
             If result Then '削除に成功したら、idをクリアする
