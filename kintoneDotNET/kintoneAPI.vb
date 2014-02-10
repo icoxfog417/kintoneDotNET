@@ -23,16 +23,24 @@ Namespace API
         Protected Const KINTONE_API_FORMAT As String = "https://{0}/k/v1/{1}.json" 'TODO:APIのバージョンが上がれば変更する必要あり
 
         ''' <summary>
-        ''' kintone APIの読み込み上限値
+        ''' kintone APIの読み込み上限値<br/>
+        ''' 現在100だが、kintoneAPIの上限値が変更されれば要修正
         ''' </summary>
         ''' <remarks></remarks>
-        Public Const KINTONE_REC_LIMIT As Integer = 100 'TODO:レコード取得の上限値。変更されれば上げる必要あり
+        Public Const KINTONE_REC_LIMIT As Integer = 100
 
         ''' <summary>
-        ''' kintone APIの更新上限値
+        ''' kintone APIの更新上限値<br/>
+        ''' 現在100だが、kintoneAPIの上限値が変更されれば要修正
         ''' </summary>
         ''' <remarks></remarks>
-        Public Const KINTONE_EXE_LIMIT As Integer = 100 'TODO:レコード更新の上限値。変更されれば上げる必要あり(現時点で件数は同じだが、読込と別にしておく)
+        Public Const KINTONE_EXE_LIMIT As Integer = 100
+
+        ''' <summary>
+        ''' 主にレコード取得のために使用するURL長の制限値
+        ''' </summary>
+        ''' <remarks></remarks>
+        Private Const URL_LENGTH_LIMIT As Integer = 2000
 
         ''' <summary>
         ''' 本APIで扱うレコードの最大値(余りに大きい件数の処理を途中で止めるための措置)
@@ -323,10 +331,11 @@ Namespace API
         ''' <summary>
         ''' 検索を行うタスクを生成するための内部処理
         ''' </summary>
-        Private Function makeTaskForFind(Of T As AbskintoneModel)(baseQuery As String, offset As Integer) As Task(Of List(Of T))
+        Private Function makeTaskForFind(Of T As AbskintoneModel)(baseQuery As String, Optional ByVal offset As Integer = -1) As Task(Of List(Of T))
 
             Dim task As New Task(Of List(Of T))(Function()
-                                                    Dim query = baseQuery + HttpUtility.UrlEncode(" limit " + ReadLimit.ToString + " offset " + offset.ToString)
+                                                    Dim query = baseQuery
+                                                    If offset > -1 Then query += HttpUtility.UrlEncode(" limit " + ReadLimit.ToString + " offset " + offset.ToString)
                                                     Dim localError As kintoneError = Nothing
                                                     Dim list As List(Of T) = FindBase(Of T)(query, localError)
                                                     If Not localError Is Nothing Then
@@ -541,26 +550,54 @@ Namespace API
 
             'オブジェクトに設定されたキーでkintoneを検索(inで一括検索)
             Dim keyName As String = key.First.p.Name
-            Dim dic As Dictionary(Of String, String) = getModel(Of T).GetPropertyToDefaultDic() 'プロパティ名を変換
-            Dim query As String = If(dic.ContainsKey(keyName), dic(keyName), keyName) + " in "
-            Dim params As New List(Of String)
-            For Each obj As T In objs
-                params.Add("""" + key.First.p.GetValue(obj, Nothing).ToString + """")
+            Dim dic As Dictionary(Of String, String) = getModel(Of T).GetPropertyToDefaultDic() '変換用ディクショナリを取得
+            Dim keyNameInQuery As String = If(dic.ContainsKey(keyName), dic(keyName), keyName) '変換後の項目名をセット
+
+            Dim defaultLength As Integer = String.Format(KINTONE_API_FORMAT, Host, "records").Length
+            Dim queryHead As String = keyNameInQuery + " in "
+            defaultLength += HttpUtility.UrlEncode("query=" + queryHead + "()").Length
+
+            Dim querys As New Dictionary(Of String, Integer)
+            Dim querySize As Integer = defaultLength
+            Dim tmpParams As New List(Of String)
+
+            For i As Integer = 0 To objs.Count - 1
+                Dim keyValue As String = key.First.p.GetValue(objs(i), Nothing).ToString
+                Dim diff As Integer = HttpUtility.UrlEncode(",""" + keyValue + """").Length
+
+                If querySize + diff > URL_LENGTH_LIMIT Then
+                    Dim q As String = queryHead + "(" + String.Join(",", tmpParams) + ")"
+                    querys.Add(q, tmpParams.Count)
+                    querySize = defaultLength
+                    tmpParams.Clear()
+                End If
+
+                tmpParams.Add("""" + keyValue + """")
+                querySize += diff
+
             Next
-            query += "(" + String.Join(",", params) + ")"
 
-            Dim list As List(Of T) = Nothing
-
-            If objs.Count > ReadLimit Then
-                list = FindAll(Of T)(query)
-            Else
-                list = Find(Of T)(query)
+            If tmpParams.Count > 0 Then
+                Dim q As String = queryHead + "(" + String.Join(",", tmpParams) + ")"
+                querys.Add(q, tmpParams.Count)
             End If
+
+            'クエリ発行
+            Dim queryResult As New List(Of T)
+            For Each item As KeyValuePair(Of String, Integer) In querys
+                Dim list As New List(Of T)
+                If item.Value > ReadLimit Then
+                    list = FindAll(Of T)(item.Key)
+                Else
+                    list = Find(Of T)(item.Key)
+                End If
+                queryResult.AddRange(list)
+            Next
 
             '取得したオブジェクトからidをセット
             For Each tgt As T In objs
                 Dim tgtKey As Object = key.First.p.GetValue(tgt, Nothing)
-                Dim sameKey As List(Of T) = (From x As T In list Where tgtKey = key.First.p.GetValue(x, Nothing) Select x).ToList
+                Dim sameKey As List(Of T) = (From x As T In queryResult Where tgtKey = key.First.p.GetValue(x, Nothing) Select x).ToList
                 If sameKey.Count = 1 Then
                     'idをセット
                     'TODO id以外に、登録日や更新情報、ステータスなどの情報を同期した方がいいか検討

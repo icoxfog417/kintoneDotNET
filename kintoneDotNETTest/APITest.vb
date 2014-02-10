@@ -249,6 +249,39 @@ Public Class APITest
 
     End Sub
 
+    ''' <summary>
+    ''' 
+    ''' </summary>
+    ''' <remarks></remarks>
+    <TestMethod()>
+    Public Sub ExecuteSaveByOverLimitURL()
+
+        Const METHOD_NAME As String = "ExecuteSaveByOverLimitURL"
+
+        '事前に削除
+        Dim remained As List(Of kintoneTestModel) = kintoneTestModel.Find(Of kintoneTestModel)(Function(x) x.methodinfo = METHOD_NAME).ToList
+        kintoneTestModel.Delete(Of kintoneTestModel)(remained)
+
+        'URLが限界をオーバーするオブジェクトを作成
+        Dim overs As New List(Of kintoneTestModel)
+        For i As Integer = 1 To 100
+            Dim m As New kintoneTestModel(METHOD_NAME)
+            m.my_key = i.ToString.PadLeft(64, "X")
+            overs.Add(m)
+        Next
+
+        Dim saved As List(Of kintoneTestModel) = kintoneTestModel.Save(Of kintoneTestModel)(overs)
+        Assert.IsTrue(saved IsNot Nothing)
+
+        For Each item As kintoneTestModel In saved
+            Assert.IsFalse(String.IsNullOrEmpty(item.record_id))
+            item.record_id = String.Empty
+        Next
+
+        '削除
+        kintoneTestModel.Delete(Of kintoneTestModel)(overs)
+
+    End Sub
 
     ''' <summary>
     ''' 文字列フィールドのRead/Writeテスト

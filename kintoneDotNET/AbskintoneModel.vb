@@ -65,6 +65,14 @@ Namespace API
                                     {"ステータス", "status"},
                                     {"作業者", "work_usr"}
                                 }
+
+        ''' <summary>
+        ''' デフォルトの日本語項目名称を変換するためのディクショナリを取得<br/>
+        ''' レコード番号などのデフォルト項目の項目名を変更している場合、このプロパティをオーバーライドしてください
+        ''' </summary>
+        ''' <value></value>
+        ''' <returns></returns>
+        ''' <remarks></remarks>
         Protected Overridable Property ConvertDictionary As Dictionary(Of String, String)
             Get
                 Return _convertDictionary
