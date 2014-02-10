@@ -8,11 +8,11 @@ Imports System.Runtime.InteropServices
 
 ' アセンブリ属性の値を確認します。
 
-<Assembly: AssemblyTitle("KintoneDotNETTest")> 
-<Assembly: AssemblyDescription("")> 
-<Assembly: AssemblyCompany("MITSUI CHEMICALS")> 
-<Assembly: AssemblyProduct("KintoneDotNETTest")> 
-<Assembly: AssemblyCopyright("Copyright © MITSUI CHEMICALS 2013")> 
+<Assembly: AssemblyTitle("kintoneDotNETTest")> 
+<Assembly: AssemblyDescription("Test code of .NET api for kintone")> 
+<Assembly: AssemblyCompany("icoxfog417")> 
+<Assembly: AssemblyProduct("kintoneDotNETTest")> 
+<Assembly: AssemblyCopyright("Copyright © Takahiro Kubo 2013")> 
 <Assembly: AssemblyTrademark("")> 
 
 <Assembly: ComVisible(False)>
