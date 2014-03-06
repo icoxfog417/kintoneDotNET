@@ -58,8 +58,8 @@
     <HelpKINode Title="kintoneUser.code Property " Url="html/614e88f1-2ec3-176a-cedc-ca2bf3c239b7.htm" />
   </HelpKINode>
   <HelpKINode Title="ContentLength property" Url="html/c5b75f16-41c3-e846-1b0b-cff2b23be6e4.htm" />
-  <HelpKINode Title="ContentType property" Url="html/cb92d1c6-caac-62d0-17dd-1348f3d46e64.htm" />
   <HelpKINode Title="contentType property" Url="html/8d141380-fc16-1237-9865-b22eec15e6ff.htm" />
+  <HelpKINode Title="ContentType property" Url="html/cb92d1c6-caac-62d0-17dd-1348f3d46e64.htm" />
   <HelpKINode Title="ConvertDictionary property" Url="html/9b3b6e70-6a73-ef4f-4946-e828d69f14e4.htm" />
   <HelpKINode Title="Create method" Url="html/0eccf912-bced-fd8b-2f6f-7fcccd38ee74.htm" />
   <HelpKINode Title="Create(Of T) method" Url="html/0e2d4148-c089-99cc-9ed9-d04debdb2642.htm" />
@@ -547,8 +547,8 @@
   <HelpKINode Title="KINTONE_PORT field" Url="html/4efc837d-2bd9-0d60-506d-8974e3652bdc.htm" />
   <HelpKINode Title="KINTONE_REC_LIMIT field" Url="html/e34805dc-eff4-99d9-8a61-8809e24f8e30.htm" />
   <HelpKINode Title="Make method" Url="html/60bc1214-d298-2885-328a-b09e5b2c1c66.htm" />
-  <HelpKINode Title="message property" Url="html/7af71a83-a63b-bfdd-37ca-a86754530cd0.htm" />
   <HelpKINode Title="Message property" Url="html/a9578579-537e-f653-0c09-aa8d5f6099de.htm" />
+  <HelpKINode Title="message property" Url="html/7af71a83-a63b-bfdd-37ca-a86754530cd0.htm" />
   <HelpKINode Title="messages property" Url="html/bbb8deb3-682b-5521-1ac5-58772d5598b5.htm" />
   <HelpKINode Title="name property">
     <HelpKINode Title="kintoneFile.name Property " Url="html/00162f8c-ff98-1644-5de3-133a43aa91e5.htm" />
