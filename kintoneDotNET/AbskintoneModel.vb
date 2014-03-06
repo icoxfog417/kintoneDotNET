@@ -175,13 +175,14 @@ Namespace API
         ''' kintone APIの上限値を超える件数のレコードを取得します
         ''' </summary>
         ''' <typeparam name="T"></typeparam>
-        ''' <param name="expression"></param>
-        ''' <param name="nameConvertor"></param>
+        ''' <param name="expression">Booleanを返却する関数式</param>
+        ''' <param name="isConvert">デフォルトの項目変換をかけるか否か</param>
         ''' <returns></returns>
         ''' <remarks></remarks>
         Public Shared Function FindAll(Of T As AbskintoneModel)(ByVal expression As Expression(Of Func(Of T, Boolean)), _
-                                                                Optional ByVal nameConvertor As Dictionary(Of String, String) = Nothing) As List(Of T)
-            Dim query As String = kintoneQuery.Make(Of T)(expression, nameConvertor)
+                                                                Optional ByVal isConvert As Boolean = True) As List(Of T)
+            Dim model As T = Activator.CreateInstance(Of T)()
+            Dim query As String = kintoneQuery.Make(Of T)(expression, If(isConvert, model.GetPropertyToDefaultDic, Nothing))
             Return FindAll(Of T)(query)
         End Function
 
