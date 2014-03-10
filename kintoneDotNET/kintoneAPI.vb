@@ -60,7 +60,7 @@ Namespace API
 
         Private Shared _domain As String = ""
         ''' <summary>
-        ''' アプリケーションのドメイン。単一で使用することはまずないので、Protected化
+        ''' アプリケーションのドメイン。
         ''' </summary>
         ''' <value></value>
         Private Shared ReadOnly Property Domain As String
@@ -140,8 +140,12 @@ Namespace API
             Get
                 Dim id As String = ConfigurationManager.AppSettings("ktAccessId")
                 Dim password As String = ConfigurationManager.AppSettings("ktAccessPassword")
-                Dim key As String = Convert.ToBase64String(ApiEncoding.GetBytes(id + ":" + password))
-                Return key
+                If id IsNot Nothing AndAlso password IsNot Nothing Then
+                    Dim key As String = Convert.ToBase64String(ApiEncoding.GetBytes(id + ":" + password))
+                    Return key
+                Else
+                    Return String.Empty
+                End If
             End Get
         End Property
 
@@ -155,8 +159,12 @@ Namespace API
             Get
                 Dim id As String = ConfigurationManager.AppSettings("ktLoginId")
                 Dim password As String = ConfigurationManager.AppSettings("ktLoginPassword")
-                Dim key As String = Convert.ToBase64String(ApiEncoding.GetBytes(id + ":" + password))
-                Return key
+                If id IsNot Nothing AndAlso password IsNot Nothing Then
+                    Dim key As String = Convert.ToBase64String(ApiEncoding.GetBytes(id + ":" + password))
+                    Return key
+                Else
+                    Return String.Empty
+                End If
             End Get
         End Property
 
@@ -168,10 +176,10 @@ Namespace API
         ''' <remarks></remarks>
         Private Shared ReadOnly Property Proxy As WebProxy
             Get
-                Dim myProxy As New WebProxy()
                 Dim proxyAddress As String = ConfigurationManager.AppSettings("proxy")
 
                 If Not String.IsNullOrEmpty(proxyAddress) Then
+                    Dim myProxy As New WebProxy()
                     myProxy.Address = New Uri(proxyAddress)
                     Dim proxyUser As String = ConfigurationManager.AppSettings("proxyUser")
                     '認証が必要なプロキシの場合、認証情報を設定
@@ -179,8 +187,11 @@ Namespace API
                         Dim credential As New NetworkCredential(proxyUser, ConfigurationManager.AppSettings("proxyPassword"))
                         myProxy.Credentials = credential
                     End If
+
+                    Return myProxy
+                Else
+                    Return Nothing
                 End If
-                Return myProxy
             End Get
         End Property
 
@@ -228,7 +239,9 @@ Namespace API
                 End If
             End If
 
-            request.Proxy = Proxy
+            If Proxy IsNot Nothing Then
+                request.Proxy = Proxy
+            End If
 
             Return request
 
