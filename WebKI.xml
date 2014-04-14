@@ -28,8 +28,10 @@
   <HelpKINode Title="AbskintoneModel.FindByIds&lt;T&gt; method" Url="html/100a5429-1e29-19fe-13e6-1c8ca567c4e6.htm" />
   <HelpKINode Title="AbskintoneModel.GetDefaultToPropertyDic method" Url="html/7edd7f5d-67e1-fe20-f31b-aa0cbf6080f7.htm" />
   <HelpKINode Title="AbskintoneModel.GetPropertyToDefaultDic method" Url="html/7efdecd8-079e-873e-a0e0-c70314cfbeb9.htm" />
+  <HelpKINode Title="AbskintoneModel.IgnoreRevision property" Url="html/0c0b2af8-3b4f-0ffb-f269-59da9459440c.htm" />
   <HelpKINode Title="AbskintoneModel.record_id property" Url="html/881627ed-155c-24e0-f82e-83b7d333665d.htm" />
   <HelpKINode Title="AbskintoneModel.record_show_url property" Url="html/727d06df-e1f2-06c4-7871-9b13a01e5765.htm" />
+  <HelpKINode Title="AbskintoneModel.revision property" Url="html/0cdf92ca-7db6-cb25-4cae-43df5ef2a3ef.htm" />
   <HelpKINode Title="AbskintoneModel.Save method" Url="html/76d04605-be7f-bbf7-3012-2350f0ac5930.htm" />
   <HelpKINode Title="AbskintoneModel.status property" Url="html/c2942655-9f29-742e-a766-b4d8bb5db2cd.htm" />
   <HelpKINode Title="AbskintoneModel.Update method" Url="html/057f3fd5-7310-c48a-a940-55b962d662cc.htm" />
@@ -38,10 +40,11 @@
   <HelpKINode Title="AbskintoneModel.UpdateHook&lt;T&gt; method" Url="html/15dce8d5-88d6-0ba9-c463-fc55e7d4f4b3.htm" />
   <HelpKINode Title="AbskintoneModel.update_usr property" Url="html/b984ab5f-feea-22d0-c628-484e7a98b7c5.htm" />
   <HelpKINode Title="AbskintoneModel.work_usr property" Url="html/7a530038-0276-320b-5eaa-44968953ce53.htm" />
+  <HelpKINode Title="AddRange method" Url="html/42766d34-e0b4-e6a3-ae13-447fc1318c32.htm" />
   <HelpKINode Title="ApiEncoding property" Url="html/84769719-9e1b-2899-addf-46cefc5ff41c.htm" />
   <HelpKINode Title="app property">
     <HelpKINode Title="AbskintoneModel.app Property " Url="html/33770366-9977-0fcf-1434-d6135f07baea.htm" />
-    <HelpKINode Title="kintoneIds.app Property " Url="html/2bae55dd-4de3-8582-4f1b-31bc175a585f.htm" />
+    <HelpKINode Title="kintoneDeletes.app Property " Url="html/ed6eea3c-f499-1aae-eb6b-35e09bf56038.htm" />
     <HelpKINode Title="kintoneRecords(T).app Property " Url="html/45588744-da43-c780-a15e-797b961eea67.htm" />
   </HelpKINode>
   <HelpKINode Title="AppId property" Url="html/37b6b3f1-05ba-900f-e9ef-0426a422bd88.htm" />
@@ -107,10 +110,15 @@
   <HelpKINode Title="Host property" Url="html/03956e6b-de94-ca4f-77c5-3c03cd9fb319.htm" />
   <HelpKINode Title="id property">
     <HelpKINode Title="kintoneError.id Property " Url="html/aff29319-7c01-7898-eedd-6ae05a89f4b5.htm" />
-    <HelpKINode Title="kintoneRecord(T).id Property " Url="html/8d267943-d090-9b5f-71ce-c98fdaf2eb28.htm" />
+    <HelpKINode Title="kintoneIndex.id Property " Url="html/96de9458-7950-1e41-efd3-5ff58bde9792.htm" />
     <HelpKINode Title="kintoneSubTableItem.id Property " Url="html/f0e412f1-504e-378d-9f70-feece2aae797.htm" />
+    <HelpKINode Title="kintoneUpdates(T).id Property " Url="html/675eb95e-45fd-0253-da71-35657f404877.htm" />
   </HelpKINode>
-  <HelpKINode Title="ids property" Url="html/515b7d4f-6ca5-a844-e738-6137ac5e297d.htm" />
+  <HelpKINode Title="ids property">
+    <HelpKINode Title="kintoneDeletes.ids Property " Url="html/0bb4a2da-f167-2147-31c0-c02b354747df.htm" />
+    <HelpKINode Title="kintoneIndexes.ids Property " Url="html/5ab66dd9-1b66-3d4e-3dec-478043cc8276.htm" />
+  </HelpKINode>
+  <HelpKINode Title="IgnoreRevision property" Url="html/0c0b2af8-3b4f-0ffb-f269-59da9459440c.htm" />
   <HelpKINode Title="IkintoneType interface">
     <HelpKINode Title="IkintoneType Interface" Url="html/d264a1a3-dd30-d5ae-c8f8-65f0e03d5431.htm" />
     <HelpKINode Title="about IkintoneType interface" Url="html/d264a1a3-dd30-d5ae-c8f8-65f0e03d5431.htm" />
@@ -124,6 +132,7 @@
   <HelpKINode Title="isAnd property" Url="html/ab2f7ee6-bdd8-e185-e2be-2a82723609de.htm" />
   <HelpKINode Title="isKey property" Url="html/ffa09c01-f531-3e7e-cf4e-8eb36e9a1ce1.htm" />
   <HelpKINode Title="isUpload property" Url="html/96f47185-a35e-047b-0202-f3886386e415.htm" />
+  <HelpKINode Title="Item method" Url="html/8a8d3bd7-3698-073a-9322-2ad7695dd776.htm" />
   <HelpKINode Title="kintoneAPI class">
     <HelpKINode Title="kintoneAPI Class" Url="html/ad1a71a0-bee3-790a-760f-63c46fa69fe0.htm" />
     <HelpKINode Title="kintoneAPI Members" Url="html/7f47c380-2019-7456-17a9-b3de8189a482.htm" />
@@ -165,10 +174,10 @@
   <HelpKINode Title="kintoneAPI.RECORD_LIMIT field" Url="html/87a97028-455b-ec13-2c24-16b12590b5c2.htm" />
   <HelpKINode Title="kintoneAPI.Save(Of T) method" Url="html/39e1a56e-77f5-73d6-ad10-b69101131b3e.htm" />
   <HelpKINode Title="kintoneAPI.Save&lt;T&gt; method" Url="html/39e1a56e-77f5-73d6-ad10-b69101131b3e.htm" />
-  <HelpKINode Title="kintoneAPI.SetIdsToModels(Of T) method" Url="html/50496c0b-e158-ef51-65bc-eb9871f5e92e.htm" />
-  <HelpKINode Title="kintoneAPI.SetIdsToModels&lt;T&gt; method" Url="html/50496c0b-e158-ef51-65bc-eb9871f5e92e.htm" />
-  <HelpKINode Title="kintoneAPI.SetIdToModel(Of T) method" Url="html/946e6977-6e85-8c5d-3f0f-30a37ac31156.htm" />
-  <HelpKINode Title="kintoneAPI.SetIdToModel&lt;T&gt; method" Url="html/946e6977-6e85-8c5d-3f0f-30a37ac31156.htm" />
+  <HelpKINode Title="kintoneAPI.SetIndexToModel(Of T) method" Url="html/55851473-7c77-001f-c49d-a828fc7ac6da.htm" />
+  <HelpKINode Title="kintoneAPI.SetIndexToModel&lt;T&gt; method" Url="html/55851473-7c77-001f-c49d-a828fc7ac6da.htm" />
+  <HelpKINode Title="kintoneAPI.SetIndexToModels(Of T) method" Url="html/71e6e53b-d7ef-9d32-ea0a-2e57d4642400.htm" />
+  <HelpKINode Title="kintoneAPI.SetIndexToModels&lt;T&gt; method" Url="html/71e6e53b-d7ef-9d32-ea0a-2e57d4642400.htm" />
   <HelpKINode Title="kintoneAPI.Update(Of T) method" Url="html/57b87b91-0654-6d85-dca9-6ee270b6e557.htm" />
   <HelpKINode Title="kintoneAPI.Update&lt;T&gt; method" Url="html/57b87b91-0654-6d85-dca9-6ee270b6e557.htm" />
   <HelpKINode Title="kintoneAPI.UploadFile method" Url="html/6e036750-8ee9-be7f-742c-b5ae0b8870c0.htm" />
@@ -216,6 +225,18 @@
   <HelpKINode Title="kintoneDatetime.toDatetime method" Url="html/a3fc7717-cea4-91d8-6659-1dbadd32e4b6.htm" />
   <HelpKINode Title="kintoneDatetime.toKintoneFormat method" Url="html/75bf3b3c-d8c8-dd5f-762d-4b3fbe5553e2.htm" />
   <HelpKINode Title="kintoneDatetime.YMDType field" Url="html/e5ee6efd-80f5-0268-f28e-4ddefe9d9212.htm" />
+  <HelpKINode Title="kintoneDeletes class">
+    <HelpKINode Title="kintoneDeletes Class" Url="html/5c8bfc25-9e56-5ea7-7407-80f8d8f0d262.htm" />
+    <HelpKINode Title="kintoneDeletes Members" Url="html/14143c68-6b44-8237-7444-1ac97697bedd.htm" />
+    <HelpKINode Title="about kintoneDeletes class" Url="html/5c8bfc25-9e56-5ea7-7407-80f8d8f0d262.htm" />
+    <HelpKINode Title="all members" Url="html/14143c68-6b44-8237-7444-1ac97697bedd.htm" />
+    <HelpKINode Title="constructor" Url="html/561cb085-0acb-b872-4943-3dd9d27f782c.htm" />
+    <HelpKINode Title="methods" Url="html/ddd6fe78-514f-0560-b60c-2053e9856e20.htm" />
+    <HelpKINode Title="properties" Url="html/88f65053-d3cc-7a6c-4b71-082c34c84d51.htm" />
+  </HelpKINode>
+  <HelpKINode Title="kintoneDeletes.app property" Url="html/ed6eea3c-f499-1aae-eb6b-35e09bf56038.htm" />
+  <HelpKINode Title="kintoneDeletes.ids property" Url="html/0bb4a2da-f167-2147-31c0-c02b354747df.htm" />
+  <HelpKINode Title="kintoneDeletes.kintoneDeletes constructor" Url="html/561cb085-0acb-b872-4943-3dd9d27f782c.htm" />
   <HelpKINode Title="kintoneDotNET.API namespace" Url="html/724b228d-441a-70e1-de7a-2c17d2bdb28a.htm" />
   <HelpKINode Title="kintoneDotNET.API.AbskintoneModel class">
     <HelpKINode Title="AbskintoneModel Class" Url="html/e3357b85-5ae4-6559-8584-70f47c91b029.htm" />
@@ -267,6 +288,10 @@
     <HelpKINode Title="kintoneDatetime Class" Url="html/c3967b5d-fb06-cab1-1984-f59963fe8860.htm" />
     <HelpKINode Title="kintoneDatetime Members" Url="html/d44693fd-677b-8418-74e9-6603c70f1edb.htm" />
   </HelpKINode>
+  <HelpKINode Title="kintoneDotNET.API.Types.kintoneDeletes class">
+    <HelpKINode Title="kintoneDeletes Class" Url="html/5c8bfc25-9e56-5ea7-7407-80f8d8f0d262.htm" />
+    <HelpKINode Title="kintoneDeletes Members" Url="html/14143c68-6b44-8237-7444-1ac97697bedd.htm" />
+  </HelpKINode>
   <HelpKINode Title="kintoneDotNET.API.Types.kintoneError class">
     <HelpKINode Title="kintoneError Class" Url="html/cfe34933-6974-ee7a-fae9-a2de4c177538.htm" />
     <HelpKINode Title="kintoneError Members" Url="html/6c1121d4-9503-afac-b33e-1f6f01d5b8d9.htm" />
@@ -279,21 +304,17 @@
     <HelpKINode Title="kintoneFile Class" Url="html/de9151bc-ec8e-de7e-074e-8da1feee09f8.htm" />
     <HelpKINode Title="kintoneFile Members" Url="html/b10f52ae-9a99-6199-0d06-91416a7e6921.htm" />
   </HelpKINode>
-  <HelpKINode Title="kintoneDotNET.API.Types.kintoneIds class">
-    <HelpKINode Title="kintoneIds Class" Url="html/6a594fef-e690-4a84-8cec-68d0f650b1c4.htm" />
-    <HelpKINode Title="kintoneIds Members" Url="html/e6376a35-7fd9-796c-404b-7e20965c14bc.htm" />
+  <HelpKINode Title="kintoneDotNET.API.Types.kintoneIndex class">
+    <HelpKINode Title="kintoneIndex Class" Url="html/b5fefa5c-7b47-7e16-810c-041fdb6600e9.htm" />
+    <HelpKINode Title="kintoneIndex Members" Url="html/4bd3ebce-dbe4-3ef2-5e0c-d7c662a93fd1.htm" />
+  </HelpKINode>
+  <HelpKINode Title="kintoneDotNET.API.Types.kintoneIndexes class">
+    <HelpKINode Title="kintoneIndexes Class" Url="html/0e40b2f4-e38d-c15d-7f2b-a1feaf8bcb03.htm" />
+    <HelpKINode Title="kintoneIndexes Members" Url="html/e8006cc8-afac-1576-d46f-fcb721e42a60.htm" />
   </HelpKINode>
   <HelpKINode Title="kintoneDotNET.API.Types.kintoneItem class">
     <HelpKINode Title="kintoneItem Class" Url="html/caf845e2-37dc-2949-c3c8-e2d352db6a3c.htm" />
     <HelpKINode Title="kintoneItem Members" Url="html/0d1cf5ac-23bd-b78a-12ef-48e7daea3010.htm" />
-  </HelpKINode>
-  <HelpKINode Title="kintoneDotNET.API.Types.kintoneRecord(Of T) class">
-    <HelpKINode Title="kintoneRecord(T) Class" Url="html/b8e8dc6c-819e-dcb6-a536-e5dd3a32d9d2.htm" />
-    <HelpKINode Title="kintoneRecord(T) Members" Url="html/5a833bf8-eb85-7329-bd74-b1dd27f20c4e.htm" />
-  </HelpKINode>
-  <HelpKINode Title="kintoneDotNET.API.Types.kintoneRecord&lt;T&gt; class">
-    <HelpKINode Title="kintoneRecord(T) Class" Url="html/b8e8dc6c-819e-dcb6-a536-e5dd3a32d9d2.htm" />
-    <HelpKINode Title="kintoneRecord(T) Members" Url="html/5a833bf8-eb85-7329-bd74-b1dd27f20c4e.htm" />
   </HelpKINode>
   <HelpKINode Title="kintoneDotNET.API.Types.kintoneRecords(Of T) class">
     <HelpKINode Title="kintoneRecords(T) Class" Url="html/40fff596-5972-78b0-1e56-24fd77dabccc.htm" />
@@ -306,6 +327,14 @@
   <HelpKINode Title="kintoneDotNET.API.Types.kintoneSubTableItem class">
     <HelpKINode Title="kintoneSubTableItem Class" Url="html/3beea170-75a9-10b6-aad2-bffef463098d.htm" />
     <HelpKINode Title="kintoneSubTableItem Members" Url="html/8a432ce7-3ce6-c3a7-1500-9146f15c22d5.htm" />
+  </HelpKINode>
+  <HelpKINode Title="kintoneDotNET.API.Types.kintoneUpdates(Of T) class">
+    <HelpKINode Title="kintoneUpdates(T) Class" Url="html/ce2cac60-db97-6199-a602-50265fb2bfb3.htm" />
+    <HelpKINode Title="kintoneUpdates(T) Members" Url="html/9036ad37-0b60-1320-cdd4-fd6cd808ffa0.htm" />
+  </HelpKINode>
+  <HelpKINode Title="kintoneDotNET.API.Types.kintoneUpdates&lt;T&gt; class">
+    <HelpKINode Title="kintoneUpdates(T) Class" Url="html/ce2cac60-db97-6199-a602-50265fb2bfb3.htm" />
+    <HelpKINode Title="kintoneUpdates(T) Members" Url="html/9036ad37-0b60-1320-cdd4-fd6cd808ffa0.htm" />
   </HelpKINode>
   <HelpKINode Title="kintoneDotNET.API.Types.kintoneUser class">
     <HelpKINode Title="kintoneUser Class" Url="html/d2ee0834-d56a-c431-4975-148fb3cafe98.htm" />
@@ -397,18 +426,32 @@
   <HelpKINode Title="kintoneFile.kintoneFile constructor" Url="html/7d5525eb-61dd-a848-e67b-21714f11db47.htm" />
   <HelpKINode Title="kintoneFile.name property" Url="html/00162f8c-ff98-1644-5de3-133a43aa91e5.htm" />
   <HelpKINode Title="kintoneFile.size property" Url="html/c7a387bf-cd6d-0b0d-8b5f-36bbd6d82654.htm" />
-  <HelpKINode Title="kintoneIds class">
-    <HelpKINode Title="kintoneIds Class" Url="html/6a594fef-e690-4a84-8cec-68d0f650b1c4.htm" />
-    <HelpKINode Title="kintoneIds Members" Url="html/e6376a35-7fd9-796c-404b-7e20965c14bc.htm" />
-    <HelpKINode Title="about kintoneIds class" Url="html/6a594fef-e690-4a84-8cec-68d0f650b1c4.htm" />
-    <HelpKINode Title="all members" Url="html/e6376a35-7fd9-796c-404b-7e20965c14bc.htm" />
-    <HelpKINode Title="constructor" Url="html/3f774cc1-901d-856a-1ec1-471f6d6cae2a.htm" />
-    <HelpKINode Title="methods" Url="html/0cdf267d-9694-3f51-98b9-f47dd6f92f58.htm" />
-    <HelpKINode Title="properties" Url="html/aac90fee-029c-c811-655e-a6c4ce616893.htm" />
+  <HelpKINode Title="kintoneIndex class">
+    <HelpKINode Title="kintoneIndex Class" Url="html/b5fefa5c-7b47-7e16-810c-041fdb6600e9.htm" />
+    <HelpKINode Title="kintoneIndex Members" Url="html/4bd3ebce-dbe4-3ef2-5e0c-d7c662a93fd1.htm" />
+    <HelpKINode Title="about kintoneIndex class" Url="html/b5fefa5c-7b47-7e16-810c-041fdb6600e9.htm" />
+    <HelpKINode Title="all members" Url="html/4bd3ebce-dbe4-3ef2-5e0c-d7c662a93fd1.htm" />
+    <HelpKINode Title="constructor" Url="html/4ddf633e-e8d6-667a-f190-44267db5762f.htm" />
+    <HelpKINode Title="methods" Url="html/ab827a9c-5377-4c4c-bb81-152b3e03c9be.htm" />
+    <HelpKINode Title="properties" Url="html/56b95255-3178-c453-bc81-6ece5a40ce1e.htm" />
   </HelpKINode>
-  <HelpKINode Title="kintoneIds.app property" Url="html/2bae55dd-4de3-8582-4f1b-31bc175a585f.htm" />
-  <HelpKINode Title="kintoneIds.ids property" Url="html/515b7d4f-6ca5-a844-e738-6137ac5e297d.htm" />
-  <HelpKINode Title="kintoneIds.kintoneIds constructor" Url="html/3f774cc1-901d-856a-1ec1-471f6d6cae2a.htm" />
+  <HelpKINode Title="kintoneIndex.id property" Url="html/96de9458-7950-1e41-efd3-5ff58bde9792.htm" />
+  <HelpKINode Title="kintoneIndex.kintoneIndex constructor" Url="html/4ddf633e-e8d6-667a-f190-44267db5762f.htm" />
+  <HelpKINode Title="kintoneIndex.revision property" Url="html/d2adbb64-ebc1-7518-f633-306d8890124c.htm" />
+  <HelpKINode Title="kintoneIndexes class">
+    <HelpKINode Title="kintoneIndexes Class" Url="html/0e40b2f4-e38d-c15d-7f2b-a1feaf8bcb03.htm" />
+    <HelpKINode Title="kintoneIndexes Members" Url="html/e8006cc8-afac-1576-d46f-fcb721e42a60.htm" />
+    <HelpKINode Title="about kintoneIndexes class" Url="html/0e40b2f4-e38d-c15d-7f2b-a1feaf8bcb03.htm" />
+    <HelpKINode Title="all members" Url="html/e8006cc8-afac-1576-d46f-fcb721e42a60.htm" />
+    <HelpKINode Title="constructor" Url="html/bf45b000-92ea-7aa8-462b-d016d0dc89d3.htm" />
+    <HelpKINode Title="methods" Url="html/491d398a-4791-2257-a4f6-2dc346333993.htm" />
+    <HelpKINode Title="properties" Url="html/e8ccb180-ada5-9072-43c8-d659a58346e1.htm" />
+  </HelpKINode>
+  <HelpKINode Title="kintoneIndexes.AddRange method" Url="html/42766d34-e0b4-e6a3-ae13-447fc1318c32.htm" />
+  <HelpKINode Title="kintoneIndexes.ids property" Url="html/5ab66dd9-1b66-3d4e-3dec-478043cc8276.htm" />
+  <HelpKINode Title="kintoneIndexes.Item method" Url="html/8a8d3bd7-3698-073a-9322-2ad7695dd776.htm" />
+  <HelpKINode Title="kintoneIndexes.kintoneIndexes constructor" Url="html/bf45b000-92ea-7aa8-462b-d016d0dc89d3.htm" />
+  <HelpKINode Title="kintoneIndexes.revisions property" Url="html/ba8962ce-e1ab-9481-f329-54ed1dff7d2b.htm" />
   <HelpKINode Title="kintoneItem class">
     <HelpKINode Title="kintoneItem Class" Url="html/caf845e2-37dc-2949-c3c8-e2d352db6a3c.htm" />
     <HelpKINode Title="kintoneItem Members" Url="html/0d1cf5ac-23bd-b78a-12ef-48e7daea3010.htm" />
@@ -459,30 +502,6 @@
   <HelpKINode Title="kintoneQueryField.Operand property" Url="html/2c1ead5a-f93a-e3b0-67af-cfe3a831fb2d.htm" />
   <HelpKINode Title="kintoneQueryField.ToString method" Url="html/83b9270b-193c-1422-3a92-c4e6e556d713.htm" />
   <HelpKINode Title="kintoneQueryField.Value property" Url="html/77850202-06d6-f9b9-4eac-8aa002913376.htm" />
-  <HelpKINode Title="kintoneRecord(Of T) class">
-    <HelpKINode Title="kintoneRecord(T) Class" Url="html/b8e8dc6c-819e-dcb6-a536-e5dd3a32d9d2.htm" />
-    <HelpKINode Title="kintoneRecord(T) Members" Url="html/5a833bf8-eb85-7329-bd74-b1dd27f20c4e.htm" />
-    <HelpKINode Title="about kintoneRecord(Of T) class" Url="html/b8e8dc6c-819e-dcb6-a536-e5dd3a32d9d2.htm" />
-    <HelpKINode Title="all members" Url="html/5a833bf8-eb85-7329-bd74-b1dd27f20c4e.htm" />
-    <HelpKINode Title="constructor" Url="html/9a30df32-c951-5503-bf67-29c753176ce4.htm" />
-    <HelpKINode Title="methods" Url="html/fa3cd679-4653-3f8c-2149-fe428327d715.htm" />
-    <HelpKINode Title="properties" Url="html/e4078a3d-f04f-e7ef-2c1b-f43cccbe0a27.htm" />
-  </HelpKINode>
-  <HelpKINode Title="kintoneRecord(Of T).id property" Url="html/8d267943-d090-9b5f-71ce-c98fdaf2eb28.htm" />
-  <HelpKINode Title="kintoneRecord(Of T).kintoneRecord constructor" Url="html/9a30df32-c951-5503-bf67-29c753176ce4.htm" />
-  <HelpKINode Title="kintoneRecord(Of T).record property" Url="html/a17fbcac-7efc-6b0a-536a-d257421ad910.htm" />
-  <HelpKINode Title="kintoneRecord&lt;T&gt; class">
-    <HelpKINode Title="kintoneRecord(T) Class" Url="html/b8e8dc6c-819e-dcb6-a536-e5dd3a32d9d2.htm" />
-    <HelpKINode Title="kintoneRecord(T) Members" Url="html/5a833bf8-eb85-7329-bd74-b1dd27f20c4e.htm" />
-    <HelpKINode Title="about kintoneRecord&lt;T&gt; class" Url="html/b8e8dc6c-819e-dcb6-a536-e5dd3a32d9d2.htm" />
-    <HelpKINode Title="all members" Url="html/5a833bf8-eb85-7329-bd74-b1dd27f20c4e.htm" />
-    <HelpKINode Title="constructor" Url="html/9a30df32-c951-5503-bf67-29c753176ce4.htm" />
-    <HelpKINode Title="methods" Url="html/fa3cd679-4653-3f8c-2149-fe428327d715.htm" />
-    <HelpKINode Title="properties" Url="html/e4078a3d-f04f-e7ef-2c1b-f43cccbe0a27.htm" />
-  </HelpKINode>
-  <HelpKINode Title="kintoneRecord&lt;T&gt;.id property" Url="html/8d267943-d090-9b5f-71ce-c98fdaf2eb28.htm" />
-  <HelpKINode Title="kintoneRecord&lt;T&gt;.kintoneRecord constructor" Url="html/9a30df32-c951-5503-bf67-29c753176ce4.htm" />
-  <HelpKINode Title="kintoneRecord&lt;T&gt;.record property" Url="html/a17fbcac-7efc-6b0a-536a-d257421ad910.htm" />
   <HelpKINode Title="kintoneRecords(Of T) class">
     <HelpKINode Title="kintoneRecords(T) Class" Url="html/40fff596-5972-78b0-1e56-24fd77dabccc.htm" />
     <HelpKINode Title="kintoneRecords(T) Members" Url="html/6e2304f5-f5dc-1a4f-ae2b-6194e88d4b38.htm" />
@@ -529,6 +548,32 @@
   <HelpKINode Title="kintoneTypeExtension.ToHttpPostedFileBase method" Url="html/93a28f6d-4321-f4d1-3f92-e20d2f8ac3a0.htm" />
   <HelpKINode Title="kintoneTypeExtension.ToHttpPostedFileBaseList method" Url="html/03aa7276-1dac-451a-06e4-d4b2296600ab.htm" />
   <HelpKINode Title="kintoneTypeExtension.UploadFile method" Url="html/713bc592-c44f-d013-1ab9-052238442ceb.htm" />
+  <HelpKINode Title="kintoneUpdates(Of T) class">
+    <HelpKINode Title="kintoneUpdates(T) Class" Url="html/ce2cac60-db97-6199-a602-50265fb2bfb3.htm" />
+    <HelpKINode Title="kintoneUpdates(T) Members" Url="html/9036ad37-0b60-1320-cdd4-fd6cd808ffa0.htm" />
+    <HelpKINode Title="about kintoneUpdates(Of T) class" Url="html/ce2cac60-db97-6199-a602-50265fb2bfb3.htm" />
+    <HelpKINode Title="all members" Url="html/9036ad37-0b60-1320-cdd4-fd6cd808ffa0.htm" />
+    <HelpKINode Title="constructor" Url="html/0d6f7ff0-f75c-03b7-a1ce-7627888ad4ad.htm" />
+    <HelpKINode Title="methods" Url="html/74564626-0f57-81aa-d5cc-da580abf7a53.htm" />
+    <HelpKINode Title="properties" Url="html/0eb5c15a-2663-4e16-d632-e9b0114eb95a.htm" />
+  </HelpKINode>
+  <HelpKINode Title="kintoneUpdates(Of T).id property" Url="html/675eb95e-45fd-0253-da71-35657f404877.htm" />
+  <HelpKINode Title="kintoneUpdates(Of T).kintoneUpdates constructor" Url="html/0d6f7ff0-f75c-03b7-a1ce-7627888ad4ad.htm" />
+  <HelpKINode Title="kintoneUpdates(Of T).record property" Url="html/526b2c54-6c35-c8bd-913e-23704194524d.htm" />
+  <HelpKINode Title="kintoneUpdates(Of T).revision property" Url="html/d9c8dac9-063e-51bb-c4b1-e2ca746bd782.htm" />
+  <HelpKINode Title="kintoneUpdates&lt;T&gt; class">
+    <HelpKINode Title="kintoneUpdates(T) Class" Url="html/ce2cac60-db97-6199-a602-50265fb2bfb3.htm" />
+    <HelpKINode Title="kintoneUpdates(T) Members" Url="html/9036ad37-0b60-1320-cdd4-fd6cd808ffa0.htm" />
+    <HelpKINode Title="about kintoneUpdates&lt;T&gt; class" Url="html/ce2cac60-db97-6199-a602-50265fb2bfb3.htm" />
+    <HelpKINode Title="all members" Url="html/9036ad37-0b60-1320-cdd4-fd6cd808ffa0.htm" />
+    <HelpKINode Title="constructor" Url="html/0d6f7ff0-f75c-03b7-a1ce-7627888ad4ad.htm" />
+    <HelpKINode Title="methods" Url="html/74564626-0f57-81aa-d5cc-da580abf7a53.htm" />
+    <HelpKINode Title="properties" Url="html/0eb5c15a-2663-4e16-d632-e9b0114eb95a.htm" />
+  </HelpKINode>
+  <HelpKINode Title="kintoneUpdates&lt;T&gt;.id property" Url="html/675eb95e-45fd-0253-da71-35657f404877.htm" />
+  <HelpKINode Title="kintoneUpdates&lt;T&gt;.kintoneUpdates constructor" Url="html/0d6f7ff0-f75c-03b7-a1ce-7627888ad4ad.htm" />
+  <HelpKINode Title="kintoneUpdates&lt;T&gt;.record property" Url="html/526b2c54-6c35-c8bd-913e-23704194524d.htm" />
+  <HelpKINode Title="kintoneUpdates&lt;T&gt;.revision property" Url="html/d9c8dac9-063e-51bb-c4b1-e2ca746bd782.htm" />
   <HelpKINode Title="kintoneUser class">
     <HelpKINode Title="kintoneUser Class" Url="html/d2ee0834-d56a-c431-4975-148fb3cafe98.htm" />
     <HelpKINode Title="kintoneUser Members" Url="html/991704a9-d53a-9728-62e0-f42cbaf011d2.htm" />
@@ -547,8 +592,8 @@
   <HelpKINode Title="KINTONE_PORT field" Url="html/4efc837d-2bd9-0d60-506d-8974e3652bdc.htm" />
   <HelpKINode Title="KINTONE_REC_LIMIT field" Url="html/e34805dc-eff4-99d9-8a61-8809e24f8e30.htm" />
   <HelpKINode Title="Make method" Url="html/60bc1214-d298-2885-328a-b09e5b2c1c66.htm" />
-  <HelpKINode Title="Message property" Url="html/a9578579-537e-f653-0c09-aa8d5f6099de.htm" />
   <HelpKINode Title="message property" Url="html/7af71a83-a63b-bfdd-37ca-a86754530cd0.htm" />
+  <HelpKINode Title="Message property" Url="html/a9578579-537e-f653-0c09-aa8d5f6099de.htm" />
   <HelpKINode Title="messages property" Url="html/bbb8deb3-682b-5521-1ac5-58772d5598b5.htm" />
   <HelpKINode Title="name property">
     <HelpKINode Title="kintoneFile.name Property " Url="html/00162f8c-ff98-1644-5de3-133a43aa91e5.htm" />
@@ -572,11 +617,17 @@
   <HelpKINode Title="PostedFile.PostedFile constructor" Url="html/4b9a93a6-0df0-7a9e-3fc8-873804465596.htm" />
   <HelpKINode Title="PostedFile.SaveAs method" Url="html/bad1d0e0-2283-0f31-6fa6-0bfa877b3e28.htm" />
   <HelpKINode Title="ReadLimit property" Url="html/9a650811-ef4b-aed5-dbbd-4d76852e19b9.htm" />
-  <HelpKINode Title="record property" Url="html/a17fbcac-7efc-6b0a-536a-d257421ad910.htm" />
+  <HelpKINode Title="record property" Url="html/526b2c54-6c35-c8bd-913e-23704194524d.htm" />
   <HelpKINode Title="records property" Url="html/699c292b-1fd3-3c17-01f8-e80ce7a37d0f.htm" />
   <HelpKINode Title="record_id property" Url="html/881627ed-155c-24e0-f82e-83b7d333665d.htm" />
   <HelpKINode Title="RECORD_LIMIT field" Url="html/87a97028-455b-ec13-2c24-16b12590b5c2.htm" />
   <HelpKINode Title="record_show_url property" Url="html/727d06df-e1f2-06c4-7871-9b13a01e5765.htm" />
+  <HelpKINode Title="revision property">
+    <HelpKINode Title="AbskintoneModel.revision Property " Url="html/0cdf92ca-7db6-cb25-4cae-43df5ef2a3ef.htm" />
+    <HelpKINode Title="kintoneIndex.revision Property " Url="html/d2adbb64-ebc1-7518-f633-306d8890124c.htm" />
+    <HelpKINode Title="kintoneUpdates(T).revision Property " Url="html/d9c8dac9-063e-51bb-c4b1-e2ca746bd782.htm" />
+  </HelpKINode>
+  <HelpKINode Title="revisions property" Url="html/ba8962ce-e1ab-9481-f329-54ed1dff7d2b.htm" />
   <HelpKINode Title="Save method" Url="html/76d04605-be7f-bbf7-3012-2350f0ac5930.htm" />
   <HelpKINode Title="Save(Of T) method" Url="html/39e1a56e-77f5-73d6-ad10-b69101131b3e.htm" />
   <HelpKINode Title="Save&lt;T&gt; method" Url="html/39e1a56e-77f5-73d6-ad10-b69101131b3e.htm" />
@@ -585,10 +636,10 @@
     <HelpKINode Title="kintoneContentConvertor(T).Serialize Method " Url="html/c9a46805-bfeb-6565-1fc0-a3acd8e3b3de.htm" />
     <HelpKINode Title="kintoneErrorConvertor.Serialize Method " Url="html/ca2dc864-8273-0442-ed2a-6f41037c0bee.htm" />
   </HelpKINode>
-  <HelpKINode Title="SetIdsToModels(Of T) method" Url="html/50496c0b-e158-ef51-65bc-eb9871f5e92e.htm" />
-  <HelpKINode Title="SetIdsToModels&lt;T&gt; method" Url="html/50496c0b-e158-ef51-65bc-eb9871f5e92e.htm" />
-  <HelpKINode Title="SetIdToModel(Of T) method" Url="html/946e6977-6e85-8c5d-3f0f-30a37ac31156.htm" />
-  <HelpKINode Title="SetIdToModel&lt;T&gt; method" Url="html/946e6977-6e85-8c5d-3f0f-30a37ac31156.htm" />
+  <HelpKINode Title="SetIndexToModel(Of T) method" Url="html/55851473-7c77-001f-c49d-a828fc7ac6da.htm" />
+  <HelpKINode Title="SetIndexToModel&lt;T&gt; method" Url="html/55851473-7c77-001f-c49d-a828fc7ac6da.htm" />
+  <HelpKINode Title="SetIndexToModels(Of T) method" Url="html/71e6e53b-d7ef-9d32-ea0a-2e57d4642400.htm" />
+  <HelpKINode Title="SetIndexToModels&lt;T&gt; method" Url="html/71e6e53b-d7ef-9d32-ea0a-2e57d4642400.htm" />
   <HelpKINode Title="size property" Url="html/c7a387bf-cd6d-0b0d-8b5f-36bbd6d82654.htm" />
   <HelpKINode Title="status property" Url="html/c2942655-9f29-742e-a766-b4d8bb5db2cd.htm" />
   <HelpKINode Title="SupportedTypes property">
@@ -617,8 +668,8 @@
     <HelpKINode Title="kintoneAPI.UploadFile Method " Url="html/6e036750-8ee9-be7f-742c-b5ae0b8870c0.htm" />
     <HelpKINode Title="kintoneTypeExtension.UploadFile Method " Url="html/713bc592-c44f-d013-1ab9-052238442ceb.htm" />
   </HelpKINode>
-  <HelpKINode Title="Value property" Url="html/77850202-06d6-f9b9-4eac-8aa002913376.htm" />
   <HelpKINode Title="value property" Url="html/f5f363c9-d8e8-4235-e530-25e63acf7f46.htm" />
+  <HelpKINode Title="Value property" Url="html/77850202-06d6-f9b9-4eac-8aa002913376.htm" />
   <HelpKINode Title="work_usr property" Url="html/7a530038-0276-320b-5eaa-44968953ce53.htm" />
   <HelpKINode Title="YMDType field" Url="html/e5ee6efd-80f5-0268-f28e-4ddefe9d9212.htm" />
 </HelpKI>
