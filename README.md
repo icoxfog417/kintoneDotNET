@@ -1,8 +1,8 @@
-kintoneDotNET (v1.0)
+kintoneDotNET (v1.0.2)
 =============
 
 kintoneDotNETは、[kintone API](https://developers.cybozu.com/ja/kintone-api/common-appapi.html) を.NET Framework上で扱うためのライブラリです。  
-[Download from Nuget](https://www.nuget.org/packages/kintoneDotNET/1.0.0)  
+[Download from Nuget](https://www.nuget.org/packages/kintoneDotNET)  
 .NET Frameworkは4.0以上で動作します。
 
 ## Feature
@@ -38,6 +38,18 @@ book.title = "How to use kintone"
 BookModel.Save()
 ```
 
+なお、リビジョンの指定/取得にも対応済みです。
+
+```
+Dim index As kintoneIndex = book.Save
+Console.Write("record_id=" + index.id + ",revision=" + index.revision.ToString())
+```
+
+```
+kintoneIndex index = book.Save;
+Console.Write("record_id=" + index.id + ",revision=" + index.revision.ToString());
+```
+
 ### Bulk Process
 kintone apiの上限設定値を超えるレコードの読み取り/更新が可能です。  
 ※内部的には、複数回APIを呼び出すことで処理しています。あまり多すぎてもkintone側へ負荷をかけてしまうので、一応60000件をリミットとして設定しています。
@@ -65,6 +77,6 @@ kintone上の特殊なフィールドについても対応を行っています�
 
 ## About Test Code
 単体テストコードを実行するには、kintoneのアカウント取得とテストに使用するアプリの登録が必要になります。
-アプリの定義はdocument/form.jsonに格納してありますので、それを参考に登録を行ってください。  
+アプリテンプレートをdocument/kintoneUnitTest.zipに格納してありますので、これを元に登録を行ってください。  
 アカウントのIDなどは、`app.config`へ記載します。  
 ※自分のアカウント情報を記載したままコミットしてしまうと大変なので、app.Debug.configを使用するなどしてください。
