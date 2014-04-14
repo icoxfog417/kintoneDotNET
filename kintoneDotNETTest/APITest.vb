@@ -115,9 +115,9 @@ Public Class APITest
         item.methodinfo = METHOD_NAME
 
         '登録
-        Dim id As String = item.Create
-        Assert.IsFalse(String.IsNullOrEmpty(id))
-        Dim created As kintoneTestModel = kintoneTestModel.FindById(Of kintoneTestModel)(id)
+        Dim index As kintoneIndex = item.Create
+        Assert.IsFalse(String.IsNullOrEmpty(index.id))
+        Dim created As kintoneTestModel = kintoneTestModel.FindById(Of kintoneTestModel)(index.id)
         Assert.IsFalse(created Is Nothing)
 
         '削除
@@ -126,20 +126,22 @@ Public Class APITest
         Assert.IsTrue(deleted Is Nothing)
 
         'Save(登録)
-        id = item.Save
-        Assert.IsFalse(String.IsNullOrEmpty(id))
-        Dim savedc As kintoneTestModel = kintoneTestModel.FindById(Of kintoneTestModel)(id)
+        index = item.Save
+        Assert.IsFalse(String.IsNullOrEmpty(index.id))
+        Dim savedc As kintoneTestModel = kintoneTestModel.FindById(Of kintoneTestModel)(index.id)
         Assert.IsFalse(savedc Is Nothing)
 
         '更新
         item.textarea = "update from unit"
-        Assert.IsTrue(item.Update())
+        index = item.Update()
+        Assert.IsFalse(String.IsNullOrEmpty(index.id))
         Dim updated As kintoneTestModel = kintoneTestModel.FindById(Of kintoneTestModel)(item.record_id)
         Assert.AreEqual(item.textarea, updated.textarea)
 
         'Save(更新)
         item.textarea = "save from unit"
-        Assert.IsTrue(String.IsNullOrEmpty(item.Save))
+        index = item.Save()
+        Assert.IsFalse(String.IsNullOrEmpty(index.id))
         Dim saved As kintoneTestModel = kintoneTestModel.FindById(Of kintoneTestModel)(item.record_id)
         Assert.AreEqual(item.textarea, saved.textarea)
 
@@ -165,20 +167,21 @@ Public Class APITest
         item.methodinfo = METHOD_NAME
 
         '更新対象レコードを事前登録
-        Dim id As String = item.Create
+        Dim index As kintoneIndex = item.Create
         Assert.IsFalse(String.IsNullOrEmpty(item.record_id))
 
         'キー推定による更新
         item.record_id = String.Empty 'レコードidをクリア
         item.numberField = 10.111
-        Assert.IsTrue(item.Update())
-        Dim updated As kintoneTestModel = kintoneTestModel.FindById(Of kintoneTestModel)(id)
+        index = item.Update()
+        Assert.IsFalse(String.IsNullOrEmpty(index.id))
+        Dim updated As kintoneTestModel = kintoneTestModel.FindById(Of kintoneTestModel)(index.id)
         Assert.AreEqual(item.numberField, updated.numberField)
 
         'キー推定による削除
         item.record_id = String.Empty 'レコードidをクリア
         Assert.IsTrue(item.Delete())
-        Dim deleted As kintoneTestModel = kintoneTestModel.FindById(Of kintoneTestModel)(id)
+        Dim deleted As kintoneTestModel = kintoneTestModel.FindById(Of kintoneTestModel)(index.id)
         Assert.IsTrue(deleted Is Nothing)
 
     End Sub
@@ -227,7 +230,8 @@ Public Class APITest
         Next
 
         '更新
-        Assert.IsTrue(kintoneTestModel.Update(list))
+        Dim indexes As kintoneIndexes = kintoneTestModel.Update(list)
+        Assert.IsTrue(indexes.Item(0) IsNot Nothing)
         Dim updated As List(Of kintoneTestModel) = kintoneTestModel.Find(Of kintoneTestModel)(Function(x) x.methodinfo = METHOD_NAME).OrderBy(Function(x) x.textarea).ToList
         For i As Integer = 0 To CNT_TEST_DATA
             Assert.AreEqual(list(i).textarea, updated(i).textarea)
@@ -236,7 +240,7 @@ Public Class APITest
 
         'Save(更新)
         ids = kintoneTestModel.Save(list)
-        Assert.IsTrue(ids Is Nothing)
+        Assert.IsFalse(ids Is Nothing)
         Dim saved As List(Of kintoneTestModel) = kintoneTestModel.Find(Of kintoneTestModel)(Function(x) x.methodinfo = METHOD_NAME).OrderBy(Function(x) x.textarea).ToList
         For i As Integer = 0 To CNT_TEST_DATA
             Assert.AreEqual(list(i).textarea, saved(i).textarea)
@@ -250,7 +254,7 @@ Public Class APITest
     End Sub
 
     ''' <summary>
-    ''' 
+    ''' Saveをする場合に、IDからオブジェクト取得時限界長を超えるURLとなる場合のテスト
     ''' </summary>
     ''' <remarks></remarks>
     <TestMethod()>
@@ -284,6 +288,36 @@ Public Class APITest
     End Sub
 
     ''' <summary>
+    ''' リビジョンの更新テスト<br/>
+    ''' </summary>
+    ''' <remarks></remarks>
+    <TestMethod()>
+    Public Sub RevisionUpdate()
+        Const METHOD_NAME As String = "RevisionUpdate"
+
+        '事前に削除
+        Dim remained As List(Of kintoneTestModel) = kintoneTestModel.Find(Of kintoneTestModel)(Function(x) x.methodinfo = METHOD_NAME).ToList
+        kintoneTestModel.Delete(Of kintoneTestModel)(remained.Select(Function(x) x.record_id).ToList)
+
+        Dim item As New kintoneTestModel
+        item.methodinfo = METHOD_NAME
+
+        '登録を行う
+        Dim index As kintoneIndex = item.Save
+        Assert.IsFalse(String.IsNullOrEmpty(item.record_id))
+        Assert.IsTrue(1, item.revision) '初回のリビジョンは1からスタート
+
+        '更新を行う
+        item.radio = "radio1"
+        index = item.Update()
+        Assert.IsTrue(2, item.revision) '更新するとリビジョンが上がる
+
+        '使用したレコードを削除
+        item.Delete()
+
+    End Sub
+
+    ''' <summary>
     ''' 文字列フィールドのRead/Writeテスト
     ''' </summary>
     ''' <remarks></remarks>
@@ -298,7 +332,8 @@ Public Class APITest
         item.stringField = updString
         item.textarea = updTexts
 
-        Assert.IsTrue(item.Update())
+        Dim index As kintoneIndex = item.Update()
+        Assert.IsFalse(String.IsNullOrEmpty(index.id))
 
         item = getRecordForUpdateAndRead()
         Assert.IsTrue(item.stringField = updString)
@@ -324,7 +359,8 @@ Public Class APITest
         item.time = updTime
         item.datetimeField = updDateTime
 
-        Assert.IsTrue(item.Update())
+        Dim index As kintoneIndex = item.Update()
+        Assert.IsFalse(String.IsNullOrEmpty(index.id))
 
         item = getRecordForUpdateAndRead()
         Assert.AreEqual(updDate.ToString("yyyyMMdd"), item.dateField.ToString("yyyyMMdd"))
@@ -350,7 +386,8 @@ Public Class APITest
         item.checkbox = updCheck
         item.multiselect = updSelect
 
-        Assert.IsTrue(item.Update())
+        Dim index As kintoneIndex = item.Update()
+        Assert.IsFalse(String.IsNullOrEmpty(index.id))
 
         item = getRecordForUpdateAndRead()
         Assert.IsTrue(ListEqual(Of String)(updCheck, item.checkbox))
@@ -404,7 +441,8 @@ Public Class APITest
 
         '内部テーブルレコードを追加
         item.changeLogs.Add(addLog)
-        Assert.IsTrue(item.Update())
+        Dim index As kintoneIndex = item.Update()
+        Assert.IsFalse(String.IsNullOrEmpty(index.id))
 
         item = getRecordForUpdateAndRead()
         Assert.AreEqual(addLog.changeYMD.ToString("yyyyMMdd"), item.changeLogs(0).changeYMD.ToString("yyyyMMdd"))
@@ -415,7 +453,8 @@ Public Class APITest
         item.changeLogs(0) = updLog
         item.changeLogs.Add(nextLog)
 
-        Assert.IsTrue(item.Update())
+        index = item.Update()
+        Assert.IsFalse(String.IsNullOrEmpty(index.id))
 
         item = getRecordForUpdateAndRead()
         Assert.AreEqual(item.changeLogs.Count, 2)

@@ -37,13 +37,14 @@ Namespace API
             Dim props As PropertyInfo() = objType.GetProperties()
             Dim targets = From p As PropertyInfo In props
                           Let attribute As kintoneItemAttribute = p.GetCustomAttributes(GetType(kintoneItemAttribute), True).SingleOrDefault
-                          Where Not attribute Is Nothing AndAlso attribute.isUpload
+                          Where isSendTarget(obj, p, attribute)
                           Select p, attribute
 
             For Each tgt In targets
                 Dim value As Object = tgt.p.GetValue(obj, Nothing)
                 Dim pType As Type = getGenericsType(tgt.p.PropertyType)
 
+                'リスト型の場合の処理
                 If TypeOf value Is IList Then
                     Dim list As New List(Of Object)
                     For Each v In value
@@ -51,11 +52,31 @@ Namespace API
                     Next
                     result.Add(tgt.p.Name, New With {.value = list})
                 Else
+                    '通常のフィールド
                     result.Add(tgt.p.Name, makeKintoneItem(pType, tgt.attribute, value, serializer))
                 End If
             Next
 
             Return result
+
+        End Function
+
+        ''' <summary>
+        ''' 送信対象の項目であるかを判定する
+        ''' </summary>
+        ''' <param name="propInfo">項目のプロパティ情報</param>
+        ''' <param name="attribute">属性情報</param>
+        ''' <returns></returns>
+        ''' <remarks></remarks>
+        Private Function isSendTarget(ByVal obj As Object, ByVal propInfo As PropertyInfo, ByVal attribute As kintoneItemAttribute) As Boolean
+            Dim isTarget As Boolean = False
+
+            'isUploadであるものは対象(基本)
+            If attribute IsNot Nothing AndAlso attribute.isUpload Then
+                isTarget = True
+            End If
+
+            Return isTarget
 
         End Function
 
@@ -126,6 +147,12 @@ Namespace API
 
             'デフォルトプロパティ格納
             If TypeOf m Is AbskintoneModel Then
+                Dim convertDic As Dictionary(Of String, String) = m.GetDefaultToPropertyDic
+                'リビジョンの変換ルールを登録する
+                '$revision->revisionの変換は読み出し時のみであるため、既存のディクショナリに含めてしまうと各所で
+                'revision以外は～という条件分岐を入れないといけなくなってしまう。そのため、ここで対応を行う。
+                If convertDic.ContainsKey("$revision") Then convertDic.Add("$revision", "revision")
+
                 For Each item As KeyValuePair(Of String, String) In m.GetDefaultToPropertyDic
                     If dictionary.ContainsKey(item.Key) Then 'デフォルト名称が使用されている場合
                         Dim defaultProp As PropertyInfo = objType.GetProperty(item.Value)

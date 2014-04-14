@@ -56,6 +56,15 @@ Namespace API
         ''' </summary>
         Public Overridable Property work_usr As New kintoneUser()
 
+        ''' <summary>
+        ''' [共通]リビジョン番号<br/>
+        ''' 初期値は-1(この場合、送信してもkintone側で検証は行われない)
+        ''' </summary>
+        Public Overridable Property revision As Integer = -1
+
+        ''' <summary>更新時、リビジョンを無視して更新する(デフォルトFalse)</summary>
+        Public Property IgnoreRevision As Boolean = False
+
         Private _convertDictionary As New Dictionary(Of String, String) From {
                                     {"レコード番号", "record_id"},
                                     {"作成日時", "created_time"},
@@ -208,8 +217,8 @@ Namespace API
         ''' <returns></returns>
         ''' <remarks></remarks>
         Public Shared Function Create(Of T As AbskintoneModel)(ByVal objs As List(Of T)) As List(Of T)
-            Dim ids As List(Of String) = GetAPI(Of T)().BulkCreate(Of T)(objs)
-            Return FindByIds(Of T)(ids)
+            Dim indexes As kintoneIndexes = GetAPI(Of T)().BulkCreate(Of T)(objs)
+            Return FindByIds(Of T)(indexes.ids)
         End Function
 
         ''' <summary>
@@ -219,7 +228,7 @@ Namespace API
         ''' <param name="objs"></param>
         ''' <returns></returns>
         ''' <remarks></remarks>
-        Public Shared Function Update(Of T As AbskintoneModel)(ByVal objs As List(Of T)) As Boolean
+        Public Shared Function Update(Of T As AbskintoneModel)(ByVal objs As List(Of T)) As kintoneIndexes
             Return GetAPI(Of T).BulkUpdate(Of T)(objs)
         End Function
 
@@ -232,8 +241,8 @@ Namespace API
         ''' <returns></returns>
         ''' <remarks></remarks>
         Public Shared Function Save(Of T As AbskintoneModel)(ByVal objs As List(Of T)) As List(Of T)
-            Dim ids As List(Of String) = GetAPI(Of T)().BulkSave(Of T)(objs)
-            Return FindByIds(Of T)(ids)
+            Dim indexes As kintoneIndexes = GetAPI(Of T)().BulkSave(Of T)(objs)
+            Return FindByIds(Of T)(indexes.ids)
 
         End Function
 
@@ -255,35 +264,33 @@ Namespace API
             Dim ids As List(Of String) = (From x As T In objs Where Not String.IsNullOrEmpty(x.record_id) Select x.record_id).ToList
             Dim result As Boolean = GetAPI(Of T).BulkDelete(Of T)(ids)
 
-            If result Then '成功した場合、objsに設定されていたidをクリアする(削除されたため)
-                objs.ForEach(Function(x) x.record_id = String.Empty)
+            If result Then '成功した場合、objsに設定されていたid/リビジョンをクリアする(削除されたため)
+                objs.ForEach(Sub(x)
+                                 x.record_id = String.Empty
+                                 x.revision = -1
+                             End Sub)
             End If
 
             Return result
 
         End Function
 
-
         ''' <summary>
         ''' レコードの登録(単一)を行う<br/>
         ''' 自身をkintone上に登録します
         ''' </summary>
-        Public Function Create() As String
+        Public Function Create() As kintoneIndex
             Dim result As Object = execute("Create", Me)
-
-            If Not String.IsNullOrEmpty(result.ToString) Then
-                Me.record_id = result.ToString
-            End If
-            Return Me.record_id
+            Return setkintoneIndex(result)
         End Function
 
         ''' <summary>
         ''' レコードの更新(単一)を行う<br/>
         ''' 自身のレコードを更新します
         ''' </summary>
-        Public Function Update() As Boolean
-            Dim result As Boolean = CBool(execute("Update", Me))
-            Return result
+        Public Function Update() As kintoneIndex
+            Dim result As Object = execute("Update", Me)
+            Return setkintoneIndex(result)
         End Function
 
         ''' <summary>
@@ -292,15 +299,26 @@ Namespace API
         ''' </summary>
         ''' <returns></returns>
         ''' <remarks></remarks>
-        Public Function Save() As String
-            Dim result As String = CStr(execute("Save", Me))
+        Public Function Save() As kintoneIndex
+            Dim result As Object = execute("Save", Me)
+            Return setkintoneIndex(result)
 
-            If Not String.IsNullOrEmpty(result) Then
-                Me.record_id = result
+        End Function
+
+        ''' <summary>
+        ''' オブジェクトをkintoneIndexにキャストし、値を自身にコピーする
+        ''' </summary>
+        ''' <param name="obj"></param>
+        ''' <returns></returns>
+        ''' <remarks></remarks>
+        Private Function setkintoneIndex(ByVal obj As Object) As kintoneIndex
+            Dim typedResult As New kintoneIndex
+            If obj IsNot Nothing AndAlso TypeOf obj Is kintoneIndex Then
+                typedResult = CType(obj, kintoneIndex)
+                Me.record_id = typedResult.id
+                Me.revision = typedResult.revision
             End If
-
-            Return result
-
+            Return typedResult
         End Function
 
         ''' <summary>
@@ -311,14 +329,15 @@ Namespace API
 
             If String.IsNullOrEmpty(Me.record_id) Then
                 'レコードidの設定がない場合、keyからidの取得を試みる
-                execute("SetIdToModel", Me)
+                execute("SetIndexToModel", Me)
             End If
 
             If String.IsNullOrEmpty(Me.record_id) Then Return True '既に削除されている場合、Trueを返却
 
             Dim result As Boolean = CBool(execute("Delete", Me.record_id))
-            If result Then '削除に成功したら、idをクリアする
+            If result Then '削除に成功したら、id/リビジョンをクリアする
                 Me.record_id = String.Empty
+                Me.revision = -1
             End If
 
             Return result
@@ -375,7 +394,7 @@ Namespace API
             Dim idline As String = String.Join("", ids)
 
             If String.IsNullOrEmpty(idline) Then 'レコードidの設定がない場合、keyからidの取得を試みる
-                GetAPI(Of T).SetIdsToModels(Of T)(objs)
+                GetAPI(Of T).SetIndexToModels(Of T)(objs)
             End If
 
             Return objs

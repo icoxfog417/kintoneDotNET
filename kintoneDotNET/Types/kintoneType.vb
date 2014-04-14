@@ -15,7 +15,19 @@ Namespace API.Types
     End Interface
 
     ''' <summary>
-    ''' JSON読み取り用のクラス
+    ''' JSONを送受信する際の、各項目に対応するクラス
+    ''' </summary>
+    ''' <remarks></remarks>
+    Public Class kintoneItem
+        Property type As String
+        Property value As Object
+    End Class
+
+
+#Region "ForResponse"
+
+    ''' <summary>
+    ''' GETのResponse(JSON)読み取り用のクラス
     ''' </summary>
     ''' <typeparam name="T"></typeparam>
     ''' <remarks></remarks>
@@ -25,38 +37,74 @@ Namespace API.Types
     End Class
 
     ''' <summary>
-    ''' JSON送信用のクラス
+    ''' id/リビジョンを保持するクラス
+    ''' </summary>
+    ''' <remarks></remarks>
+    Public Class kintoneIndex
+        Property id As String
+        Property revision As Integer = 0
+    End Class
+
+    ''' <summary>
+    ''' id/リビジョンの一覧を受け取るためのクラス
+    ''' </summary>
+    ''' <remarks></remarks>
+    Public Class kintoneIndexes
+        Property ids As New List(Of String)
+        Property revisions As New List(Of String)
+
+        Public Sub AddRange(ByVal kc As kintoneIndexes)
+            ids.AddRange(kc.ids)
+            revisions.AddRange(kc.revisions)
+        End Sub
+
+        Public Function Item(ByVal index As Integer) As kintoneIndex
+            Dim id As kintoneIndex = Nothing
+            If index < ids.Count Then
+                id = New kintoneIndex
+                id.id = ids(index)
+                id.revision = revisions(index)
+            End If
+            Return id
+        End Function
+
+    End Class
+
+#End Region
+
+#Region "ForRequest"
+
+    ''' <summary>
+    ''' Update対象を示すクラス
     ''' </summary>
     ''' <typeparam name="T"></typeparam>
     ''' <remarks></remarks>
-    Public Class kintoneRecord(Of T As AbskintoneModel)
+    Public Class kintoneUpdates(Of T As AbskintoneModel)
         Public Property id As String
+        Public Property revision As Integer = -1
         Public Property record As T
         Public Sub New()
         End Sub
         Public Sub New(ByVal model As T)
             id = model.record_id
+            If Not model.IgnoreRevision Then revision = model.revision
             record = model
         End Sub
     End Class
 
     ''' <summary>
-    ''' JSONを送受信する際の、各項目に対応するクラス
+    ''' Delete対象を指定するためのクラス
     ''' </summary>
     ''' <remarks></remarks>
-    Public Class kintoneItem
-        Property type As String
-        Property value As Object
-    End Class
-
-    ''' <summary>
-    ''' Create/Deleteなどでidの一覧を受け取るためのクラス
-    ''' </summary>
-    ''' <remarks></remarks>
-    Public Class kintoneIds
+    Public Class kintoneDeletes
         Public Property app As String
         Property ids As List(Of String)
     End Class
+
+#End Region
+
+
+#Region "ForErrorHandling"
 
     ''' <summary>
     ''' kintone上でのエラーを取得するためのクラス
@@ -117,6 +165,8 @@ Namespace API.Types
         End Function
 
     End Class
+
+#End Region
 
 End Namespace
 

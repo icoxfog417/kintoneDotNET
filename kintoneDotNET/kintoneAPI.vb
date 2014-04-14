@@ -402,8 +402,8 @@ Namespace API
         ''' <param name="obj"></param>
         ''' <returns></returns>
         ''' <remarks></remarks>
-        Public Function Create(Of T As AbskintoneModel)(ByVal obj As T) As String
-            Return taskCreate(Of T)(New List(Of T) From {obj}).FirstOrDefault
+        Public Function Create(Of T As AbskintoneModel)(ByVal obj As T) As kintoneIndex
+            Return taskCreate(Of T)(New List(Of T) From {obj}).Item(0)
         End Function
 
         ''' <summary>
@@ -413,10 +413,10 @@ Namespace API
         ''' <param name="objs"></param>
         ''' <returns></returns>
         ''' <remarks></remarks>
-        Public Function BulkCreate(Of T As AbskintoneModel)(ByVal objs As List(Of T)) As List(Of String)
-            Dim result As List(Of List(Of String)) = executeParallel(Of T, List(Of String))(objs, AddressOf taskCreate(Of T))
-            Dim flatten As New List(Of String)
-            For Each li As List(Of String) In result
+        Public Function BulkCreate(Of T As AbskintoneModel)(ByVal objs As List(Of T)) As kintoneIndexes
+            Dim result As List(Of kintoneIndexes) = executeParallel(Of T, kintoneIndexes)(objs, AddressOf taskCreate(Of T))
+            Dim flatten As New kintoneIndexes
+            For Each li As kintoneIndexes In result
                 flatten.AddRange(li)
             Next
             Return flatten
@@ -429,7 +429,7 @@ Namespace API
         ''' <param name="objs"></param>
         ''' <returns></returns>
         ''' <remarks></remarks>
-        Private Function taskCreate(Of T As AbskintoneModel)(ByVal objs As List(Of T)) As List(Of String)
+        Private Function taskCreate(Of T As AbskintoneModel)(ByVal objs As List(Of T)) As kintoneIndexes
             'JsonオブジェクトをRequestに書き出し
             'http://stackoverflow.com/questions/9145667/how-to-post-json-to-the-server
 
@@ -448,18 +448,17 @@ Namespace API
             Dim jsonData As String = js.Serialize(sendData)
             writeToRequestBody(request, jsonData)
 
-            Dim ids As New List(Of String)
+            Dim created As New kintoneIndexes
             Dim kerror As kintoneError = Nothing
             Using response As HttpWebResponse = getResponse(request, kerror)
                 If Not response Is Nothing Then
                     Dim reader As New StreamReader(response.GetResponseStream)
-                    Dim serialized As kintoneIds = js.Deserialize(Of kintoneIds)(reader.ReadToEnd)
-                    ids = serialized.ids
+                    created = js.Deserialize(Of kintoneIndexes)(reader.ReadToEnd)
                 End If
             End Using
             If kerror IsNot Nothing Then Throw New kintoneException(kerror)
 
-            Return ids
+            Return created
 
         End Function
 
@@ -469,8 +468,8 @@ Namespace API
         ''' <param name="obj"></param>
         ''' <returns></returns>
         ''' <remarks></remarks>
-        Public Function Update(Of T As AbskintoneModel)(ByVal obj As T) As Boolean
-            Return taskUpdate(Of T)(New List(Of T) From {obj})
+        Public Function Update(Of T As AbskintoneModel)(ByVal obj As T) As kintoneIndex
+            Return taskUpdate(Of T)(New List(Of T) From {obj}).Item(0)
         End Function
 
         ''' <summary>
@@ -480,10 +479,13 @@ Namespace API
         ''' <param name="objs"></param>
         ''' <returns></returns>
         ''' <remarks></remarks>
-        Public Function BulkUpdate(Of T As AbskintoneModel)(ByVal objs As List(Of T)) As Boolean
-            Dim result As List(Of Boolean) = executeParallel(Of T, Boolean)(objs, AddressOf taskUpdate(Of T))
-            Dim falseIndex As Integer = result.IndexOf(False)
-            Return If(falseIndex < 0, True, False)
+        Public Function BulkUpdate(Of T As AbskintoneModel)(ByVal objs As List(Of T)) As kintoneIndexes
+            Dim result As List(Of kintoneIndexes) = executeParallel(Of T, kintoneIndexes)(objs, AddressOf taskUpdate(Of T))
+            Dim flatten As New kintoneIndexes
+            For Each li As kintoneIndexes In result
+                flatten.AddRange(li)
+            Next
+            Return flatten
 
         End Function
 
@@ -494,14 +496,14 @@ Namespace API
         ''' <param name="objs"></param>
         ''' <returns></returns>
         ''' <remarks></remarks>
-        Private Function taskUpdate(Of T As AbskintoneModel)(ByVal objs As List(Of T)) As Boolean
+        Private Function taskUpdate(Of T As AbskintoneModel)(ByVal objs As List(Of T)) As kintoneIndexes
 
             Dim updates As List(Of T) = getModel(Of T).UpdateHook(objs)
 
             Dim request As HttpWebRequest = makeHeader("records", "PUT")
-            Dim sendData As New kintoneRecords(Of kintoneRecord(Of T))
+            Dim sendData As New kintoneRecords(Of kintoneUpdates(Of T))
             sendData.app = AppId
-            sendData.records = updates.Select(Function(x) New kintoneRecord(Of T)(x)).ToList
+            sendData.records = updates.Select(Function(x) New kintoneUpdates(Of T)(x)).ToList
 
             'Request Body にJSONデータを書き込み
             Dim js As New JavaScriptSerializer
@@ -512,11 +514,22 @@ Namespace API
             writeToRequestBody(request, jsonData)
 
             Dim kerror As kintoneError = Nothing
+            Dim indexes As New kintoneIndexes
             Using response As HttpWebResponse = getResponse(request, kerror)
+                If Not response Is Nothing Then
+                    Dim reader As New StreamReader(response.GetResponseStream)
+                    Dim updated As kintoneRecords(Of kintoneIndex) = js.Deserialize(Of kintoneRecords(Of kintoneIndex))(reader.ReadToEnd)
+                    If updated IsNot Nothing Then
+                        For Each item As kintoneIndex In updated.records
+                            indexes.ids.Add(item.id)
+                            indexes.revisions.Add(item.revision)
+                        Next
+                    End If
+                End If
             End Using
 
             If kerror IsNot Nothing Then Throw New kintoneException(kerror)
-            Return True
+            Return indexes
 
         End Function
 
@@ -528,17 +541,12 @@ Namespace API
         ''' <param name="obj"></param>
         ''' <returns></returns>
         ''' <remarks></remarks>
-        Public Function Save(Of T As AbskintoneModel)(ByVal obj As T) As String
-            Dim ids As List(Of String) = BulkSave(Of T)(New List(Of T) From {obj})
-            If ids IsNot Nothing AndAlso ids.Count > 0 Then
-                Return ids.First
-            Else
-                Return String.Empty
-            End If
+        Public Function Save(Of T As AbskintoneModel)(ByVal obj As T) As kintoneIndex
+            Return BulkSave(Of T)(New List(Of T) From {obj}).Item(0)
         End Function
 
-        Public Sub SetIdToModel(Of T As AbskintoneModel)(ByRef obj As T)
-            SetIdsToModels(Of T)(New List(Of T) From {obj})
+        Public Sub SetIndexToModel(Of T As AbskintoneModel)(ByRef obj As T)
+            SetIndexToModels(Of T)(New List(Of T) From {obj})
         End Sub
 
         ''' <summary>
@@ -547,7 +555,7 @@ Namespace API
         ''' <typeparam name="t"></typeparam>
         ''' <param name="objs"></param>
         ''' <remarks></remarks>
-        Public Sub SetIdsToModels(Of T As AbskintoneModel)(ByRef objs As List(Of T))
+        Public Sub SetIndexToModels(Of T As AbskintoneModel)(ByRef objs As List(Of T))
 
             'モデルのキー項目を取得
             Dim key = From p As PropertyInfo In GetType(T).GetProperties
@@ -566,9 +574,8 @@ Namespace API
             Dim dic As Dictionary(Of String, String) = getModel(Of T).GetPropertyToDefaultDic() '変換用ディクショナリを取得
             Dim keyNameInQuery As String = If(dic.ContainsKey(keyName), dic(keyName), keyName) '変換後の項目名をセット
 
-            Dim defaultLength As Integer = String.Format(KINTONE_API_FORMAT, Host, "records").Length
-            Dim queryHead As String = keyNameInQuery + " in "
-            defaultLength += HttpUtility.UrlEncode("query=" + queryHead + "()").Length
+            Dim queryFormat As String = keyNameInQuery + " in ({0})"
+            Dim defaultLength As Integer = String.Format(KINTONE_API_FORMAT, Host, "records").Length + HttpUtility.UrlEncode(queryFormat).Length
 
             Dim querys As New Dictionary(Of String, Integer)
             Dim querySize As Integer = defaultLength
@@ -579,7 +586,7 @@ Namespace API
                 Dim diff As Integer = HttpUtility.UrlEncode(",""" + keyValue + """").Length
 
                 If querySize + diff > URL_LENGTH_LIMIT Then
-                    Dim q As String = queryHead + "(" + String.Join(",", tmpParams) + ")"
+                    Dim q As String = String.Format(queryFormat, String.Join(",", tmpParams))
                     querys.Add(q, tmpParams.Count)
                     querySize = defaultLength
                     tmpParams.Clear()
@@ -591,7 +598,7 @@ Namespace API
             Next
 
             If tmpParams.Count > 0 Then
-                Dim q As String = queryHead + "(" + String.Join(",", tmpParams) + ")"
+                Dim q As String = String.Format(queryFormat, String.Join(",", tmpParams))
                 querys.Add(q, tmpParams.Count)
             End If
 
@@ -612,9 +619,9 @@ Namespace API
                 Dim tgtKey As Object = key.First.p.GetValue(tgt, Nothing)
                 Dim sameKey As List(Of T) = (From x As T In queryResult Where tgtKey = key.First.p.GetValue(x, Nothing) Select x).ToList
                 If sameKey.Count = 1 Then
-                    'idをセット
-                    'TODO id以外に、登録日や更新情報、ステータスなどの情報を同期した方がいいか検討
+                    'id/リビジョンをセット
                     tgt.record_id = sameKey.First.record_id
+                    tgt.revision = sameKey.First.revision
                 ElseIf sameKey.Count > 1 Then
                     Throw New kintoneException(GetType(T).ToString + "でキーとして指定されたkintoneItem(" + keyName + ")の値が重複するデータが存在します")
                 End If
@@ -629,8 +636,8 @@ Namespace API
         ''' <param name="objs"></param>
         ''' <returns></returns>
         ''' <remarks></remarks>
-        Public Function BulkSave(Of T As AbskintoneModel)(ByVal objs As List(Of T)) As List(Of String)
-            SetIdsToModels(objs) 'kintoneに存在するものについてはidがセットされる
+        Public Function BulkSave(Of T As AbskintoneModel)(ByVal objs As List(Of T)) As kintoneIndexes
+            SetIndexToModels(objs) 'kintoneに存在するものについてはidがセットされる
 
             'Update/Create分を振り分け
             Dim creates As New List(Of T)
@@ -645,16 +652,15 @@ Namespace API
             Next
 
             'Update/Createの実行
-            Dim result As Boolean = True
-            Dim ids As List(Of String) = Nothing
+            Dim result As New kintoneIndexes
             If updates.Count > 0 Then
                 result = BulkUpdate(Of T)(updates)
             End If
             If creates.Count > 0 Then
-                ids = BulkCreate(Of T)(creates)
+                result = BulkCreate(Of T)(creates)
             End If
 
-            Return ids
+            Return result
 
         End Function
 
@@ -696,7 +702,7 @@ Namespace API
             Dim request As HttpWebRequest = makeHeader("records", "DELETE")
 
             Dim deletes As List(Of String) = getModel(Of T).DeleteHook(Of T)(ids)
-            Dim sendData As New kintoneIds()
+            Dim sendData As New kintoneDeletes()
             sendData.app = Me.AppId
             sendData.ids = deletes
 

@@ -48,7 +48,7 @@ Public Class APITestException
     Public Sub FieldUpdateException()
 
         Dim item As kintoneTestModel = getInitializedRecord()
-        Dim result As Boolean = False
+        Dim result As kintoneIndex = Nothing
         item.validationFld = "" '入力必須項目を空白にする
         item.datetimeField = DateTime.MinValue.AddDays(1) 'kintone上エラーになる日付を設定
 
@@ -61,7 +61,7 @@ Public Class APITestException
             Console.WriteLine(ex.error)
         End Try
 
-        Assert.IsFalse(result)
+        Assert.IsTrue(result Is Nothing)
 
     End Sub
 
@@ -98,6 +98,54 @@ Public Class APITestException
         End Try
 
         Assert.IsTrue(ids Is Nothing)
+
+    End Sub
+
+    ''' <summary>
+    ''' リビジョンによる楽観ロックのエラー<br/>
+    ''' </summary>
+    ''' <remarks></remarks>
+    <TestMethod()>
+    Public Sub RevisionLockException()
+        Const METHOD_NAME As String = "RevisionLockException"
+
+        '事前に削除
+        Dim remained As List(Of kintoneTestModel) = kintoneTestModel.Find(Of kintoneTestModel)(Function(x) x.methodinfo = METHOD_NAME).ToList
+        kintoneTestModel.Delete(Of kintoneTestModel)(remained.Select(Function(x) x.record_id).ToList)
+
+        Dim item As New kintoneTestModel
+        item.methodinfo = METHOD_NAME
+
+        '登録を行う
+        Dim index As kintoneIndex = item.Save
+        Assert.IsFalse(String.IsNullOrEmpty(item.record_id))
+        Assert.IsTrue(1, item.revision) '初回のリビジョンは1からスタート
+
+        '初回の更新を行う
+        item.radio = "radio1"
+        index = item.Update()
+        Assert.IsTrue(2, item.revision)
+
+        'リビジョンがバッティングする更新を行う
+        item.radio = "radio2"
+        item.revision = 1
+
+        Try
+            index = item.Update()
+        Catch ex As Exception
+            Console.WriteLine(ex.Message)
+            index = Nothing
+        End Try
+
+        Assert.IsTrue(index Is Nothing)
+
+        'リビジョンを無視して更新する
+        item.IgnoreRevision = True
+        index = item.Update()
+        Assert.IsTrue(index IsNot Nothing)
+
+        '使用したレコードを削除
+        item.Delete()
 
     End Sub
 
