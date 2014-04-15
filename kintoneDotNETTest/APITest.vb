@@ -33,44 +33,116 @@ Public Class APITest
         Dim querys As New Dictionary(Of String, String)
         Dim q As String = ""
         'Simple Expression
-        q = kintoneQuery.Make(Of kintoneTestModel)(Function(x) x.status > "a")
+        q = kintoneQueryExpression.Eval(Of kintoneTestModel)(Function(x) x.status > "a")
         Console.WriteLine("querySimple1:" + q)
         Assert.AreEqual("ステータス > ""a""", q)
 
-        q = kintoneQuery.Make(Of kintoneTestModel)(Function(x) Not x.status > "a")
+        q = kintoneQueryExpression.Eval(Of kintoneTestModel)(Function(x) Not x.status > "a")
         Console.WriteLine("querySimple2:" + q)
         Assert.AreEqual("ステータス <= ""a""", q)
 
         'Equal
-        q = kintoneQuery.Make(Of kintoneTestModel)(Function(x) x.status.Equals(1) Or x.record_id <> 1 And Not x.numberField = 1, Nothing)
+        q = kintoneQueryExpression.Eval(Of kintoneTestModel)(Function(x) x.status.Equals(1) Or x.record_id <> 1 And Not x.numberField = 1, Nothing)
         Console.WriteLine("queryEqual:" + q)
         Assert.AreEqual("status = 1 or record_id != 1 and numberField != 1", q)
 
         'like
-        q = kintoneQuery.Make(Of kintoneTestModel)(Function(x) x.status Like "A" And Not x.link Like "http", Nothing)
+        q = kintoneQueryExpression.Eval(Of kintoneTestModel)(Function(x) x.status Like "A" And Not x.link Like "http", Nothing)
         Console.WriteLine("queryLike:" + q)
         Assert.AreEqual("status like ""A"" and link not like ""http""", q)
 
         'IN
         Dim ids As New List(Of String)() From {"1", "2", "3"}
-        q = kintoneQuery.Make(Of kintoneTestModel)(Function(x) {"1", "a"}.Contains(x.radio) And Not ids.Contains(x.record_id) And New List(Of Integer)() From {1, 2}.Contains(x.numberField), Nothing)
+        q = kintoneQueryExpression.Eval(Of kintoneTestModel)(Function(x) {"1", "a"}.Contains(x.radio) And Not ids.Contains(x.record_id) And New List(Of Integer)() From {1, 2}.Contains(x.numberField), Nothing)
         Console.WriteLine("queryArray&List:" + q)
         Assert.AreEqual("radio in (""1"",""a"") and record_id not in (""1"",""2"",""3"") and numberField in (1,2)", q)
 
         'method Equal
-        q = kintoneQuery.Make(Of kintoneTestModel)(Function(x) x.status = String.Empty And x.created_time < DateTime.MaxValue, Nothing)
+        q = kintoneQueryExpression.Eval(Of kintoneTestModel)(Function(x) x.status = String.Empty And x.created_time < DateTime.MaxValue, Nothing)
         Console.WriteLine("queryMethodCall:" + q)
         Assert.AreEqual("status = """" and created_time < ""9999-12-31T23:59:59+09:00""", q)
 
         'MemberEqual
         Dim m As New kintoneTestModel
         m.status = "X"
-        q = kintoneQuery.Make(Of kintoneTestModel)(Function(x) x.status = m.status, Nothing)
+        q = kintoneQueryExpression.Eval(Of kintoneTestModel)(Function(x) x.status = m.status, Nothing)
         Console.WriteLine("queryMemberEval:" + q)
         Assert.AreEqual("status = ""X""", q)
 
     End Sub
 
+
+    <TestMethod()>
+    Public Sub ReadkintoneQuery()
+
+        Dim q As New kintoneQuery(Of kintoneTestModel)()
+        Dim appFormat As String = "app=" + New kintoneTestModel().app
+
+        Assert.AreEqual(appFormat, q.Build)
+
+        q.Where(Function(x) x.stringField = "A")
+        Assert.AreEqual(appFormat + "&query=stringField=""A""", q.Build.Replace(" ", ""))
+
+        q.Ascending("record_id", "numberField")
+        Assert.AreEqual(appFormat + "&query=stringField=""A""orderbyレコード番号asc,numberFieldasc", q.Build.Replace(" ", ""))
+
+        q.Offset(100)
+        Assert.AreEqual(appFormat + "&query=stringField=""A""orderbyレコード番号asc,numberFieldascoffset100", q.Build.Replace(" ", ""))
+
+        q.Limit(10)
+        Assert.AreEqual(appFormat + "&query=stringField=""A""orderbyレコード番号asc,numberFieldasclimit10offset100", q.Build.Replace(" ", ""))
+
+        q.Fields("record_id", "created_time")
+        Assert.AreEqual(appFormat + "&fields[0]=レコード番号&fields[1]=作成日時&query=stringField=""A""orderbyレコード番号asc,numberFieldasclimit10offset100", q.Build.Replace(" ", ""))
+
+    End Sub
+
+    <TestMethod()>
+    Public Sub ReadByQuery()
+        Const METHOD_NAME As String = "ReadByQuery"
+
+        '事前に削除
+        Dim remained As List(Of kintoneTestModel) = kintoneTestModel.Find(Of kintoneTestModel)(Function(x) x.methodinfo = METHOD_NAME).ToList
+        kintoneTestModel.Delete(Of kintoneTestModel)(remained.Select(Function(x) x.record_id).ToList)
+
+        '仮レコードの登録
+        Dim item1 As New kintoneTestModel(METHOD_NAME)
+        item1.stringField = "GROUP1"
+        item1.numberField = 0
+
+        Dim item2 As New kintoneTestModel(METHOD_NAME)
+        item2.stringField = "GROUP1"
+        item2.numberField = 1
+
+        Dim item3 As New kintoneTestModel(METHOD_NAME)
+        item3.stringField = "DEPT-A"
+        item3.numberField = 2
+
+        Dim item4 As New kintoneTestModel(METHOD_NAME)
+        item4.stringField = "DEPT-A"
+        item4.numberField = 3
+
+        Dim list As New List(Of kintoneTestModel) From {item1, item2, item3, item4}
+        Dim created As List(Of kintoneTestModel) = kintoneTestModel.Create(Of kintoneTestModel)(list)
+
+        '登録結果の確認
+        Assert.AreEqual(list.Count, created.Count)
+
+        'クエリ選択を実施
+        Dim q1 As List(Of kintoneTestModel) = kintoneTestModel.Find(Of kintoneTestModel)().Where(Function(x) x.methodinfo = METHOD_NAME And x.numberField >= 2).Descending("numberField").Fields("numberField")
+        q1.ForEach(Sub(i) Console.WriteLine(i))
+        '降順の並びで、numberField以外に値はセットされていない
+        Assert.IsTrue(item4.numberField = q1.First.numberField And String.IsNullOrEmpty(q1.First.stringField))
+
+        Dim q2 As List(Of kintoneTestModel) = kintoneTestModel.Find(Of kintoneTestModel)().Where(Function(x) x.methodinfo = METHOD_NAME).Ascending("stringField", "numberField").Offset(3).Limit(1)
+        q2.ForEach(Sub(i) Console.WriteLine(i))
+        '昇順の並びで、最後の要素を取得
+        Assert.IsTrue(item2.stringField = q2.First.stringField And item2.numberField = q2.First.numberField)
+
+        '削除
+        kintoneTestModel.Delete(Of kintoneTestModel)(created.Select(Function(x) x.record_id).ToList)
+
+    End Sub
 
     ''' <summary>
     ''' FindAllのテスト 全件取得可能かチェックする
@@ -148,7 +220,7 @@ Public Class APITest
         '削除して終了
         Assert.IsTrue(item.Delete())
 
-     End Sub
+    End Sub
 
     ''' <summary>
     ''' モデルのキーを使用した更新のテスト。<br/>
@@ -364,7 +436,7 @@ Public Class APITest
 
         item = getRecordForUpdateAndRead()
         Assert.AreEqual(updDate.ToString("yyyyMMdd"), item.dateField.ToString("yyyyMMdd"))
-        'TODO 要確認：更新時 秒の情報が落ちる？(秒の値が常に00になっている)
+        '更新時 秒の情報は落ちる。(秒の値が常に00になっている)
         Assert.AreEqual(updTime.ToString("HHmm"), item.time.ToString("HHmm"))
         Assert.AreEqual(updDateTime.ToString("yyyyMMdd HHmm"), item.datetimeField.ToString("yyyyMMdd HHmm"))
 

@@ -74,6 +74,7 @@
     <Compile Include="kintoneContentConvertor.vb" />
     <Compile Include="kintoneErrorConvertor.vb" />
     <Compile Include="kintoneException.vb" />
+    <Compile Include="kintoneQueryExpression.vb" />
     <Compile Include="kintoneQuery.vb" />
     <Compile Include="Types\kintoneDatetime.vb" />
     <Compile Include="Types\kintoneFile.vb" />

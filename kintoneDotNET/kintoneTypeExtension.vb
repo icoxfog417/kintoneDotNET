@@ -1,6 +1,7 @@
 ﻿Imports System.Runtime.CompilerServices
 Imports System.Collections.ObjectModel
 Imports kintoneDotNET.API.Types
+Imports System.Linq.Expressions
 
 Namespace API
 
@@ -47,6 +48,5 @@ Namespace API
         End Function
 
     End Module
-
 
 End Namespace

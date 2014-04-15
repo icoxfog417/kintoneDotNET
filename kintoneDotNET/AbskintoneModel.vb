@@ -128,7 +128,7 @@ Namespace API
         Public Shared Function Find(Of T As AbskintoneModel)(ByVal expression As Expression(Of Func(Of T, Boolean)), _
                                                                 Optional ByVal isConvert As Boolean = True) As List(Of T)
             Dim model As T = Activator.CreateInstance(Of T)()
-            Dim query As String = kintoneQuery.Make(Of T)(expression, If(isConvert, model.GetPropertyToDefaultDic, Nothing))
+            Dim query As String = kintoneQueryExpression.Eval(Of T)(expression, If(isConvert, model.GetPropertyToDefaultDic, Nothing))
             Return Find(Of T)(query)
         End Function
 
@@ -142,6 +142,17 @@ Namespace API
         ''' <remarks></remarks>
         Public Shared Function Find(Of T As AbskintoneModel)(ByVal query As String) As List(Of T)
             Return GetAPI(Of T).Find(Of T)(query)
+        End Function
+
+        ''' <summary>
+        ''' 直接条件を指定せず、クエリオブジェクトから検索を行う
+        ''' </summary>
+        ''' <typeparam name="T"></typeparam>
+        ''' <returns></returns>
+        ''' <remarks></remarks>
+        Public Shared Function Find(Of T As AbskintoneModel)() As kintoneQuery(Of T)
+            Dim q As New kintoneQuery(Of T)(False)
+            Return q
         End Function
 
         ''' <summary>
@@ -191,7 +202,7 @@ Namespace API
         Public Shared Function FindAll(Of T As AbskintoneModel)(ByVal expression As Expression(Of Func(Of T, Boolean)), _
                                                                 Optional ByVal isConvert As Boolean = True) As List(Of T)
             Dim model As T = Activator.CreateInstance(Of T)()
-            Dim query As String = kintoneQuery.Make(Of T)(expression, If(isConvert, model.GetPropertyToDefaultDic, Nothing))
+            Dim query As String = kintoneQueryExpression.Eval(Of T)(expression, If(isConvert, model.GetPropertyToDefaultDic, Nothing))
             Return FindAll(Of T)(query)
         End Function
 
@@ -207,6 +218,16 @@ Namespace API
             Return GetAPI(Of T).FindAll(Of T)(query)
         End Function
 
+        ''' <summary>
+        ''' 直接条件を指定せず、クエリオブジェクトから検索を行う
+        ''' </summary>
+        ''' <typeparam name="T"></typeparam>
+        ''' <returns></returns>
+        ''' <remarks></remarks>
+        Public Shared Function FindAll(Of T As AbskintoneModel)() As kintoneQuery(Of T)
+            Dim q As New kintoneQuery(Of T)(True)
+            Return q
+        End Function
 
         ''' <summary>
         ''' レコードの登録を行う<br/>
