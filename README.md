@@ -1,4 +1,4 @@
-kintoneDotNET (v1.0.2)
+kintoneDotNET (v1.0.3)
 =============
 
 kintoneDotNETは、[kintone API](https://developers.cybozu.com/ja/kintone-api/common-appapi.html) を.NET Framework上で扱うためのライブラリです。  
@@ -15,12 +15,24 @@ kintone からデータを抽出する際、LINQのような構文で条件を�
 
 ```
 List<BookModel> books = BookModel.Find<BookModel>(x => x.title Like "harry potter");
-List<BookModel> popular = BookModel.Find<BookModel>(x => x.updated_time > DateTime.Now);
+List<BookModel> latest = BookModel.Find<BookModel>(x => x.updated_time > DateTime.Now);
 ```
 
 ```
 Dim books As List(Of BookModel) = BookModel.Find(Of BookModel)(Function(x) x.title Like "harry potter")
-Dim popular As List(Of BookModel) = BookModel.Find(Of BookModel)(Function(x) x.updated_time > DateTime.Now)
+Dim latest As List(Of BookModel) = BookModel.Find(Of BookModel)(Function(x) x.updated_time > DateTime.Now)
+```
+
+Order、offset/limitを指定する場合、下記のようにメソッドチェーンで簡易に書けます。
+
+```
+List<BookModel> books = BookModel.Find<BookModel>().Where(x => x.price > 1000).Descending("price");
+List<BookModel> popular = BookModel.Find<BookModel>().Ascending("rank").Offset(0).Limit(10);
+```
+
+```
+Dim books As List(Of BookModel) = BookModel.Find(Of BookModel)().Where(Function(x) x.price > 1000).Descending("price")
+Dim popular As List(Of BookModel) = BookModel.Find(Of BookModel)().Ascending("rank").Offset(0).Limit(10)
 ```
 
 ### Save
