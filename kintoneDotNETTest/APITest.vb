@@ -75,28 +75,74 @@ Public Class APITest
     <TestMethod()>
     Public Sub ReadkintoneQuery()
 
-        Dim q As New kintoneQuery()
+        Dim q As New kintoneQuery(Of kintoneTestModel)()
+        Dim appFormat As String = "app=" + New kintoneTestModel().app
 
-        q.App = "10"
-        Assert.AreEqual("app=10", q.Build)
+        Assert.AreEqual(appFormat, q.Build)
 
-        q.Where(Of kintoneTestModel)(Function(x) x.stringField = "A")
-        Assert.AreEqual("app=10&query=stringField=""A""", q.Build.Replace(" ", ""))
+        q.Where(Function(x) x.stringField = "A")
+        Assert.AreEqual(appFormat + "&query=stringField=""A""", q.Build.Replace(" ", ""))
 
         q.Ascending("record_id", "numberField")
-        Assert.AreEqual("app=10&query=stringField=""A""orderbyrecord_idasc,numberFieldasc", q.Build.Replace(" ", ""))
+        Assert.AreEqual(appFormat + "&query=stringField=""A""orderbyレコード番号asc,numberFieldasc", q.Build.Replace(" ", ""))
 
         q.Offset(100)
-        Assert.AreEqual("app=10&query=stringField=""A""orderbyrecord_idasc,numberFieldascoffset100", q.Build.Replace(" ", ""))
+        Assert.AreEqual(appFormat + "&query=stringField=""A""orderbyレコード番号asc,numberFieldascoffset100", q.Build.Replace(" ", ""))
 
         q.Limit(10)
-        Assert.AreEqual("app=10&query=stringField=""A""orderbyrecord_idasc,numberFieldasclimit10offset100", q.Build.Replace(" ", ""))
+        Assert.AreEqual(appFormat + "&query=stringField=""A""orderbyレコード番号asc,numberFieldasclimit10offset100", q.Build.Replace(" ", ""))
 
         q.Fields("record_id", "created_time")
-        Assert.AreEqual("app=10&fields[0]=record_id&fields[1]=created_time&query=stringField=""A""orderbyrecord_idasc,numberFieldasclimit10offset100", q.Build.Replace(" ", ""))
+        Assert.AreEqual(appFormat + "&fields[0]=レコード番号&fields[1]=作成日時&query=stringField=""A""orderbyレコード番号asc,numberFieldasclimit10offset100", q.Build.Replace(" ", ""))
 
     End Sub
 
+    <TestMethod()>
+    Public Sub ReadByQuery()
+        Const METHOD_NAME As String = "ReadByQuery"
+
+        '事前に削除
+        Dim remained As List(Of kintoneTestModel) = kintoneTestModel.Find(Of kintoneTestModel)(Function(x) x.methodinfo = METHOD_NAME).ToList
+        kintoneTestModel.Delete(Of kintoneTestModel)(remained.Select(Function(x) x.record_id).ToList)
+
+        '仮レコードの登録
+        Dim item1 As New kintoneTestModel(METHOD_NAME)
+        item1.stringField = "GROUP1"
+        item1.numberField = 0
+
+        Dim item2 As New kintoneTestModel(METHOD_NAME)
+        item2.stringField = "GROUP1"
+        item2.numberField = 1
+
+        Dim item3 As New kintoneTestModel(METHOD_NAME)
+        item3.stringField = "DEPT-A"
+        item3.numberField = 2
+
+        Dim item4 As New kintoneTestModel(METHOD_NAME)
+        item4.stringField = "DEPT-A"
+        item4.numberField = 3
+
+        Dim list As New List(Of kintoneTestModel) From {item1, item2, item3, item4}
+        Dim created As List(Of kintoneTestModel) = kintoneTestModel.Create(Of kintoneTestModel)(list)
+
+        '登録結果の確認
+        Assert.AreEqual(list.Count, created.Count)
+
+        'クエリ選択を実施
+        Dim q1 As List(Of kintoneTestModel) = kintoneTestModel.Find(Of kintoneTestModel)().Where(Function(x) x.methodinfo = METHOD_NAME And x.numberField >= 2).Descending("numberField").Fields("numberField")
+        q1.ForEach(Sub(i) Console.WriteLine(i))
+        '降順の並びで、numberField以外に値はセットされていない
+        Assert.IsTrue(item4.numberField = q1.First.numberField And String.IsNullOrEmpty(q1.First.stringField))
+
+        Dim q2 As List(Of kintoneTestModel) = kintoneTestModel.Find(Of kintoneTestModel)().Where(Function(x) x.methodinfo = METHOD_NAME).Ascending("stringField", "numberField").Offset(3).Limit(1)
+        q2.ForEach(Sub(i) Console.WriteLine(i))
+        '昇順の並びで、最後の要素を取得
+        Assert.IsTrue(item2.stringField = q2.First.stringField And item2.numberField = q2.First.numberField)
+
+        '削除
+        kintoneTestModel.Delete(Of kintoneTestModel)(created.Select(Function(x) x.record_id).ToList)
+
+    End Sub
 
     ''' <summary>
     ''' FindAllのテスト 全件取得可能かチェックする

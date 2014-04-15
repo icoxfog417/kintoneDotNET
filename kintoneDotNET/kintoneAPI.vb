@@ -259,18 +259,15 @@ Namespace API
         ''' <returns></returns>
         ''' <remarks></remarks>
         Public Function Find(Of T As AbskintoneModel)(Optional ByVal query As String = "") As List(Of T)
-            Dim q As kintoneQuery = kintoneQuery.Make(query)
+            Dim q As kintoneQuery(Of T) = kintoneQuery(Of T).Make(query)
             Return Find(Of T)(q)
 
         End Function
 
-        Public Function Find(Of T As AbskintoneModel)(ByVal query As kintoneQuery) As List(Of T)
-            Dim model As T = getModel(Of T)()
-            Dim q As kintoneQuery = query.Clone
-            q.App = model.app
+        Public Function Find(Of T As AbskintoneModel)(ByVal query As kintoneQuery(Of T)) As List(Of T)
 
             Dim kerror As kintoneError = Nothing
-            Dim result As List(Of T) = FindBase(Of T)(q, kerror)
+            Dim result As List(Of T) = FindBase(Of T)(query, kerror)
             If kerror IsNot Nothing Then Throw New kintoneException(kerror)
 
             Return result
@@ -278,7 +275,7 @@ Namespace API
         End Function
 
         Public Function FindAll(Of T As AbskintoneModel)(Optional ByVal query As String = "") As List(Of T)
-            Dim q As kintoneQuery = kintoneQuery.Make(query)
+            Dim q As kintoneQuery(Of T) = kintoneQuery(Of T).Make(query)
             Return FindAll(Of T)(q)
 
         End Function
@@ -290,10 +287,7 @@ Namespace API
         ''' <param name="query"></param>
         ''' <returns></returns>
         ''' <remarks></remarks>
-        Public Function FindAll(Of T As AbskintoneModel)(ByVal query As kintoneQuery) As List(Of T)
-            Dim model As T = getModel(Of T)()
-            Dim q As kintoneQuery = query.Clone
-            q.App = model.app
+        Public Function FindAll(Of T As AbskintoneModel)(ByVal query As kintoneQuery(Of T)) As List(Of T)
 
             Dim stepCount As Integer = 1
             Dim offset As Integer = 0
@@ -305,7 +299,7 @@ Namespace API
             While recordStillExist
                 Dim tasks As New List(Of Task(Of List(Of T)))
                 For i As Integer = 1 To threadCount
-                    tasks.Add(makeTaskForFind(Of T)(q, offset))
+                    tasks.Add(makeTaskForFind(Of T)(query, offset))
                     offset += ReadLimit
                 Next
                 Dim taskRuns As Task(Of List(Of T))() = tasks.ToArray
@@ -358,10 +352,10 @@ Namespace API
         ''' <summary>
         ''' 検索を行うタスクを生成するための内部処理
         ''' </summary>
-        Private Function makeTaskForFind(Of T As AbskintoneModel)(baseQuery As kintoneQuery, Optional ByVal offset As Integer = -1) As Task(Of List(Of T))
+        Private Function makeTaskForFind(Of T As AbskintoneModel)(baseQuery As kintoneQuery(Of T), Optional ByVal offset As Integer = -1) As Task(Of List(Of T))
 
             Dim task As New Task(Of List(Of T))(Function()
-                                                    Dim query As kintoneQuery = baseQuery.Clone
+                                                    Dim query As kintoneQuery(Of T) = baseQuery.Clone
                                                     If offset > -1 Then query.Limit(ReadLimit).Offset(offset)
                                                     Dim localError As kintoneError = Nothing
                                                     Dim list As List(Of T) = FindBase(Of T)(query, localError)
@@ -377,12 +371,13 @@ Namespace API
         ''' <summary>
         ''' 検索処理の実体
         ''' </summary>
-        Private Function FindBase(Of T As AbskintoneModel)(ByVal query As kintoneQuery, Optional ByRef kerror As kintoneError = Nothing) As List(Of T)
+        Private Function FindBase(Of T As AbskintoneModel)(ByVal query As kintoneQuery(Of T), Optional ByRef kerror As kintoneError = Nothing) As List(Of T)
 
             Dim serialized As kintoneRecords(Of T) = Nothing
             Dim result As New List(Of T)
 
-            Dim request As HttpWebRequest = makeHeader("records", "GET", query.Build(True))
+            Dim q As String = query.Build(True)
+            Dim request As HttpWebRequest = makeHeader("records", "GET", q)
             Dim responseStr As String = ""
 
             Using response As HttpWebResponse = getResponse(request, kerror)
@@ -623,7 +618,7 @@ Namespace API
             For Each item As KeyValuePair(Of String, Integer) In querys
                 Dim list As New List(Of T)
                 '必要最小限の項目のみ読み込む
-                Dim q As kintoneQuery = kintoneQuery.Make(item.Key).Fields(dic("record_id"), "revision", keyNameInQuery)
+                Dim q As kintoneQuery(Of T) = kintoneQuery(Of T).Make(item.Key).Fields(dic("record_id"), "revision", keyNameInQuery)
                 If item.Value > ReadLimit Then
                     list = FindAll(Of T)(q)
                 Else

@@ -6,40 +6,43 @@ Namespace API
     ''' kintoneのクエリを作成するための中間オブジェクト
     ''' </summary>
     ''' <remarks></remarks>
-    Public Class kintoneQuery
-        Public Property App As String = ""
-        Private _query As String = ""
+    Public Class kintoneQuery(Of T As AbskintoneModel)
+
+        Private _model As T = Nothing
+        Private _rawquery As String = ""
+        Private _expression As Expression(Of Func(Of T, Boolean)) = Nothing
+        Private _convertDictionary As New Dictionary(Of String, String)
         Private _offset As Integer = -1
         Private _limit As Integer = -1
         Private _orderBy As New Dictionary(Of String, Boolean)
         Private _fields As New List(Of String)
+        Private _isAll As Boolean = False
 
         Public Sub New()
+            _model = Activator.CreateInstance(Of T)()
+            _convertDictionary = _model.GetPropertyToDefaultDic
         End Sub
 
         Public Sub New(ByVal query As String)
-            Me._query = query
+            Me.New()
+            Me._rawquery = query
         End Sub
 
-        Public Sub New(ByVal app As String, ByVal query As String)
-            Me.App = app
-            Me._query = query
+        Public Sub New(ByVal isAll As Boolean)
+            Me.New()
+            Me._isAll = isAll
         End Sub
 
-        Public Shared Function Make() As kintoneQuery
-            Return New kintoneQuery()
+        Public Shared Function Make() As kintoneQuery(Of T)
+            Return New kintoneQuery(Of T)()
         End Function
 
-        Public Shared Function Make(ByVal query As String) As kintoneQuery
-            Return New kintoneQuery(query)
+        Public Shared Function Make(ByVal query As String) As kintoneQuery(Of T)
+            Return New kintoneQuery(Of T)(query)
         End Function
 
-        Public Shared Function Make(ByVal app As String, ByVal query As String) As kintoneQuery
-            Return New kintoneQuery(app, query)
-        End Function
-
-        Public Function Clone() As kintoneQuery
-            Dim c As New kintoneQuery(App, _query)
+        Public Function Clone() As kintoneQuery(Of T)
+            Dim c As New kintoneQuery(Of T)(_rawquery)
             c._offset = Me._offset
             c._limit = Me._limit
             c._orderBy = New Dictionary(Of String, Boolean)(Me._orderBy)
@@ -48,30 +51,45 @@ Namespace API
 
         End Function
 
-
         ''' <summary>
-        ''' 抽出条件の作成を行う
+        ''' 抽出条件の設定を行う
         ''' </summary>
-        ''' <typeparam name="T"></typeparam>
         ''' <param name="expression"></param>
         ''' <returns></returns>
         ''' <remarks></remarks>
-        Public Function Where(Of T As AbskintoneModel)(ByVal expression As Expression(Of Func(Of T, Boolean))) As kintoneQuery
-            _query = kintoneQueryExpression.Eval(expression)
+        Public Function Where(ByVal expression As Expression(Of Func(Of T, Boolean))) As kintoneQuery(Of T)
+            _expression = expression
             Return Me
         End Function
 
         ''' <summary>
-        ''' 抽出条件の作成を行う
+        ''' 項目変換用のディクショナリを設定
         ''' </summary>
-        ''' <typeparam name="T"></typeparam>
-        ''' <param name="expression"></param>
-        ''' <param name="nameConvertor"></param>
+        ''' <param name="dic"></param>
         ''' <returns></returns>
         ''' <remarks></remarks>
-        Public Function Where(Of T As AbskintoneModel)(ByVal expression As Expression(Of Func(Of T, Boolean)), _
-                                                             ByVal nameConvertor As Dictionary(Of String, String)) As kintoneQuery
-            _query = kintoneQueryExpression.Eval(expression, nameConvertor)
+        Public Function ConvertBy(ByVal dic As Dictionary(Of String, String)) As kintoneQuery(Of T)
+            _convertDictionary = dic
+            Return Me
+        End Function
+
+        ''' <summary>
+        ''' 項目変換をオフにする
+        ''' </summary>
+        ''' <returns></returns>
+        ''' <remarks></remarks>
+        Public Function ConvertOff() As kintoneQuery(Of T)
+            _convertDictionary.Clear()
+            Return Me
+        End Function
+
+        ''' <summary>
+        ''' 項目変換をオンにする
+        ''' </summary>
+        ''' <returns></returns>
+        ''' <remarks></remarks>
+        Public Function ConvertOn() As kintoneQuery(Of T)
+            _convertDictionary = _model.GetPropertyToDefaultDic
             Return Me
         End Function
 
@@ -81,7 +99,7 @@ Namespace API
         ''' <param name="index"></param>
         ''' <returns></returns>
         ''' <remarks></remarks>
-        Public Function Offset(ByVal index As Integer) As kintoneQuery
+        Public Function Offset(ByVal index As Integer) As kintoneQuery(Of T)
             _offset = index
             Return Me
         End Function
@@ -92,7 +110,7 @@ Namespace API
         ''' <param name="size"></param>
         ''' <returns></returns>
         ''' <remarks></remarks>
-        Public Function Limit(ByVal size As Integer) As kintoneQuery
+        Public Function Limit(ByVal size As Integer) As kintoneQuery(Of T)
             _limit = size
             Return Me
         End Function
@@ -103,7 +121,7 @@ Namespace API
         ''' <param name="names"></param>
         ''' <returns></returns>
         ''' <remarks></remarks>
-        Public Function Fields(ParamArray names As String()) As kintoneQuery
+        Public Function Fields(ParamArray names As String()) As kintoneQuery(Of T)
             For Each n As String In names
                 _fields.Add(n)
             Next
@@ -116,7 +134,7 @@ Namespace API
         ''' <param name="names"></param>
         ''' <returns></returns>
         ''' <remarks></remarks>
-        Public Function Ascending(ParamArray names As String()) As kintoneQuery
+        Public Function Ascending(ParamArray names As String()) As kintoneQuery(Of T)
             For Each n As String In names
                 If _orderBy.ContainsKey(n) Then
                     _orderBy(n) = True
@@ -135,7 +153,7 @@ Namespace API
         ''' <param name="names"></param>
         ''' <returns></returns>
         ''' <remarks></remarks>
-        Public Function Descending(ParamArray names As String()) As kintoneQuery
+        Public Function Descending(ParamArray names As String()) As kintoneQuery(Of T)
             For Each n As String In names
                 If _orderBy.ContainsKey(n) Then
                     _orderBy(n) = False
@@ -156,13 +174,19 @@ Namespace API
         Public Function Build(Optional ByVal isEncode As Boolean = False) As String
             Dim result As String = ""
 
-            result = _query
+            result = _rawquery
+
+            '条件
+            If _expression IsNot Nothing Then
+                result += kintoneQueryExpression.Eval(Of T)(_expression, _convertDictionary)
+            End If
 
             '順序
             If _orderBy.Count > 0 Then
                 Dim os As New List(Of String)
                 For Each o As KeyValuePair(Of String, Boolean) In _orderBy
-                    os.Add(o.Key + " " + If(o.Value, " asc", " desc"))
+                    Dim key As String = If(_convertDictionary.ContainsKey(o.Key), _convertDictionary(o.Key), o.Key)
+                    os.Add(key + " " + If(o.Value, " asc", " desc"))
                 Next
                 result += " order by " + String.Join(",", os)
             End If
@@ -186,10 +210,12 @@ Namespace API
             If _fields.Count > 0 Then
                 Dim fs As New List(Of String)
                 For i As Integer = 0 To _fields.Count - 1
+                    Dim fName As String = If(_convertDictionary.ContainsKey(_fields(i)), _convertDictionary(_fields(i)), _fields(i))
+
                     If Not isEncode Then
-                        fs.Add("fields[" + i.ToString + "]=" + _fields(i))
+                        fs.Add("fields[" + i.ToString + "]=" + fName)
                     Else
-                        fs.Add(HttpUtility.UrlEncode("fields[" + i.ToString + "]") + "=" + HttpUtility.UrlEncode(_fields(i)))
+                        fs.Add(HttpUtility.UrlEncode("fields[" + i.ToString + "]") + "=" + HttpUtility.UrlEncode(fName))
                     End If
 
                 Next
@@ -198,10 +224,8 @@ Namespace API
 
             End If
 
-            'アプリケーション番号がある場合、付与
-            If Not String.IsNullOrEmpty(App) Then
-                result = "app=" + App + If(result.Length > 0, "&" + result, "")
-            End If
+            'アプリケーション番号を付与
+            result = "app=" + _model.app + If(result.Length > 0, "&" + result, "")
 
             Return result
 
@@ -211,6 +235,21 @@ Namespace API
             Return Build()
         End Function
 
+        ''' <summary>
+        ''' リスト型への暗黙型変換
+        ''' </summary>
+        ''' <param name="q"></param>
+        ''' <returns></returns>
+        ''' <remarks></remarks>
+        Public Shared Widening Operator CType(ByVal q As kintoneQuery(Of T)) As List(Of T)
+            Dim model As T = Activator.CreateInstance(Of T)()
+            Dim api As New kintoneAPI(model.app)
+            If Not q._isAll Then
+                Return api.Find(q)
+            Else
+                Return api.FindAll(q)
+            End If
+        End Operator
 
     End Class
 

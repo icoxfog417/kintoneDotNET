@@ -145,14 +145,14 @@ Namespace API
         End Function
 
         ''' <summary>
-        ''' レコードの検索を行う(クエリオブジェクト指定)<br/>
+        ''' 直接条件を指定せず、クエリオブジェクトから検索を行う
         ''' </summary>
         ''' <typeparam name="T"></typeparam>
-        ''' <param name="query"></param>
         ''' <returns></returns>
         ''' <remarks></remarks>
-        Public Shared Function Find(Of T As AbskintoneModel)(ByVal query As kintoneQuery) As List(Of T)
-            Return GetAPI(Of T).Find(Of T)(query)
+        Public Shared Function Find(Of T As AbskintoneModel)() As kintoneQuery(Of T)
+            Dim q As New kintoneQuery(Of T)(False)
+            Return q
         End Function
 
         ''' <summary>
@@ -219,14 +219,14 @@ Namespace API
         End Function
 
         ''' <summary>
-        ''' レコードの検索を行う(全件)(文字列クエリオブジェクト指定)<br/>
+        ''' 直接条件を指定せず、クエリオブジェクトから検索を行う
         ''' </summary>
         ''' <typeparam name="T"></typeparam>
-        ''' <param name="query"></param>
         ''' <returns></returns>
         ''' <remarks></remarks>
-        Public Shared Function FindAll(Of T As AbskintoneModel)(ByVal query As kintoneQuery) As List(Of T)
-            Return GetAPI(Of T).FindAll(Of T)(query)
+        Public Shared Function FindAll(Of T As AbskintoneModel)() As kintoneQuery(Of T)
+            Dim q As New kintoneQuery(Of T)(True)
+            Return q
         End Function
 
         ''' <summary>
