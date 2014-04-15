@@ -586,7 +586,7 @@ Namespace API
 
             '値指定を除いた、URLのデフォルト長を設定
             Dim queryFormat As String = keyNameInQuery + " in ({0})"
-            Dim defaultLength As Integer = HttpUtility.UrlEncode(String.Format(KINTONE_API_FORMAT, Host, "records") + "?query=" + queryFormat + "&fields[0]=" + dic("record_id") + "&fields[1]=revision").Length
+            Dim defaultLength As Integer = HttpUtility.UrlEncode(String.Format(KINTONE_API_FORMAT, Host, "records") + "?query=" + queryFormat).Length
 
             Dim querys As New Dictionary(Of String, Integer)
             Dim querySize As Integer = defaultLength
@@ -617,8 +617,7 @@ Namespace API
             Dim queryResult As New List(Of T)
             For Each item As KeyValuePair(Of String, Integer) In querys
                 Dim list As New List(Of T)
-                '必要最小限の項目のみ読み込む
-                Dim q As kintoneQuery(Of T) = kintoneQuery(Of T).Make(item.Key).Fields(dic("record_id"), "revision", keyNameInQuery)
+                Dim q As kintoneQuery(Of T) = kintoneQuery(Of T).Make(item.Key)
                 If item.Value > ReadLimit Then
                     list = FindAll(Of T)(q)
                 Else
