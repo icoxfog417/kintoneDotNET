@@ -1,5 +1,5 @@
 "キー","テストメソッド","文字列フィールド","数値","ラジオボタン","チェックボックス[check1]","チェックボックス[check2]","ドロップダウン","リッチエディター","複数行文字列","セレクトボックス[select1]","セレクトボックス[select2]","セレクトボックス[select3]","日付","時刻","日時","リンク","バリデーション"
-"edcc4f24-c82a-4907-a4d7-42d5b25e13de","ExecuteUpdateAndRead","","0","radio1",,"1","drop1",,"","1",,"1","","","","","ABCDE"
+"KEY5","ExecuteUpdateAndRead","","0","radio1",,"1","drop1",,"","1",,"1","","","","","ABCDE"
 "KEY4","ReadInitialField","","","radio1",,,"drop2","<br />","",,,,"","","","","ABCDE"
 "KEY3","InitialData","文字","","radio2","1","1","drop1","<b>リッチ</b>　だぜ","複数複数複数複数","1","1",,"2013/10/24","15:54","2013/10/24 15:54","http://msdn.microsoft.com/ja-jp/library/system.configuration.configurationmanager.appsettings.aspx","ABCDE"
 "KEY2","InitialData","字文","120","radio1","1","1","","<b>リッチ</b>　<u>だぜ</u>&nbsp; &nbsp;きんとん","複数複数複数複数","1",,"1","2013/10/24","15:54","2013/10/24 15:54","http://epplus.codeplex.com/SourceControl/latest#EPPlus/ExcelCellBase.cs","ABCDE"
