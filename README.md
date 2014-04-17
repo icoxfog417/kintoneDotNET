@@ -88,7 +88,7 @@ kintone上の特殊なフィールドについても対応を行っています�
 ※なお、C#のコードはVB.NETから変換しているので、誤りがあるかもしれません。もし発見した場合はご連絡ください。
 
 ## About Test Code
-単体テストコードを実行するには、kintoneのアカウント取得とテストに使用するアプリの登録が必要になります。
-アプリテンプレートをdocument/kintoneUnitTest.zipに格納してありますので、これを元に登録を行ってください。  
-アカウントのIDなどは、`app.config`へ記載します。  
-※自分のアカウント情報を記載したままコミットしてしまうと大変なので、app.Debug.configを使用するなどしてください。
+単体テストコードを実行するには、kintoneのアカウント取得とテストに使用するアプリの登録が必要になります。  
+kintoneのアカウントは、[開発者ライセンスの申し込み](https://cybozudev.zendesk.com/hc/ja)で取得することができます。  
+その後の設定方法については、[こちら](https://github.com/icoxfog417/kintoneDotNET/wiki/How-to-Run-Test-Code)をご参照ください。
+
