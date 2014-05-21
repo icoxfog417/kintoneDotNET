@@ -116,6 +116,17 @@ Namespace API.Types
         Public Property code As String
         Public Property details As New List(Of kintoneErrorDetail)
 
+        Public ReadOnly Property Summary As String
+            Get
+                Dim msg As String = message
+                If details.Count > 0 Then
+                    Dim detail As kintoneErrorDetail = details.First
+                    msg += "(" + detail.messages.First + If(details.Count > 1, " 他" + (details.Count - 1).ToString + "件のエラー)", ")")
+                End If
+                Return msg
+            End Get
+        End Property
+
         Public Overrides Function ToString() As String
             Dim result As String = ""
             result += "id:" + id + " code:" + code + vbCrLf

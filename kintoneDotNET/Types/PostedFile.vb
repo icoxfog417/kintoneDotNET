@@ -54,6 +54,18 @@ Namespace API.Types
 
         End Sub
 
+        ''' <summary>
+        ''' 直接Streamを受け取りインスタンスを初期化する
+        ''' </summary>
+        ''' <param name="fileName"></param>
+        ''' <param name="stream"></param>
+        ''' <remarks></remarks>
+        Public Sub New(ByVal fileName As String, ByVal stream As Stream)
+            _fileName = fileName
+            _contentLength = stream.Length
+            _stream = stream
+        End Sub
+
         Public Overrides Sub SaveAs(filename As String)
             Using target As New FileStream(filename, FileMode.Create)
                 Dim fByte(_stream.Length - 1) As Byte
