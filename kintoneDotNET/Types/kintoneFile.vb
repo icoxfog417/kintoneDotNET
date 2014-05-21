@@ -43,7 +43,7 @@ Namespace API.Types
             response.Clear()
             response.ContentType = contentType
             response.AddHeader("Content-Disposition", String.Format("attachment;filename={0}", name))
-            response.BinaryWrite(GetFile.GetBuffer)
+            response.BinaryWrite(GetFile.ToArray)
             response.End()
         End Sub
 
