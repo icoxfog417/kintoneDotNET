@@ -23,6 +23,16 @@ Namespace API
         Public Overrides ReadOnly Property Message As String
             Get
                 If _error IsNot Nothing Then
+                    Return _error.Summary
+                Else
+                    Return _message
+                End If
+            End Get
+        End Property
+
+        Public ReadOnly Property Detail As String
+            Get
+                If _error IsNot Nothing Then
                     Return _error.ToString
                 Else
                     Return _message
