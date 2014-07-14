@@ -581,7 +581,7 @@ Namespace API
             'オブジェクトに設定されたキーでkintoneを検索(inで一括検索)
             Dim keyInfo = key.First
             Dim keyName As String = keyInfo.p.Name
-            Dim dic As Dictionary(Of String, String) = getModel(Of T).GetPropertyToDefaultDic() '変換用ディクショナリを取得
+            Dim dic As Dictionary(Of String, String) = getModel(Of T).GetToItemNameDic() '変換用ディクショナリを取得
             Dim keyNameInQuery As String = If(dic.ContainsKey(keyName), dic(keyName), keyName) '変換後の項目名をセット
 
             '値指定を除いた、URLのデフォルト長を設定

@@ -65,15 +65,18 @@ Namespace API
         ''' <summary>更新時、リビジョンを無視して更新する(デフォルトFalse)</summary>
         Public Property IgnoreRevision As Boolean = False
 
-        Private _convertDictionary As New Dictionary(Of String, String) From {
-                                    {"レコード番号", "record_id"},
-                                    {"作成日時", "created_time"},
-                                    {"更新日時", "updated_time"},
-                                    {"作成者", "create_usr"},
-                                    {"更新者", "update_usr"},
-                                    {"ステータス", "status"},
-                                    {"作業者", "work_usr"}
-                                }
+        '$idは条件指定では使えないため、リクエストを送る場合は"レコード番号"を利用する必要がある
+        Private _convertDictionary As New List(Of NameConvertor) From {
+            NameConvertor.Create("$id", "record_id", NameConvertor.Direction.Read),
+            NameConvertor.Create("レコード番号", "record_id", NameConvertor.Direction.Send),
+            NameConvertor.Create("$revision", "revision", NameConvertor.Direction.Read),
+            NameConvertor.Create("作成日時", "created_time"),
+            NameConvertor.Create("更新日時", "updated_time"),
+            NameConvertor.Create("作成者", "create_usr"),
+            NameConvertor.Create("更新者", "update_usr"),
+            NameConvertor.Create("ステータス", "status"),
+            NameConvertor.Create("作業者", "work_usr")
+        }
 
         ''' <summary>
         ''' デフォルトの日本語項目名称を変換するためのディクショナリを取得<br/>
@@ -82,11 +85,11 @@ Namespace API
         ''' <value></value>
         ''' <returns></returns>
         ''' <remarks></remarks>
-        Protected Overridable Property ConvertDictionary As Dictionary(Of String, String)
+        Protected Overridable Property ConvertDictionary As List(Of NameConvertor)
             Get
                 Return _convertDictionary
             End Get
-            Set(value As Dictionary(Of String, String))
+            Set(value As List(Of NameConvertor))
                 _convertDictionary = value
             End Set
         End Property
@@ -128,7 +131,7 @@ Namespace API
         Public Shared Function Find(Of T As AbskintoneModel)(ByVal expression As Expression(Of Func(Of T, Boolean)), _
                                                                 Optional ByVal isConvert As Boolean = True) As List(Of T)
             Dim model As T = Activator.CreateInstance(Of T)()
-            Dim query As String = kintoneQueryExpression.Eval(Of T)(expression, If(isConvert, model.GetPropertyToDefaultDic, Nothing))
+            Dim query As String = kintoneQueryExpression.Eval(Of T)(expression, If(isConvert, model.GetToItemNameDic(), Nothing))
             Return Find(Of T)(query)
         End Function
 
@@ -202,7 +205,7 @@ Namespace API
         Public Shared Function FindAll(Of T As AbskintoneModel)(ByVal expression As Expression(Of Func(Of T, Boolean)), _
                                                                 Optional ByVal isConvert As Boolean = True) As List(Of T)
             Dim model As T = Activator.CreateInstance(Of T)()
-            Dim query As String = kintoneQueryExpression.Eval(Of T)(expression, If(isConvert, model.GetPropertyToDefaultDic, Nothing))
+            Dim query As String = kintoneQueryExpression.Eval(Of T)(expression, If(isConvert, model.GetToItemNameDic, Nothing))
             Return FindAll(Of T)(query)
         End Function
 
@@ -453,34 +456,59 @@ Namespace API
         End Function
 
         ''' <summary>
-        ''' kintone上デフォルトで日本語である項目("レコード番号","作成日時" など)をプロパティ名(record_id,updated_time etc)に変換するためのDictionaryを取得する
+        ''' kintone上の項目名称("レコード番号","作成日時" など)をプロパティ名(record_id,updated_time etc)に変換するためのDictionaryを取得する
         ''' </summary>
-        Public Function GetDefaultToPropertyDic() As Dictionary(Of String, String)
-            Return GetNameConvertDic(True)
+        Public Function GetToPropertyDic() As Dictionary(Of String, String)
+            Return GetNameConvertDic(NameConvertor.Direction.Read)
         End Function
 
         ''' <summary>
-        ''' プロパティ名をkintone上のデフォルト名称に変換するためのDictionaryを取得する
+        ''' プロパティ名をkintone上の項目名称に変換するためのDictionaryを取得する
         ''' </summary>
-        Public Function GetPropertyToDefaultDic() As Dictionary(Of String, String)
-            Return GetNameConvertDic(False)
+        Public Function GetToItemNameDic() As Dictionary(Of String, String)
+            Return GetNameConvertDic(NameConvertor.Direction.Send)
         End Function
 
         ''' <summary>
         ''' 変換用Dictionaryを取得するための内部処理
         ''' </summary>
-        ''' <param name="isDefaultToProperty"></param>
-        Private Function GetNameConvertDic(Optional ByVal isDefaultToProperty As Boolean = True) As Dictionary(Of String, String)
-            If isDefaultToProperty Then
-                Return _convertDictionary
+        ''' <param name="direction"></param>
+        Private Function GetNameConvertDic(ByVal direction As NameConvertor.Direction) As Dictionary(Of String, String)
+            Dim nconvertors = _convertDictionary.FindAll(Function(cn) cn.ConvertDirection = direction Or cn.ConvertDirection = NameConvertor.Direction.Both)
+
+            If direction = NameConvertor.Direction.Read Then
+                Return nconvertors.ToDictionary(Function(cn) cn.ItemName, Function(cn) cn.PropertyName)
             Else
-                Dim opposit As New Dictionary(Of String, String)
-                For Each item As KeyValuePair(Of String, String) In _convertDictionary
-                    opposit.Add(item.Value, item.Key) '逆にする
-                Next
-                Return opposit
+                Return nconvertors.ToDictionary(Function(cn) cn.PropertyName, Function(cn) cn.ItemName)
             End If
 
+        End Function
+
+    End Class
+
+    ''' <summary>
+    ''' kintone上のアイテム名とコード上のプロパティ名を対応させるための変換ルール
+    ''' </summary>
+    ''' <remarks></remarks>
+    Public Class NameConvertor
+        Public Enum Direction
+            Both
+            Read
+            Send
+        End Enum
+
+        Public Property ItemName As String = ""
+        Public Property PropertyName As String = ""
+        Public Property ConvertDirection As Direction = Direction.Both
+
+        Public Sub New(ByVal itemName As String, ByVal propertyName As String, Optional ByVal direction As Direction = Direction.Both)
+            Me.ItemName = itemName
+            Me.PropertyName = propertyName
+            Me.ConvertDirection = direction
+        End Sub
+
+        Public Shared Function Create(ByVal itemName As String, ByVal propertyName As String, Optional ByVal direction As Direction = Direction.Both) As NameConvertor
+            Return New NameConvertor(itemName, propertyName, direction)
         End Function
 
     End Class
