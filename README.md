@@ -1,4 +1,4 @@
-kintoneDotNET (v1.0.3)
+kintoneDotNET (v1.0.4)
 =============
 
 kintoneDotNETは、[kintone API](https://developers.cybozu.com/ja/kintone-api/common-appapi.html) を.NET Framework上で扱うためのライブラリです。  
