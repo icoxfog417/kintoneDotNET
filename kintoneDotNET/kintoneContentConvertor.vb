@@ -147,13 +147,7 @@ Namespace API
 
             'デフォルトプロパティ格納
             If TypeOf m Is AbskintoneModel Then
-                Dim convertDic As Dictionary(Of String, String) = m.GetDefaultToPropertyDic
-                'リビジョンの変換ルールを登録する
-                '$revision->revisionの変換は読み出し時のみであるため、既存のディクショナリに含めてしまうと各所で
-                'revision以外は～という条件分岐を入れないといけなくなってしまう。そのため、ここで対応を行う。
-                If convertDic.ContainsKey("$revision") Then convertDic.Add("$revision", "revision")
-
-                For Each item As KeyValuePair(Of String, String) In m.GetDefaultToPropertyDic
+                For Each item As KeyValuePair(Of String, String) In m.GetToPropertyDic
                     If dictionary.ContainsKey(item.Key) Then 'デフォルト名称が使用されている場合
                         Dim defaultProp As PropertyInfo = objType.GetProperty(item.Value)
                         If defaultProp IsNot Nothing Then

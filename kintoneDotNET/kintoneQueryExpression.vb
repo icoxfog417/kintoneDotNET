@@ -20,7 +20,7 @@ Namespace API
         ''' <remarks></remarks>
         Public Shared Function Eval(Of T As AbskintoneModel)(ByVal expression As Expression(Of Func(Of T, Boolean))) As String
             Dim model As T = Activator.CreateInstance(Of T)()
-            Return Eval(expression, model.GetPropertyToDefaultDic)
+            Return Eval(expression, model.GetToItemNameDic)
         End Function
 
 

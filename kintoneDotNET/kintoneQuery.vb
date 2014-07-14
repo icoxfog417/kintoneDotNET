@@ -20,7 +20,7 @@ Namespace API
 
         Public Sub New()
             _model = Activator.CreateInstance(Of T)()
-            _convertDictionary = _model.GetPropertyToDefaultDic
+            _convertDictionary = _model.GetToItemNameDic
         End Sub
 
         Public Sub New(ByVal query As String)
@@ -89,7 +89,7 @@ Namespace API
         ''' <returns></returns>
         ''' <remarks></remarks>
         Public Function ConvertOn() As kintoneQuery(Of T)
-            _convertDictionary = _model.GetPropertyToDefaultDic
+            _convertDictionary = _model.GetToItemNameDic
             Return Me
         End Function
 
