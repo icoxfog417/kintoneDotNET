@@ -225,7 +225,7 @@ Namespace API
             End If
 
             'アプリケーション番号を付与
-            result = "app=" + _model.app + If(result.Length > 0, "&" + result, "")
+            result = "app=" + _model.appId + If(result.Length > 0, "&" + result, "")
 
             Return result
 
@@ -243,7 +243,7 @@ Namespace API
         ''' <remarks></remarks>
         Public Shared Widening Operator CType(ByVal q As kintoneQuery(Of T)) As List(Of T)
             Dim model As T = Activator.CreateInstance(Of T)()
-            Dim api As New kintoneAPI(model.app)
+            Dim api As New kintoneAPI(model.appId)
             If Not q._isAll Then
                 Return api.Find(q)
             Else

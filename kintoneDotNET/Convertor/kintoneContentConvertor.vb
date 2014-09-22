@@ -3,7 +3,7 @@ Imports System.Web.Script.Serialization
 Imports System.Reflection
 Imports kintoneDotNET.API.Types
 
-Namespace API
+Namespace API.Convertor
 
     ''' <summary>
     ''' kintoneから返却されるJSONの読み込み、また送信する際のシリアライズを行うConvertor
@@ -199,7 +199,6 @@ Namespace API
             Else
                 Select Case t
                     Case GetType(DateTime)
-                        Dim d As DateTime = Nothing
                         result = kintoneDatetime.kintoneToDatetime(obj)
                     Case GetType(kintoneUser)
                         result = New kintoneUser(obj)

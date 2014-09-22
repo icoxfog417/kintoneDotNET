@@ -17,7 +17,7 @@ Namespace API
         ''' <summary>
         ''' kintoneのアプリケーションID
         ''' </summary>
-        Public MustOverride ReadOnly Property app As String
+        Public MustOverride ReadOnly Property appId As String
 
         ''' <summary>
         ''' [共通]レコード番号
@@ -100,11 +100,12 @@ Namespace API
         ''' </summary>
         Public ReadOnly Property record_show_url() As String
             Get
-                Dim api As New kintoneAPI(app)
-                Dim url As String = "https://" + kintoneAPI.Host + "/k/" + app + "/show?record=" + record_id
+                Dim api As New kintoneAPI(appId)
+                Dim url As String = "https://" + kintoneAPI.Host + "/k/" + appId + "/show?record=" + record_id
                 Return url
             End Get
         End Property
+
 
         ''' <summary>
         ''' レコードの検索を行う(expression指定)
@@ -442,7 +443,7 @@ Namespace API
         ''' 自身を操作するAPIを取得する
         ''' </summary>
         Private Function GetAPI() As kintoneAPI
-            Dim api As New kintoneAPI(app)
+            Dim api As New kintoneAPI(appId)
             Return api
         End Function
 
@@ -451,7 +452,7 @@ Namespace API
         ''' </summary>
         Private Shared Function GetAPI(Of T As AbskintoneModel)() As kintoneAPI
             Dim model As T = Activator.CreateInstance(Of T)()
-            Dim api As New kintoneAPI(model.app)
+            Dim api As New kintoneAPI(model.appId)
             Return api
         End Function
 

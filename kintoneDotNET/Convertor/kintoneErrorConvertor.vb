@@ -3,7 +3,7 @@ Imports System.Web.Script.Serialization
 Imports System.Collections.ObjectModel
 Imports System.Text.RegularExpressions
 
-Namespace API
+Namespace API.Convertor
 
     ''' <summary>
     ''' kintoneから返却されたエラー内容をデシリアライズするためのクラス

@@ -1,9 +1,9 @@
 ﻿Imports System.Text
 Imports Microsoft.VisualStudio.TestTools.UnitTesting
+Imports System.IO
 Imports System.Configuration
 Imports kintoneDotNET.API
 Imports kintoneDotNET.API.Types
-Imports System.IO
 
 ''' <summary>
 ''' kintoneAPIの単体テストを実施する
@@ -12,6 +12,18 @@ Imports System.IO
 <TestClass()>
 Public Class APITest
     Inherits AbskintoneTest
+
+    ''' <summary>
+    ''' kintoneのアプリ情報取得テスト
+    ''' </summary>
+    ''' <remarks></remarks>
+    <TestMethod()>
+    Public Sub GetApplication()
+        Dim model As New kintoneTestModel()
+        Dim result As kintoneApplication = kintoneAPI.GetApplication(model.appId)
+        Assert.AreEqual(model.appId, result.appId)
+    End Sub
+
 
     ''' <summary>
     ''' Readのテスト(単純に読み込みで例外が発生しないことを確認)
@@ -76,7 +88,7 @@ Public Class APITest
     Public Sub ReadkintoneQuery()
 
         Dim q As New kintoneQuery(Of kintoneTestModel)()
-        Dim appFormat As String = "app=" + New kintoneTestModel().app
+        Dim appFormat As String = "app=" + New kintoneTestModel().appId
 
         Assert.AreEqual(appFormat, q.Build)
 

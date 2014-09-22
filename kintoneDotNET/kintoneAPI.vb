@@ -6,6 +6,7 @@ Imports System.Runtime.Serialization
 Imports System.Web.Script.Serialization
 Imports System.Collections.ObjectModel
 Imports kintoneDotNET.API.Types
+Imports kintoneDotNET.API.Convertor
 
 Namespace API
 
@@ -209,6 +210,7 @@ Namespace API
             Return model
         End Function
 
+
         ''' <summary>
         ''' kintoneにアクセスするためのHTTPヘッダを作成する
         ''' </summary>
@@ -247,6 +249,34 @@ Namespace API
 
         End Function
 
+        ''' <summary>
+        ''' kintoneのアプリ情報を取得する
+        ''' </summary>
+        ''' <param name="appId"></param>
+        ''' <returns></returns>
+        ''' <remarks></remarks>
+        Public Shared Function GetApplication(ByVal appId As String) As kintoneApplication
+            Dim request As HttpWebRequest = makeHeader("app", "GET", String.Format("id={0}", appId))
+
+            'Request Body にJSONデータを書き込み
+            Dim js As New JavaScriptSerializer
+            Dim kApp As New kintoneApplication
+            Dim kerror As kintoneError = Nothing
+            Using response As HttpWebResponse = getResponse(request, kerror)
+                If Not response Is Nothing Then
+                    Dim reader As New StreamReader(response.GetResponseStream)
+                    kApp = js.Deserialize(Of kintoneApplication)(reader.ReadToEnd)
+                End If
+            End Using
+            If kerror IsNot Nothing Then Throw New kintoneException(kerror)
+
+            Return kApp
+
+        End Function
+
+        Public Function GetApplication() As kintoneApplication
+            Return GetApplication(Me.AppId)
+        End Function
 
         ''' <summary>
         ''' レコードの検索を行う<br/>

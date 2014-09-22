@@ -47,10 +47,10 @@ Public Class kintoneTestModel
     <kintoneItem>
     Public Property changeLogs As New List(Of ChangeLog)
 
-    Private _app As String = ConfigurationManager.AppSettings("testAppId")
-    Public Overrides ReadOnly Property app As String
+    Private _appId As String = ConfigurationManager.AppSettings("testAppId")
+    Public Overrides ReadOnly Property appId As String
         Get
-            Return _app
+            Return _appId
         End Get
     End Property
 
