@@ -70,6 +70,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AbskintoneModel.vb" />
+    <Compile Include="kintoneAccount.vb" />
     <Compile Include="kintoneAPI.vb" />
     <Compile Include="kintoneContentConvertor.vb" />
     <Compile Include="kintoneErrorConvertor.vb" />
