@@ -28,6 +28,31 @@ Public Class APITest
 
     End Sub
 
+    ''' <summary>
+    ''' アカウント情報の編集テスト
+    ''' </summary>
+    ''' <remarks></remarks>
+    <TestMethod()>
+    Public Sub OverwriteAccountSetting()
+
+        Dim domain As String = kintoneAPI.Account.Domain
+
+        Try
+            With kintoneAPI.Account
+                .Domain = ""
+                Dim result As List(Of kintoneTestModel) = kintoneTestModel.Find(Of kintoneTestModel)(String.Empty)
+                Assert.Fail() 'Cause Exception
+            End With
+        Catch ex As Exception
+        End Try
+
+        With kintoneAPI.Account
+            .Domain = domain
+            Dim result As List(Of kintoneTestModel) = kintoneTestModel.Find(Of kintoneTestModel)(String.Empty)
+        End With
+
+    End Sub
+
     <TestMethod()>
     Public Sub ReadExpression()
         Dim querys As New Dictionary(Of String, String)

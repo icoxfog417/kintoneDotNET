@@ -58,27 +58,39 @@ Namespace API
             End Get
         End Property
 
-        Private Shared _domain As String = ""
+        Private Shared _account As kintoneAccount = New kintoneAccount
+        ''' <summary>
+        ''' kintone接続情報。接続情報を動的に設定する場合に使用。
+        ''' 各プロパティに値が設定されている場合は優先使用
+        ''' </summary>
+        ''' <remarks></remarks>
+        Public Shared ReadOnly Property Account As kintoneAccount
+            Get
+                Return _account
+            End Get
+        End Property
+
         ''' <summary>
         ''' アプリケーションのドメイン。
         ''' </summary>
         ''' <value></value>
         Private Shared ReadOnly Property Domain As String
             Get
-                If String.IsNullOrEmpty(_domain) Then _domain = ConfigurationManager.AppSettings("ktDomain")
-                Return _domain
+                Return _account.Domain
             End Get
         End Property
 
-        Private Shared _host As String = ""
         ''' <summary>
         ''' kintoneのアクセス先。"xxx.cybozu.com"というようなアドレスで表現される(xxxはDomain)
         ''' </summary>
         ''' <value></value>
         Public Shared ReadOnly Property Host As String
             Get
-                If String.IsNullOrEmpty(_host) Then _host = String.Format(KINTONE_HOST, Domain)
-                Return _host
+                Dim result As String = ""
+                If Not String.IsNullOrEmpty(_account.Domain) Then
+                    result = String.Format(KINTONE_HOST, _account.Domain)
+                End If
+                Return result
             End Get
         End Property
 
@@ -130,7 +142,7 @@ Namespace API
             End Set
         End Property
 
-        ''' <summary>
+       ''' <summary>
         ''' Basic認証のためのキーを作成する。形式については<a href="http://developers.cybozu.com/ja/kintone-api/common-appapi.html">公式ドキュメント</a>を参照
         ''' </summary>
         ''' <value></value>
@@ -138,14 +150,11 @@ Namespace API
         ''' <remarks></remarks>
         Private Shared ReadOnly Property AccessKey As String
             Get
-                Dim id As String = ConfigurationManager.AppSettings("ktAccessId")
-                Dim password As String = ConfigurationManager.AppSettings("ktAccessPassword")
-                If id IsNot Nothing AndAlso password IsNot Nothing Then
-                    Dim key As String = Convert.ToBase64String(ApiEncoding.GetBytes(id + ":" + password))
-                    Return key
-                Else
-                    Return String.Empty
+                Dim key As String = Nothing
+                If Not String.IsNullOrEmpty(_account.AccessId) AndAlso Not String.IsNullOrEmpty(_account.AccessPassword) Then
+                    key = Convert.ToBase64String(ApiEncoding.GetBytes(_account.AccessId + ":" + _account.AccessPassword))
                 End If
+                Return key
             End Get
         End Property
 
@@ -157,18 +166,27 @@ Namespace API
         ''' <remarks></remarks>
         Private Shared ReadOnly Property LoginKey As String
             Get
-                Dim id As String = ConfigurationManager.AppSettings("ktLoginId")
-                Dim password As String = ConfigurationManager.AppSettings("ktLoginPassword")
-                If id IsNot Nothing AndAlso password IsNot Nothing Then
-                    Dim key As String = Convert.ToBase64String(ApiEncoding.GetBytes(id + ":" + password))
-                    Return key
-                Else
-                    Return String.Empty
+                Dim key As String = ""
+                If Not String.IsNullOrEmpty(_account.LoginId) AndAlso Not String.IsNullOrEmpty(_account.LoginPassword) Then
+                    key = Convert.ToBase64String(ApiEncoding.GetBytes(_account.LoginId + ":" + _account.LoginPassword))
                 End If
+                Return key
             End Get
         End Property
 
         ''' <summary>
+        ''' kintoneのAPIトークンを取得する
+        ''' </summary>
+        ''' <value></value>
+        ''' <returns></returns>
+        ''' <remarks></remarks>
+        Private Shared ReadOnly Property ApiToken As String
+            Get
+                Return _account.ApiToken
+            End Get
+        End Property
+
+       ''' <summary>
         ''' Proxyを経由する場合、プロキシの設定を行う
         ''' </summary>
         ''' <value></value>
@@ -176,22 +194,18 @@ Namespace API
         ''' <remarks></remarks>
         Private Shared ReadOnly Property Proxy As WebProxy
             Get
-                Dim proxyAddress As String = ConfigurationManager.AppSettings("proxy")
+                Dim myProxy As New WebProxy()
 
-                If Not String.IsNullOrEmpty(proxyAddress) Then
-                    Dim myProxy As New WebProxy()
-                    myProxy.Address = New Uri(proxyAddress)
-                    Dim proxyUser As String = ConfigurationManager.AppSettings("proxyUser")
+                If Not String.IsNullOrEmpty(_account.Proxy) Then
+                    myProxy.Address = New Uri(_account.Proxy)
+
                     '認証が必要なプロキシの場合、認証情報を設定
-                    If Not String.IsNullOrEmpty(proxyUser) Then
-                        Dim credential As New NetworkCredential(proxyUser, ConfigurationManager.AppSettings("proxyPassword"))
+                    If Not String.IsNullOrEmpty(_account.ProxyUser) Then
+                        Dim credential As New NetworkCredential(_account.ProxyUser, _account.ProxyPassword)
                         myProxy.Credentials = credential
                     End If
-
-                    Return myProxy
-                Else
-                    Return Nothing
                 End If
+                Return myProxy
             End Get
         End Property
 
@@ -223,7 +237,13 @@ Namespace API
                 uri += "?" + query
             End If
             Dim request As HttpWebRequest = DirectCast(Net.WebRequest.Create(uri), HttpWebRequest)
-            request.Headers.Add("X-Cybozu-Authorization", LoginKey)
+
+            If Not String.IsNullOrEmpty(ApiToken) Then
+                request.Headers.Add("X-Cybozu-API-Token", ApiToken)
+            Else
+                request.Headers.Add("X-Cybozu-Authorization", LoginKey)
+            End If
+
             If Not String.IsNullOrEmpty(AccessKey) Then
                 request.Headers.Add("Authorization", "Basic " + AccessKey)
             End If
