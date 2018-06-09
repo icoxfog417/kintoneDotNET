@@ -24,17 +24,17 @@ Namespace API
 
         ''' <summary>
         ''' kintone APIの読み込み上限値<br/>
-        ''' 現在100だが、kintoneAPIの上限値が変更されれば要修正
+        ''' 現在500だが、kintoneAPIの上限値が変更されれば要修正
         ''' </summary>
         ''' <remarks></remarks>
-        Public Const KINTONE_REC_LIMIT As Integer = 100
+        Public Const KINTONE_REC_LIMIT As Integer = 500
 
         ''' <summary>
         ''' kintone APIの更新上限値<br/>
-        ''' 現在100だが、kintoneAPIの上限値が変更されれば要修正
+        ''' 現在500だが、kintoneAPIの上限値が変更されれば要修正
         ''' </summary>
         ''' <remarks></remarks>
-        Public Const KINTONE_EXE_LIMIT As Integer = 100
+        Public Const KINTONE_EXE_LIMIT As Integer = 500
 
         ''' <summary>
         ''' 主にレコード取得のために使用するURL長の制限値
