@@ -97,6 +97,10 @@ Namespace API
 
         Private Shared Function evalExpression(ByVal exp As Expression) As kintoneQueryField
             Dim field As kintoneQueryField = Nothing
+            Dim inverse As Boolean = False
+            If exp.NodeType = ExpressionType.Not Then
+                inverse = True
+            End If
             Dim operand As ExpressionType = exp.NodeType
             Dim methodName As String = ""
 
@@ -112,6 +116,11 @@ Namespace API
                 right = CType(exp, BinaryExpression).Right
             ElseIf TypeOf exp Is UnaryExpression Then
                 left = CType(exp, UnaryExpression).Operand
+                operand = left.NodeType
+                If TypeOf left Is BinaryExpression Then
+                    right = CType(left, BinaryExpression).Right
+                    left = CType(left, BinaryExpression).Left
+                End If
             Else
                 left = exp
             End If
@@ -131,7 +140,7 @@ Namespace API
                 Dim leftEval As Expression = extractMember(left)
                 Dim rightMember As MemberExpression = extractMember(right)
 
-                If Not (TypeOf leftEval Is MemberExpression AndAlso TypeOf CType(leftEval, MemberExpression).Member Is PropertyInfo) AndAlso _
+                If Not (TypeOf leftEval Is MemberExpression AndAlso TypeOf CType(leftEval, MemberExpression).Member Is PropertyInfo) AndAlso
                     (rightMember IsNot Nothing AndAlso TypeOf rightMember.Member Is PropertyInfo) Then 'プロパティが右辺にくる場合逆転
                     Dim temp As Expression = left
                     left = rightMember
@@ -146,32 +155,55 @@ Namespace API
             value = extractValue(right)
             prop = leftMember.Member.DeclaringType.GetProperty(name)
 
-            If operand = ExpressionType.Not Then
-                opr = "not "
+            If inverse Then
+                Select Case methodName
+                    Case "LikeString" 'Like演算
+                        opr = "not like"
+                    Case "Contains" 'IN
+                        opr = "not in"
+                    Case Else 'methodがない場合、演算子から判定
+                        Select Case operand
+                            Case ExpressionType.Equal
+                                opr = "!="
+                            Case ExpressionType.NotEqual
+                                opr = "="
+                            Case ExpressionType.LessThan
+                                opr = ">="
+                            Case ExpressionType.GreaterThan
+                                opr = "<="
+                            Case ExpressionType.LessThanOrEqual
+                                opr = ">"
+                            Case ExpressionType.GreaterThanOrEqual
+                                opr = "<"
+                            Case Else
+                                opr = "="
+                        End Select
+                End Select
+            Else
+                Select Case methodName
+                    Case "LikeString" 'Like演算
+                        opr = "like"
+                    Case "Contains" 'IN
+                        opr = "in"
+                    Case Else 'methodがない場合、演算子から判定
+                        Select Case operand
+                            Case ExpressionType.Equal
+                                opr = "="
+                            Case ExpressionType.NotEqual
+                                opr = "!="
+                            Case ExpressionType.LessThan
+                                opr = "<"
+                            Case ExpressionType.GreaterThan
+                                opr = ">"
+                            Case ExpressionType.LessThanOrEqual
+                                opr = "<="
+                            Case ExpressionType.GreaterThanOrEqual
+                                opr = ">="
+                            Case Else
+                                opr = "="
+                        End Select
+                End Select
             End If
-            Select Case methodName
-                Case "LikeString" 'Like演算
-                    opr += "like"
-                Case "Contains" 'IN
-                    opr += "in"
-                Case Else 'methodがない場合、演算子から判定
-                    Select Case operand
-                        Case ExpressionType.Equal
-                            opr = "="
-                        Case ExpressionType.NotEqual
-                            opr = "!="
-                        Case ExpressionType.LessThan
-                            opr = "<"
-                        Case ExpressionType.GreaterThan
-                            opr = ">"
-                        Case ExpressionType.LessThanOrEqual
-                            opr = "<="
-                        Case ExpressionType.GreaterThanOrEqual
-                            opr = ">="
-                        Case Else
-                            opr = "="
-                    End Select
-            End Select
 
             If prop.PropertyType = GetType(DateTime) Then 'DateTime型の場合比較値が特殊になるため、対応を行う
                 Dim attr As kintoneItemAttribute = prop.GetCustomAttributes(GetType(kintoneItemAttribute), True).SingleOrDefault
